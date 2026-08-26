@@ -3,14 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>MemeCoinSite</title>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            background: linear-gradient(135deg, #111827, #4c1d95, #7c3aed);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 50px 30px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.20);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo {
+            font-size: 65px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            color: #e5e7eb;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        #g_id_signin {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #status {
+            margin-top: 25px;
+            min-height: 24px;
+            color: #d1fae5;
+            font-size: 15px;
+        }
+
+        .footer {
+            margin-top: 35px;
+            color: #d1d5db;
+            font-size: 13px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>🚀 MemeCoinSite</h1>
 
-    <p>Create your own unique digital meme collectible.</p>
+    <div class="container">
 
-    <button>Sign in with Google</button>
+        <div class="logo">🚀</div>
+
+        <h1>MemeCoinSite</h1>
+
+        <p class="subtitle">
+            Create your own unique digital meme collectible.
+        </p>
+
+        <!-- Real Google Sign-In -->
+        <div
+            id="g_id_onload"
+            data-client_id="564623769013-gn2njhia3plqahbid5ue9dvufitsofh0.apps.googleusercontent.com"
+            data-callback="handleCredentialResponse"
+            data-auto_prompt="false">
+        </div>
+
+        <div
+            class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="signin_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
+        </div>
+
+        <div id="status"></div>
+
+        <div class="footer">
+            © 2026 MemeCoinSite
+        </div>
+
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            const status = document.getElementById("status");
+
+            if (response && response.credential) {
+                status.textContent =
+                    "✅ Google Sign-In successful!";
+
+                console.log("Google credential received.");
+            } else {
+                status.textContent =
+                    "❌ Sign-In failed. Please try again.";
+            }
+        }
+    </script>
+
 </body>
 </html>
