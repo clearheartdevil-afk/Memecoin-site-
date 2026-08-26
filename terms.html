@@ -3,140 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - MemeCoinSite</title>
+
+    <title>MemeCoinSite</title>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: Arial, sans-serif;
-            line-height: 1.7;
-            max-width: 850px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            color: #222;
-            background: #f7f7f7;
+            color: white;
+            text-align: center;
+            background: linear-gradient(135deg, #111827, #4c1d95, #7c3aed);
         }
 
         .container {
-            background: white;
-            padding: 35px;
-            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            padding: 50px 30px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.20);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo {
+            font-size: 65px;
+            margin-bottom: 15px;
         }
 
         h1 {
-            margin-top: 0;
+            font-size: 42px;
+            margin-bottom: 15px;
         }
 
-        h2 {
-            margin-top: 30px;
+        .subtitle {
+            color: #e5e7eb;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
 
-        a {
-            color: #4f46e5;
+        #g_id_signin {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #status {
+            margin-top: 25px;
+            min-height: 24px;
+            color: #d1fae5;
+            font-size: 15px;
+        }
+
+        .footer {
+            margin-top: 35px;
+            color: #d1d5db;
+            font-size: 13px;
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h1>Terms of Service</h1>
+        <div class="logo">🚀</div>
 
-    <p><strong>Last updated:</strong> August 26, 2026</p>
+        <h1>MemeCoinSite</h1>
 
-    <p>
-        Welcome to MemeCoinSite. By accessing or using this website,
-        you agree to these Terms of Service.
-    </p>
+        <p class="subtitle">
+            Create your own unique digital meme collectible.
+        </p>
 
-    <h2>1. Use of the Website</h2>
+        <!-- Real Google Sign-In -->
+        <div
+            id="g_id_onload"
+            data-client_id="564623769013-gn2njhia3plqahbid5ue9dvufitsofh0.apps.googleusercontent.com"
+            data-callback="handleCredentialResponse"
+            data-auto_prompt="false">
+        </div>
 
-    <p>
-        You agree to use MemeCoinSite only for lawful purposes and in
-        accordance with these Terms.
-    </p>
+        <div
+            class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="signin_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
+        </div>
 
-    <h2>2. User Accounts</h2>
+        <div id="status"></div>
 
-    <p>
-        Some features may require you to sign in using Google or another
-        supported authentication service. You are responsible for activity
-        associated with your account.
-    </p>
+        <div class="footer">
+            © 2026 MemeCoinSite
+        </div>
 
-    <h2>3. User-Generated Content</h2>
+    </div>
 
-    <p>
-        If MemeCoinSite allows you to create or upload content, you are
-        responsible for ensuring that your content does not violate
-        applicable laws or the rights of other people.
-    </p>
+    <script>
+        function handleCredentialResponse(response) {
+            const status = document.getElementById("status");
 
-    <h2>4. Prohibited Activities</h2>
-
-    <p>
-        You must not use the website to distribute unlawful, fraudulent,
-        abusive, malicious, or infringing content, or to interfere with
-        the operation or security of the website.
-    </p>
-
-    <h2>5. Intellectual Property</h2>
-
-    <p>
-        The website design, software, branding, and other materials
-        provided by MemeCoinSite may be protected by applicable
-        intellectual-property laws.
-    </p>
-
-    <h2>6. Third-Party Services</h2>
-
-    <p>
-        MemeCoinSite may use third-party services, including Google
-        authentication. Your use of those services may also be subject
-        to their own terms and policies.
-    </p>
-
-    <h2>7. Disclaimer</h2>
-
-    <p>
-        The website is provided on an "as is" and "as available" basis.
-        We do not guarantee that the website will always be available,
-        error-free, or uninterrupted.
-    </p>
-
-    <h2>8. Limitation of Liability</h2>
-
-    <p>
-        To the extent permitted by applicable law, MemeCoinSite will not
-        be responsible for losses resulting from your use of or inability
-        to use the website.
-    </p>
-
-    <h2>9. Changes to These Terms</h2>
-
-    <p>
-        We may update these Terms of Service from time to time.
-        Updated terms will be posted on this page.
-    </p>
-
-    <h2>10. Contact</h2>
-
-    <p>
-        If you have questions about these Terms, contact us at:
-    </p>
-
-    <p>
-        <strong>Email:</strong>
-        <a href="mailto:clearheartdevil@gmail.com">
-            clearheartdevil@gmail.com
-        </a>
-    </p>
-
-    <p>
-        <a href="index.html">← Back to MemeCoinSite</a>
-    </p>
-
-</div>
+            if (response && response.credential) {
+                status.textContent =
+                    "✅ Google Sign-In successful!";
+                
+                console.log("Google credential received.");
+            } else {
+                status.textContent =
+                    "❌ Sign-In failed. Please try again.";
+            }
+        }
+    </script>
 
 </body>
 </html>
