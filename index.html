@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>MemeCoinSite</title>
 
 <style>
@@ -18,8 +17,8 @@ body{
     font-family:Arial,sans-serif;
     color:white;
     background:
-        radial-gradient(circle at top left,rgba(124,58,237,.45),transparent 35%),
-        radial-gradient(circle at bottom right,rgba(59,130,246,.35),transparent 35%),
+        radial-gradient(circle at top left,#7c3aed55,transparent 35%),
+        radial-gradient(circle at bottom right,#3b82f655,transparent 35%),
         linear-gradient(135deg,#080b14,#17112d,#35146b);
     padding:20px;
 }
@@ -34,9 +33,8 @@ header{
     padding:35px 20px;
     margin-bottom:20px;
     border-radius:25px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
+    background:#ffffff12;
+    border:1px solid #ffffff22;
 }
 
 .logo{
@@ -63,7 +61,6 @@ button{
 
 button:hover{
     opacity:.85;
-    transform:translateY(-1px);
 }
 
 .login{
@@ -80,6 +77,7 @@ button:hover{
     text-align:center;
     margin:15px;
     min-height:25px;
+    font-weight:bold;
 }
 
 #app{
@@ -93,8 +91,8 @@ button:hover{
     padding:18px;
     margin-bottom:20px;
     border-radius:18px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.12);
+    background:#ffffff12;
+    border:1px solid #ffffff20;
 }
 
 .profile img{
@@ -124,8 +122,8 @@ button:hover{
 .card{
     padding:22px;
     border-radius:20px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.12);
+    background:#ffffff12;
+    border:1px solid #ffffff20;
 }
 
 .card h2{
@@ -159,8 +157,8 @@ button:hover{
 .coin{
     padding:20px;
     border-radius:17px;
-    background:rgba(0,0,0,.25);
-    border:1px solid rgba(255,255,255,.1);
+    background:#00000040;
+    border:1px solid #ffffff18;
 }
 
 .coin-name{
@@ -178,12 +176,6 @@ button:hover{
     margin:10px 0;
 }
 
-.coin-meta{
-    color:#c4b5fd;
-    font-size:13px;
-    margin-top:6px;
-}
-
 .price{
     margin-top:10px;
     font-weight:bold;
@@ -195,7 +187,7 @@ button:hover{
     margin-top:10px;
     padding:6px 10px;
     border-radius:8px;
-    background:rgba(167,139,250,.2);
+    background:#a78bfa22;
     color:#ddd6fe;
     font-weight:bold;
 }
@@ -205,13 +197,16 @@ button:hover{
     color:white;
 }
 
-.sell-button{
-    background:#f59e0b;
-    color:white;
+.hidden{
+    display:none!important;
 }
 
-.form{
-    margin-top:15px;
+.notice{
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:12px;
+    background:#facc1518;
+    color:#fde68a;
 }
 
 input,textarea,select{
@@ -223,6 +218,7 @@ input,textarea,select{
     border:1px solid #ddd;
     background:white;
     color:#111827;
+    font-size:15px;
 }
 
 textarea{
@@ -235,51 +231,14 @@ label{
     font-weight:bold;
 }
 
-.hidden{
-    display:none!important;
-}
-
 .admin{
-    border:1px solid rgba(250,204,21,.4);
-}
-
-.notice{
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:12px;
-    background:rgba(250,204,21,.1);
-    color:#fde68a;
-}
-
-.leaderboard-row{
-    display:grid;
-    grid-template-columns:60px 1fr 120px 120px;
-    gap:10px;
-    padding:15px;
-    margin-bottom:8px;
-    border-radius:12px;
-    background:rgba(255,255,255,.06);
+    border:1px solid #facc1566;
 }
 
 .footer{
     text-align:center;
     color:#9ca3af;
     margin:30px 0;
-}
-
-@media(max-width:600px){
-
-    h1{
-        font-size:32px;
-    }
-
-    .profile{
-        flex-wrap:wrap;
-    }
-
-    .leaderboard-row{
-        grid-template-columns:45px 1fr;
-    }
 }
 </style>
 </head>
@@ -366,7 +325,7 @@ Open Marketplace
 <h2>🎨 Customize</h2>
 
 <p>
-Use your creativity to customize an asset you own.
+Customize an asset that you own.
 </p>
 
 <button onclick="showSection('customize')">
@@ -381,7 +340,7 @@ Customize
 <h2>🏆 Quarterly Program</h2>
 
 <p>
-Admin selects Luxury, Gold, Silver and Bronze assets.
+Admin selects Luxury, Gold, Silver and Bronze.
 </p>
 
 <button onclick="showSection('tiers')">
@@ -396,7 +355,7 @@ View Program
 <h2>📊 Leaderboard</h2>
 
 <p>
-See top collectors and high-tier collections.
+See top collectors.
 </p>
 
 <button onclick="showSection('leaderboard')">
@@ -411,7 +370,7 @@ View Leaderboard
 <h2>💬 Community</h2>
 
 <p>
-Chat and communicate with other users.
+Chat with other users.
 </p>
 
 <button onclick="showSection('community')">
@@ -432,7 +391,7 @@ Open Community
 </div>
 
 <div id="myCoins" class="coin-list">
-Loading...
+Loading collection...
 </div>
 
 </div>
@@ -447,12 +406,11 @@ Loading...
 </div>
 
 <div class="notice">
-For now this is a TEST marketplace.
-No real BTC, ETH, SOL or USDT is transferred.
+TEST MODE — no real crypto is transferred.
 </div>
 
 <div id="marketplaceList" class="coin-list">
-Loading...
+Loading marketplace...
 </div>
 
 </div>
@@ -469,7 +427,7 @@ Loading...
 <div class="card">
 
 <p>
-Select an asset you own and customize its appearance.
+Choose one of your owned coins and create your own design.
 </p>
 
 <br>
@@ -477,14 +435,18 @@ Select an asset you own and customize its appearance.
 <label>Select Asset</label>
 
 <select id="customAsset">
-<option value="">Loading...</option>
+
+<option value="">
+Loading your coins...
+</option>
+
 </select>
 
 <label>Custom Name</label>
 
 <input
 id="customName"
-placeholder="Example: Black Moon"
+placeholder="Example: Mohit's Moon"
 >
 
 <label>Custom Description</label>
@@ -498,14 +460,14 @@ placeholder="Describe your design"
 
 <input
 id="customImage"
-placeholder="https://..."
+placeholder="https://example.com/image.png"
 >
 
 <label>Custom Color</label>
 
 <input
 id="customColor"
-placeholder="Example: Purple"
+placeholder="Example: Gold"
 >
 
 <button id="saveCustomization">
@@ -530,28 +492,28 @@ placeholder="Example: Purple"
 <div class="coin">
 💎 <strong>LUXURY</strong>
 <p>
-Personally selected by the MemeCoinSite Admin after the quarter.
+Selected by the Admin after each quarter.
 </p>
 </div>
 
 <div class="coin">
 🥇 <strong>GOLD</strong>
 <p>
-Personally selected by the MemeCoinSite Admin.
+Selected by the Admin after each quarter.
 </p>
 </div>
 
 <div class="coin">
 🥈 <strong>SILVER</strong>
 <p>
-Personally selected by the MemeCoinSite Admin.
+Selected by the Admin after each quarter.
 </p>
 </div>
 
 <div class="coin">
 🥉 <strong>BRONZE</strong>
 <p>
-Personally selected by the MemeCoinSite Admin.
+Selected by the Admin after each quarter.
 </p>
 </div>
 
@@ -589,8 +551,6 @@ Loading...
 
 <p>
 Community chat will be connected here.
-Users will eventually be able to discuss coins,
-collections and trades.
 </p>
 
 </div>
@@ -663,7 +623,6 @@ placeholder="Example: 10"
 
 </div>
 
-
 </div>
 
 <div class="footer">
@@ -699,15 +658,13 @@ doc,
 getDoc,
 setDoc,
 collection,
-getDocs,
-query,
-where
+getDocs
 }
 from
 "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 
-/* FIREBASE */
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
@@ -745,9 +702,7 @@ const provider =
 new GoogleAuthProvider();
 
 
-/*
- * YOUR ADMIN UID
- */
+/* ADMIN UID */
 
 const ADMIN_UID =
 "yoOUbX1BlZZmjGqewGSe2sI8Dn62";
@@ -785,14 +740,11 @@ document.getElementById("myCoins");
 const marketplaceList =
 document.getElementById("marketplaceList");
 
-const leaderboardList =
-document.getElementById("leaderboardList");
+const customAsset =
+document.getElementById("customAsset");
 
 const adminPanel =
 document.getElementById("adminPanel");
-
-const customAsset =
-document.getElementById("customAsset");
 
 
 /* NAVIGATION */
@@ -801,14 +753,12 @@ window.showSection =
 function(section){
 
 const sections = [
-
 "collection",
 "marketplace",
 "customize",
 "tiers",
 "leaderboard",
 "community"
-
 ];
 
 sections.forEach(id => {
@@ -817,27 +767,22 @@ const element =
 document.getElementById(id);
 
 if(element){
-
 element.classList.add("hidden");
-
 }
 
 });
-
 
 const selected =
 document.getElementById(section);
 
 if(selected){
-
 selected.classList.remove("hidden");
-
 }
 
 };
 
 
-/* ID GENERATOR */
+/* CREATE ID */
 
 function generateID(){
 
@@ -850,7 +795,7 @@ Math.random()
 }
 
 
-/* SAFE TEXT */
+/* SAFE HTML */
 
 function escapeHTML(value){
 
@@ -933,7 +878,6 @@ user.uid === ADMIN_UID
 
 }
 
-
 status.textContent =
 "✅ Login successful!";
 
@@ -952,7 +896,7 @@ error.message;
 );
 
 
-/* AUTH */
+/* AUTH STATE */
 
 onAuthStateChanged(
 auth,
@@ -977,6 +921,8 @@ currentUser =
 user;
 
 
+try{
+
 const userRef =
 doc(
 db,
@@ -986,7 +932,6 @@ user.uid
 
 const snapshot =
 await getDoc(userRef);
-
 
 const data =
 snapshot.exists()
@@ -1030,14 +975,23 @@ await loadMyCoins();
 
 await loadMarketplace();
 
-await loadLeaderboard();
-
 await loadCustomizeAssets();
+
+}
+catch(error){
+
+console.error(error);
+
+status.textContent =
+"❌ Loading error: " +
+error.message;
+
+}
 
 });
 
 
-/* LOAD MY COINS */
+/* LOAD COLLECTION */
 
 async function loadMyCoins(){
 
@@ -1045,8 +999,11 @@ if(!currentUser)
 return;
 
 
-myCoins.innerHTML = "";
+myCoins.innerHTML =
+"Loading collection...";
 
+
+try{
 
 const coinsRef =
 collection(
@@ -1074,6 +1031,9 @@ return;
 }
 
 
+myCoins.innerHTML = "";
+
+
 snapshot.forEach(docSnap => {
 
 const coin =
@@ -1091,7 +1051,9 @@ div.innerHTML = `
 
 <div class="coin-name">
 🪙 ${escapeHTML(
-coin.name || "Unnamed"
+coin.customName ||
+coin.name ||
+"Unnamed"
 )}
 </div>
 
@@ -1103,20 +1065,26 @@ coin.symbol || ""
 
 <div class="coin-description">
 ${escapeHTML(
-coin.description || ""
+coin.customDescription ||
+coin.description ||
+""
 )}
 </div>
 
-<div class="coin-meta">
-Asset ID:
+<div class="price">
+Original Price:
 ${escapeHTML(
-coin.coinID || docSnap.id
+coin.purchasePrice || ""
+)}
+${escapeHTML(
+coin.purchaseCurrency || ""
 )}
 </div>
 
 <div class="tier">
 ${escapeHTML(
-coin.tier || "Not Yet Ranked"
+coin.tier ||
+"Not Yet Ranked"
 )}
 </div>
 
@@ -1127,9 +1095,23 @@ myCoins.appendChild(div);
 });
 
 }
+catch(error){
+
+console.error(error);
+
+myCoins.innerHTML = `
+<div class="coin">
+❌ Could not load collection.<br><br>
+${escapeHTML(error.message)}
+</div>
+`;
+
+}
+
+}
 
 
-/* LOAD CUSTOMIZATION DROPDOWN */
+/* LOAD CUSTOMIZATION ASSETS */
 
 async function loadCustomizeAssets(){
 
@@ -1137,9 +1119,14 @@ if(!currentUser)
 return;
 
 
-customAsset.innerHTML =
-'<option value="">Select an asset</option>';
+customAsset.innerHTML = `
+<option value="">
+Loading your coins...
+</option>
+`;
 
+
+try{
 
 const coinsRef =
 collection(
@@ -1154,6 +1141,35 @@ const snapshot =
 await getDocs(coinsRef);
 
 
+customAsset.innerHTML = "";
+
+
+if(snapshot.empty){
+
+customAsset.innerHTML = `
+<option value="">
+You don't own any coins yet
+</option>
+`;
+
+return;
+
+}
+
+
+const firstOption =
+document.createElement("option");
+
+firstOption.value = "";
+
+firstOption.textContent =
+"Select an asset";
+
+customAsset.appendChild(
+firstOption
+);
+
+
 snapshot.forEach(docSnap => {
 
 const coin =
@@ -1163,32 +1179,66 @@ docSnap.data();
 const option =
 document.createElement("option");
 
-
 option.value =
 docSnap.id;
 
-
 option.textContent =
-(coin.name || "Asset")
+(
+coin.customName ||
+coin.name ||
+"Unnamed"
+)
 +
 " — "
 +
-(coin.symbol || "");
+(
+coin.symbol ||
+""
+);
 
-
-customAsset.appendChild(option);
+customAsset.appendChild(
+option
+);
 
 });
+
+
+status.textContent =
+"";
+
+}
+catch(error){
+
+console.error(
+"Customization loading error:",
+error
+);
+
+customAsset.innerHTML = `
+<option value="">
+Unable to load assets
+</option>
+`;
+
+status.textContent =
+"❌ Customization loading failed: "
++
+error.message;
+
+}
 
 }
 
 
-/* LOAD MARKETPLACE */
+/* MARKETPLACE */
 
 async function loadMarketplace(){
 
-marketplaceList.innerHTML = "";
+marketplaceList.innerHTML =
+"Loading marketplace...";
 
+
+try{
 
 const assetsRef =
 collection(
@@ -1198,7 +1248,9 @@ db,
 
 
 const snapshot =
-await getDocs(assetsRef);
+await getDocs(
+assetsRef
+);
 
 
 if(snapshot.empty){
@@ -1214,8 +1266,9 @@ return;
 }
 
 
-let found =
-false;
+marketplaceList.innerHTML = "";
+
+let found = false;
 
 
 snapshot.forEach(docSnap => {
@@ -1224,15 +1277,11 @@ const item =
 docSnap.data();
 
 
-if(item.status !== "primary-sale"){
-
+if(item.status !== "primary-sale")
 return;
 
-}
 
-
-found =
-true;
+found = true;
 
 
 const div =
@@ -1274,7 +1323,8 @@ item.primaryCurrency || ""
 
 <div class="tier">
 ${escapeHTML(
-item.tier || "Not Yet Ranked"
+item.tier ||
+"Not Yet Ranked"
 )}
 </div>
 
@@ -1290,7 +1340,9 @@ docSnap.id
 
 `;
 
-marketplaceList.appendChild(div);
+marketplaceList.appendChild(
+div
+);
 
 });
 
@@ -1326,9 +1378,23 @@ button.dataset.id
 });
 
 }
+catch(error){
+
+console.error(error);
+
+marketplaceList.innerHTML = `
+<div class="coin">
+❌ Marketplace error.<br><br>
+${escapeHTML(error.message)}
+</div>
+`;
+
+}
+
+}
 
 
-/* PRIMARY TEST PURCHASE */
+/* TEST PRIMARY PURCHASE */
 
 async function testPrimaryPurchase(assetID){
 
@@ -1384,10 +1450,6 @@ return;
 }
 
 
-/*
- * One unit per user
- */
-
 const ownershipRef =
 doc(
 db,
@@ -1414,9 +1476,7 @@ return;
 }
 
 
-/*
- * Save ownership
- */
+/* SAVE OWNERSHIP */
 
 await setDoc(
 ownershipRef,
@@ -1466,9 +1526,7 @@ new Date().toISOString()
 );
 
 
-/*
- * Save user transaction
- */
+/* SAVE TEST TRANSACTION */
 
 const transactionID =
 "TEST-" + Date.now();
@@ -1489,43 +1547,33 @@ transactionRef,
 {
 
 transactionID:
-
 transactionID,
 
 assetID:
-
 assetID,
 
 buyerUID:
-
 currentUser.uid,
 
 sellerUID:
-
 "ADMIN",
 
 type:
-
 "primary-test-purchase",
 
 amount:
-
 asset.primaryPrice,
 
 currency:
-
 asset.primaryCurrency,
 
 fee:
-
 "0",
 
 status:
-
 "completed",
 
 createdAt:
-
 new Date().toISOString()
 
 }
@@ -1541,7 +1589,6 @@ await loadMyCoins();
 await loadCustomizeAssets();
 
 showSection("collection");
-
 
 }
 catch(error){
@@ -1582,35 +1629,35 @@ customAsset.value;
 if(!assetID){
 
 status.textContent =
-"❌ Select an asset.";
+"❌ Please select an asset.";
 
 return;
 
 }
 
 
-const name =
+const customName =
 document
 .getElementById("customName")
 .value
 .trim();
 
 
-const description =
+const customDescription =
 document
 .getElementById("customDescription")
 .value
 .trim();
 
 
-const imageURL =
+const customImage =
 document
 .getElementById("customImage")
 .value
 .trim();
 
 
-const color =
+const customColor =
 document
 .getElementById("customColor")
 .value
@@ -1650,16 +1697,16 @@ ownershipRef,
 {
 
 customName:
-name,
+customName,
 
 customDescription:
-description,
+customDescription,
 
 customImageURL:
-imageURL,
+customImage,
 
 customColor:
-color,
+customColor,
 
 customizedAt:
 new Date().toISOString()
@@ -1677,14 +1724,14 @@ status.textContent =
 
 await loadMyCoins();
 
-
 }
 catch(error){
 
 console.error(error);
 
 status.textContent =
-"❌ Could not save design: " +
+"❌ Could not save design: "
++
 error.message;
 
 }
@@ -1788,47 +1835,36 @@ coinRef,
 {
 
 coinID:
-
 coinID,
 
 name:
-
 name,
 
 symbol:
-
 symbol,
 
 description:
-
 description,
 
 primaryPrice:
-
 price,
 
 primaryCurrency:
-
 currency,
 
 tier:
-
 "Not Yet Ranked",
 
 ownerUID:
-
 null,
 
 status:
-
 "primary-sale",
 
 createdAt:
-
 new Date().toISOString(),
 
 createdBy:
-
 currentUser.uid
 
 }
@@ -1836,7 +1872,8 @@ currentUser.uid
 
 
 status.textContent =
-"✅ Asset published: " +
+"✅ Asset published: "
++
 coinID;
 
 
@@ -1859,14 +1896,14 @@ document
 
 await loadMarketplace();
 
-
 }
 catch(error){
 
 console.error(error);
 
 status.textContent =
-"❌ Publishing failed: " +
+"❌ Publishing failed: "
++
 error.message;
 
 }
@@ -1879,8 +1916,17 @@ error.message;
 
 async function loadLeaderboard(){
 
-leaderboardList.innerHTML = "";
+const leaderboardList =
+document.getElementById(
+"leaderboardList"
+);
 
+
+leaderboardList.innerHTML =
+"Loading...";
+
+
+try{
 
 const usersRef =
 collection(
@@ -1890,7 +1936,9 @@ db,
 
 
 const snapshot =
-await getDocs(usersRef);
+await getDocs(
+usersRef
+);
 
 
 if(snapshot.empty){
@@ -1903,7 +1951,7 @@ return;
 }
 
 
-const users = [];
+leaderboardList.innerHTML = "";
 
 
 snapshot.forEach(docSnap => {
@@ -1912,64 +1960,44 @@ const data =
 docSnap.data();
 
 
-users.push({
-
-name:
-data.name || "User",
-
-coins:
-data.coinCount || 0,
-
-luxury:
-data.luxuryCount || 0
-
-});
-
-});
-
-
-users.sort(
-(a,b) =>
-b.coins - a.coins
-);
-
-
-users.forEach(
-(user,index) => {
-
 const row =
 document.createElement("div");
 
+
 row.className =
-"leaderboard-row";
+"coin";
 
 
 row.innerHTML = `
 
-<div>
 <strong>
-#${index + 1}
+${escapeHTML(
+data.name || "User"
+)}
 </strong>
-</div>
 
-<div>
-${escapeHTML(user.name)}
-</div>
+<br>
 
-<div>
-🪙 ${user.coins}
-</div>
-
-<div>
-💎 ${user.luxury}
-</div>
+Coins:
+${escapeHTML(
+data.coinCount || 0
+)}
 
 `;
 
-
-leaderboardList.appendChild(row);
+leaderboardList.appendChild(
+row
+);
 
 });
+
+}
+catch(error){
+
+leaderboardList.innerHTML =
+"❌ Leaderboard error.";
+
+}
 
 }
 
@@ -1980,12 +2008,35 @@ logoutBtn.addEventListener(
 "click",
 async () => {
 
+try{
+
 await signOut(auth);
 
 status.textContent =
 "You have been logged out.";
 
 }
+catch(error){
+
+status.textContent =
+"❌ Logout failed.";
+
+}
+
+});
+
+
+/* INITIAL LEADERBOARD */
+
+setTimeout(
+() => {
+
+if(currentUser){
+loadLeaderboard();
+}
+
+},
+1500
 );
 
 </script>
