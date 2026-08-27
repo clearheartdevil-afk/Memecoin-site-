@@ -288,6 +288,30 @@ label {
     margin-top: 7px;
 }
 
+.price-range {
+    margin: 8px 0 14px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #22c55e18;
+    color: #bbf7d0;
+    font-size: 14px;
+}
+
+.request-status {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.accept-button {
+    background: #22c55e;
+    color: white;
+}
+
+.reject-button {
+    background: #ef4444;
+    color: white;
+}
+
 </style>
 </head>
 
@@ -400,6 +424,21 @@ Sell Coin
 
 <div class="card">
 
+<h2>📩 Buyer Requests</h2>
+
+<p>
+Review users who want to buy your listed coins.
+</p>
+
+<button onclick="showSection('sellerRequests')">
+Open Requests
+</button>
+
+</div>
+
+
+<div class="card">
+
 <h2>🏆 Quarterly Program</h2>
 
 <p>
@@ -472,6 +511,35 @@ Loading...
 </h3>
 
 <div id="userMarketplace" class="coin-list">
+Loading...
+</div>
+
+<br>
+
+<h3 style="margin-bottom:10px;">
+📩 My Purchase Requests
+</h3>
+
+<div id="myTradeRequests" class="coin-list">
+Loading...
+</div>
+
+</div>
+
+
+<!-- SELLER REQUESTS -->
+
+<div id="sellerRequestsSection" class="section hidden">
+
+<div class="section-title">
+📩 Requests From Buyers
+</div>
+
+<div class="notice">
+Review the buyer and buying price. Accepting moves the request to Admin for final approval in the current test system.
+</div>
+
+<div id="sellerRequests" class="coin-list">
 Loading...
 </div>
 
@@ -568,39 +636,27 @@ Loading your coins...
 </select>
 
 <label>
-Your Selling Price
+Your Selling Price (USD-denominated)
 </label>
 
 <input
 id="sellPrice"
 type="number"
-min="0.01"
+min="1"
 step="0.01"
-placeholder="Example: 25"
+placeholder="Example: 20"
 >
+
+<div id="sellPriceRange" class="price-range">
+Select a coin to see its allowed selling range.
+</div>
 
 <label>
 Currency
 </label>
 
 <select id="sellCurrency">
-
-<option value="USDT">
-USDT
-</option>
-
-<option value="BTC">
-BTC
-</option>
-
-<option value="ETH">
-ETH
-</option>
-
-<option value="SOL">
-SOL
-</option>
-
+<option value="USDT">USDT</option>
 </select>
 
 <button id="listForSale" class="sell-button">
@@ -787,7 +843,7 @@ SOL
 </div>
 
 <div class="notice">
-Only the Admin can approve or reject these test trades.
+Seller must accept first. Admin then gives the final approval in the current test version. Real payment verification will later trigger automatic transfer.
 </div>
 
 <div id="tradeRequests"
@@ -945,6 +1001,18 @@ document.getElementById("adminPanel");
 const tradeRequests =
 document.getElementById("tradeRequests");
 
+const sellerRequestsSection =
+document.getElementById("sellerRequestsSection");
+
+const sellerRequests =
+document.getElementById("sellerRequests");
+
+const myTradeRequests =
+document.getElementById("myTradeRequests");
+
+const sellPriceRange =
+document.getElementById("sellPriceRange");
+
 
 /* =========================
    STATUS
@@ -986,6 +1054,139 @@ Math.random()
 
 
 /* =========================
+   TIER PRICE RULES
+   ========================= */
+
+const TIER_PRICE_RANGES = {
+
+"NOT YET RANKED": {
+min: 1,
+max: 5,
+label: "New / Unreviewed"
+},
+
+"NORMAL": {
+min: 7,
+max: 13,
+label: "Normal"
+},
+
+"BRONZE": {
+min: 15,
+max: 30,
+label: "Bronze"
+},
+
+"SILVER": {
+min: 50,
+max: 350,
+label: "Silver"
+},
+
+"GOLD": {
+min: 500,
+max: 1500,
+label: "Gold"
+},
+
+"LUXURY": {
+min: 2000,
+max: 10000,
+label: "Luxury"
+}
+
+};
+
+
+function normalizeTier(tier){
+
+const value =
+String(tier || "NOT YET RANKED")
+.trim()
+.toUpperCase();
+
+if(value === "NOT YET RANKED" ||
+value === "NOT_YET_RANKED" ||
+value === "UNRANKED" ||
+value === ""){
+
+return "NOT YET RANKED";
+
+}
+
+return value;
+
+}
+
+
+function getPriceRange(tier){
+
+return TIER_PRICE_RANGES[
+normalizeTier(tier)
+] || TIER_PRICE_RANGES["NOT YET RANKED"];
+
+}
+
+
+function getPriceRangeText(tier){
+
+const range =
+getPriceRange(tier);
+
+return `${range.label}: $${range.min}–$${range.max}`;
+
+}
+
+
+function isPriceAllowed(tier, price){
+
+const range =
+getPriceRange(tier);
+
+const number =
+Number(price);
+
+return Number.isFinite(number) &&
+number >= range.min &&
+number <= range.max;
+
+}
+
+
+function updateSellPriceRange(){
+
+if(!sellAsset ||
+!sellPriceRange)
+return;
+
+const selected =
+sellAsset.options[
+sellAsset.selectedIndex
+];
+
+if(!selected ||
+!selected.dataset.tier){
+
+sellPriceRange.textContent =
+"Select a coin to see its allowed selling range.";
+
+return;
+
+}
+
+const tier =
+selected.dataset.tier;
+
+const range =
+getPriceRange(tier);
+
+sellPriceRange.textContent =
+`Allowed selling price: $${range.min}–$${range.max} (${range.label})`;
+
+}
+
+
+/* =========================
    NAVIGATION
    ========================= */
 
@@ -999,7 +1200,8 @@ const sections = [
 "customize",
 "sell",
 "tiers",
-"leaderboard"
+"leaderboard",
+"sellerRequests"
 
 ];
 
@@ -1032,6 +1234,17 @@ selected.classList.remove("hidden");
 if(section === "marketplace"){
 
 loadMarketplace();
+
+loadMyTradeRequests();
+
+}
+
+
+if(section === "sellerRequests"){
+
+sellerRequestsSection.classList.remove("hidden");
+
+loadSellerRequests();
 
 }
 
@@ -1232,6 +1445,10 @@ adminPanel.classList.remove(
 await loadTradeRequests();
 
 }
+
+await loadSellerRequests();
+
+await loadMyTradeRequests();
 
 
 await loadMyCoins();
@@ -1702,6 +1919,9 @@ document.createElement("option");
 option.value =
 docSnap.id;
 
+option.dataset.tier =
+coin.tier ||
+"Not Yet Ranked";
 
 option.textContent =
 (
@@ -1715,6 +1935,12 @@ coin.name ||
 (
 coin.symbol ||
 ""
+)
++
+" — "
++
+getPriceRangeText(
+coin.tier
 );
 
 
@@ -1732,7 +1958,15 @@ sellAsset.innerHTML =
 
 }
 
+updateSellPriceRange();
+
 }
+
+
+sellAsset.addEventListener(
+"change",
+updateSellPriceRange
+);
 
 
 /* =========================
@@ -1827,6 +2061,26 @@ return;
 
 const coin =
 ownershipSnapshot.data();
+
+const tier =
+coin.tier ||
+"Not Yet Ranked";
+
+if(!isPriceAllowed(
+tier,
+price
+)){
+
+const range =
+getPriceRange(tier);
+
+setStatus(
+`❌ ${range.label} coins can only be listed from $${range.min} to $${range.max}.`
+);
+
+return;
+
+}
 
 
 const listingsRef =
@@ -1934,11 +2188,17 @@ coin.tier ||
 price:
 String(price),
 
+priceUSD:
+Number(price),
+
 currency:
-currency,
+"USDT",
 
 status:
 "active",
+
+sellerResponse:
+"not_requested",
 
 createdAt:
 new Date().toISOString()
@@ -2082,6 +2342,13 @@ ${escapeHTML(
 listing.tier
 )}
 
+</div>
+
+<div class="small">
+Allowed range:
+${escapeHTML(
+getPriceRangeText(listing.tier)
+)}
 </div>
 
 
@@ -2507,12 +2774,21 @@ listing.sellerName
 
 <div class="price">
 
-💰 ${escapeHTML(
+💰 Buying Price: $${escapeHTML(
 listing.price
 )}
 
 ${escapeHTML(
-listing.currency
+listing.currency || "USDT"
+)}
+
+</div>
+
+<div class="small">
+
+Allowed range:
+${escapeHTML(
+getPriceRangeText(listing.tier)
 )}
 
 </div>
@@ -2547,7 +2823,9 @@ data-id="${escapeHTML(
 docSnap.id
 )}">
 
-🛒 Request to Buy
+🛒 Request to Buy for $${escapeHTML(
+listing.price
+)}
 
 </button>
 
@@ -2817,6 +3095,23 @@ return;
 }
 
 
+if(!isPriceAllowed(
+listing.tier,
+listing.price
+)){
+
+const range =
+getPriceRange(listing.tier);
+
+setStatus(
+`❌ This listing price is outside the allowed ${range.label} range.`
+);
+
+return;
+
+}
+
+
 if(
 listing.sellerUID ===
 currentUser.uid
@@ -2911,13 +3206,22 @@ listing.symbol,
 price:
 listing.price,
 
+priceUSD:
+Number(listing.price),
+
 currency:
-listing.currency,
+listing.currency || "USDT",
+
+tier:
+listing.tier || "Not Yet Ranked",
 
 platformFee:
 "0.01",
 
 status:
+"pending_seller",
+
+sellerResponse:
 "pending",
 
 createdAt:
@@ -2928,8 +3232,10 @@ new Date().toISOString()
 
 
 setStatus(
-"✅ Purchase request sent to Admin!"
+"✅ Purchase request sent to seller. Waiting for seller response."
 );
+
+await loadMyTradeRequests();
 
 
 }
@@ -2941,6 +3247,482 @@ setStatus(
 "❌ Request failed: " +
 error.message
 );
+
+}
+
+}
+
+
+/* =========================
+   SELLER TRADE REQUESTS
+   ========================= */
+
+async function loadSellerRequests(){
+
+if(!currentUser)
+return;
+
+sellerRequests.innerHTML =
+"Loading...";
+
+try{
+
+const q =
+query(
+collection(db, "tradeRequests"),
+where("sellerUID", "==", currentUser.uid)
+);
+
+const snapshot =
+await getDocs(q);
+
+sellerRequests.innerHTML = "";
+
+let found = false;
+
+snapshot.forEach(
+docSnap => {
+
+const request =
+docSnap.data();
+
+if(
+request.status !== "pending_seller"
+)
+return;
+
+found = true;
+
+const div =
+document.createElement("div");
+
+div.className = "coin";
+
+div.innerHTML = `
+
+<div class="coin-name">
+🪙 ${escapeHTML(request.name)}
+</div>
+
+<div class="coin-symbol">
+${escapeHTML(request.symbol)}
+</div>
+
+<div class="owner">
+Buyer: ${escapeHTML(request.buyerName)}
+</div>
+
+<div class="price">
+💰 Buying Price: $${escapeHTML(request.price)}
+${escapeHTML(request.currency || "USDT")}
+</div>
+
+<div class="tier">
+${escapeHTML(request.tier || "Not Yet Ranked")}
+</div>
+
+<div class="small">
+This request is waiting for your decision.
+</div>
+
+<button
+class="accept-seller-button accept-button"
+data-request="${escapeHTML(docSnap.id)}">
+✅ Accept Purchase
+</button>
+
+<button
+class="reject-seller-button reject-button"
+data-request="${escapeHTML(docSnap.id)}">
+❌ Reject Purchase
+</button>
+
+`;
+
+sellerRequests.appendChild(div);
+
+});
+
+if(!found){
+
+sellerRequests.innerHTML =
+'<div class="coin">No pending buyer requests.</div>';
+
+return;
+
+}
+
+document
+.querySelectorAll(".accept-seller-button")
+.forEach(button => {
+
+button.addEventListener(
+"click",
+async () => {
+
+await sellerAcceptTrade(
+button.dataset.request
+);
+
+}
+);
+
+});
+
+document
+.querySelectorAll(".reject-seller-button")
+.forEach(button => {
+
+button.addEventListener(
+"click",
+async () => {
+
+await sellerRejectTrade(
+button.dataset.request
+);
+
+}
+);
+
+});
+
+}
+catch(error){
+
+console.error(error);
+
+sellerRequests.innerHTML =
+"❌ Could not load seller requests.";
+
+}
+
+}
+
+
+async function sellerAcceptTrade(
+requestID
+){
+
+if(!currentUser){
+
+setStatus("❌ Please sign in.");
+
+return;
+
+}
+
+try{
+
+const requestRef =
+doc(db, "tradeRequests", requestID);
+
+const requestSnapshot =
+await getDoc(requestRef);
+
+if(!requestSnapshot.exists()){
+
+setStatus("❌ Request not found.");
+
+return;
+
+}
+
+const request =
+requestSnapshot.data();
+
+if(
+request.sellerUID !== currentUser.uid
+){
+
+setStatus(
+"❌ You are not the seller for this request."
+);
+
+return;
+
+}
+
+if(
+request.status !== "pending_seller"
+){
+
+setStatus(
+"❌ This request has already been processed."
+);
+
+return;
+
+}
+
+const listingRef =
+doc(db, "marketplace", request.listingID);
+
+const listingSnapshot =
+await getDoc(listingRef);
+
+if(!listingSnapshot.exists()){
+
+setStatus("❌ Listing no longer exists.");
+
+return;
+
+}
+
+const listing =
+listingSnapshot.data();
+
+if(listing.status !== "active"){
+
+setStatus(
+"❌ This listing is no longer active."
+);
+
+return;
+
+}
+
+if(!isPriceAllowed(
+listing.tier,
+listing.price
+)){
+
+const range =
+getPriceRange(listing.tier);
+
+setStatus(
+`❌ Listing price is outside the allowed ${range.label} range.`
+);
+
+return;
+
+}
+
+await updateDoc(
+requestRef,
+{
+
+status:
+"seller_accepted",
+
+sellerResponse:
+"accepted",
+
+sellerAcceptedAt:
+new Date().toISOString()
+
+}
+);
+
+setStatus(
+"✅ You accepted the buyer. Waiting for Admin approval in the current test system."
+);
+
+await loadSellerRequests();
+await loadTradeRequests();
+
+}
+catch(error){
+
+console.error(error);
+
+setStatus(
+"❌ Could not accept request: " +
+error.message
+);
+
+}
+
+}
+
+
+async function sellerRejectTrade(
+requestID
+){
+
+if(!currentUser){
+
+setStatus("❌ Please sign in.");
+
+return;
+
+}
+
+try{
+
+const requestRef =
+doc(db, "tradeRequests", requestID);
+
+const requestSnapshot =
+await getDoc(requestRef);
+
+if(!requestSnapshot.exists()){
+
+setStatus("❌ Request not found.");
+
+return;
+
+}
+
+const request =
+requestSnapshot.data();
+
+if(
+request.sellerUID !== currentUser.uid
+){
+
+setStatus(
+"❌ You are not the seller for this request."
+);
+
+return;
+
+}
+
+if(
+request.status !== "pending_seller"
+){
+
+setStatus(
+"❌ This request has already been processed."
+);
+
+return;
+
+}
+
+await updateDoc(
+requestRef,
+{
+
+status:
+"seller_rejected",
+
+sellerResponse:
+"rejected",
+
+rejectedAt:
+new Date().toISOString(),
+
+rejectedBy:
+currentUser.uid
+
+}
+);
+
+setStatus(
+"✅ Purchase request rejected."
+);
+
+await loadSellerRequests();
+await loadMyTradeRequests();
+
+}
+catch(error){
+
+console.error(error);
+
+setStatus(
+"❌ Could not reject request: " +
+error.message
+);
+
+}
+
+}
+
+
+/* =========================
+   BUYER TRADE REQUESTS
+   ========================= */
+
+async function loadMyTradeRequests(){
+
+if(!currentUser)
+return;
+
+myTradeRequests.innerHTML =
+"Loading...";
+
+try{
+
+const q =
+query(
+collection(db, "tradeRequests"),
+where("buyerUID", "==", currentUser.uid)
+);
+
+const snapshot =
+await getDocs(q);
+
+myTradeRequests.innerHTML = "";
+
+if(snapshot.empty){
+
+myTradeRequests.innerHTML =
+'<div class="coin">You have no purchase requests.</div>';
+
+return;
+
+}
+
+snapshot.forEach(
+docSnap => {
+
+const request =
+docSnap.data();
+
+const div =
+document.createElement("div");
+
+div.className = "coin";
+
+let statusText =
+"Waiting for seller";
+
+if(request.status === "seller_accepted")
+statusText =
+"Seller accepted — waiting for Admin approval";
+
+if(request.status === "seller_rejected")
+statusText =
+"Seller rejected";
+
+if(request.status === "approved")
+statusText =
+"Completed";
+
+if(request.status === "rejected")
+statusText =
+"Admin rejected";
+
+div.innerHTML = `
+
+<div class="coin-name">
+🪙 ${escapeHTML(request.name)}
+</div>
+
+<div class="price">
+💰 Buying Price: $${escapeHTML(request.price)}
+${escapeHTML(request.currency || "USDT")}
+</div>
+
+<div class="request-status">
+Status: ${escapeHTML(statusText)}
+</div>
+
+`;
+
+myTradeRequests.appendChild(div);
+
+});
+
+}
+catch(error){
+
+console.error(error);
+
+myTradeRequests.innerHTML =
+"❌ Could not load your purchase requests.";
 
 }
 
@@ -2991,7 +3773,7 @@ docSnap.data();
 
 if(
 request.status !==
-"pending"
+"seller_accepted"
 )
 return;
 
@@ -3049,24 +3831,28 @@ request.buyerName
 
 <div class="price">
 
-Price:
-${escapeHTML(
+Buying Price:
+$${escapeHTML(
 request.price
 )}
 
 ${escapeHTML(
-request.currency
+request.currency || "USDT"
 )}
 
+</div>
+
+<div class="small">
+Allowed range:
+${escapeHTML(
+getPriceRangeText(request.tier)
+)}
 </div>
 
 
 <div class="small">
 
-Platform test fee:
-0.01 ${escapeHTML(
-request.currency
-)}
+Seller accepted this purchase request.
 
 </div>
 
@@ -3223,11 +4009,11 @@ requestSnapshot.data();
 
 if(
 request.status !==
-"pending"
+"seller_accepted"
 ){
 
 setStatus(
-"❌ This request has already been processed."
+"❌ This request is not ready for Admin approval."
 );
 
 return;
@@ -3303,6 +4089,19 @@ return;
 
 const sellerCoin =
 sellerCoinSnapshot.data();
+
+if(!isPriceAllowed(
+request.tier || sellerCoin.tier,
+request.price
+)){
+
+setStatus(
+"❌ Trade price is outside the allowed tier range."
+);
+
+return;
+
+}
 
 
 /*
