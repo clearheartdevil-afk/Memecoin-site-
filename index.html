@@ -68,6 +68,11 @@ button:hover {
     opacity: .85;
 }
 
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
 .login {
     background: white;
     color: #4c1d95;
@@ -226,6 +231,11 @@ button:hover {
     color: white;
 }
 
+.accept-button {
+    background: #22c55e;
+    color: white;
+}
+
 .hidden {
     display: none !important;
 }
@@ -302,14 +312,45 @@ label {
     font-weight: bold;
 }
 
-.accept-button {
-    background: #22c55e;
-    color: white;
-}
-
 .reject-button {
     background: #ef4444;
     color: white;
+}
+
+.social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.social-links a {
+    display: inline-block;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #ffffff12;
+    color: #ddd6fe;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.leaderboard-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.leaderboard-rank {
+    font-size: 25px;
+    font-weight: bold;
+    min-width: 45px;
+}
+
+.leaderboard-photo {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 </style>
@@ -430,7 +471,7 @@ Sell Coin
 Review users who want to buy your listed coins.
 </p>
 
-<button onclick="showSection('sellerRequests')">
+<button onclick="showSection('sellerRequestsSection')">
 Open Requests
 </button>
 
@@ -540,7 +581,7 @@ Review the buyer and buying price. Accepting moves the request to Admin for fina
 </div>
 
 <div id="sellerRequests" class="coin-list">
-Loading...
+Loading buyer requests...
 </div>
 
 </div>
@@ -656,7 +697,11 @@ Currency
 </label>
 
 <select id="sellCurrency">
-<option value="USDT">USDT</option>
+
+<option value="USDT">
+USDT
+</option>
+
 </select>
 
 <button id="listForSale" class="sell-button">
@@ -694,6 +739,7 @@ Loading...
 
 <p>
 Highest tier selected by Admin.
+Selling price: $2,000 – $10,000
 </p>
 
 </div>
@@ -704,6 +750,7 @@ Highest tier selected by Admin.
 
 <p>
 Premium tier selected by Admin.
+Selling price: $500 – $1,500
 </p>
 
 </div>
@@ -714,6 +761,7 @@ Premium tier selected by Admin.
 
 <p>
 Silver tier selected by Admin.
+Selling price: $50 – $350
 </p>
 
 </div>
@@ -724,6 +772,29 @@ Silver tier selected by Admin.
 
 <p>
 Bronze tier selected by Admin.
+Selling price: $15 – $30
+</p>
+
+</div>
+
+<div class="coin">
+
+🪙 <strong>NORMAL</strong>
+
+<p>
+Normal coin.
+Selling price: $7 – $13
+</p>
+
+</div>
+
+<div class="coin">
+
+🆕 <strong>NOT YET RANKED</strong>
+
+<p>
+New / unreviewed coin.
+Selling price: $1 – $5
 </p>
 
 </div>
@@ -739,6 +810,10 @@ Bronze tier selected by Admin.
 
 <div class="section-title">
 📊 Collector Leaderboard
+</div>
+
+<div class="notice">
+Users with more coins and higher-tier / rare coins appear higher on the leaderboard.
 </div>
 
 <div id="leaderboardList">
@@ -1105,10 +1180,12 @@ String(tier || "NOT YET RANKED")
 .trim()
 .toUpperCase();
 
-if(value === "NOT YET RANKED" ||
+if(
+value === "NOT YET RANKED" ||
 value === "NOT_YET_RANKED" ||
 value === "UNRANKED" ||
-value === ""){
+value === ""
+){
 
 return "NOT YET RANKED";
 
@@ -1155,17 +1232,23 @@ number <= range.max;
 
 function updateSellPriceRange(){
 
-if(!sellAsset ||
-!sellPriceRange)
+if(
+!sellAsset ||
+!sellPriceRange
+)
 return;
+
 
 const selected =
 sellAsset.options[
 sellAsset.selectedIndex
 ];
 
-if(!selected ||
-!selected.dataset.tier){
+
+if(
+!selected ||
+!selected.dataset.tier
+){
 
 sellPriceRange.textContent =
 "Select a coin to see its allowed selling range.";
@@ -1174,11 +1257,13 @@ return;
 
 }
 
+
 const tier =
 selected.dataset.tier;
 
 const range =
 getPriceRange(tier);
+
 
 sellPriceRange.textContent =
 `Allowed selling price: $${range.min}–$${range.max} (${range.label})`;
@@ -1201,7 +1286,7 @@ const sections = [
 "sell",
 "tiers",
 "leaderboard",
-"sellerRequests"
+"sellerRequestsSection"
 
 ];
 
@@ -1240,9 +1325,7 @@ loadMyTradeRequests();
 }
 
 
-if(section === "sellerRequests"){
-
-sellerRequestsSection.classList.remove("hidden");
+if(section === "sellerRequestsSection"){
 
 loadSellerRequests();
 
@@ -1446,10 +1529,10 @@ await loadTradeRequests();
 
 }
 
+
 await loadSellerRequests();
 
 await loadMyTradeRequests();
-
 
 await loadMyCoins();
 
@@ -1660,7 +1743,8 @@ const first =
 document.createElement("option");
 
 
-first.value = "";
+first.value =
+"";
 
 
 first.textContent =
@@ -1895,7 +1979,8 @@ const first =
 document.createElement("option");
 
 
-first.value = "";
+first.value =
+"";
 
 
 first.textContent =
@@ -1919,9 +2004,11 @@ document.createElement("option");
 option.value =
 docSnap.id;
 
+
 option.dataset.tier =
 coin.tier ||
 "Not Yet Ranked";
+
 
 option.textContent =
 (
@@ -1957,6 +2044,7 @@ sellAsset.innerHTML =
 '<option value="">Unable to load assets</option>';
 
 }
+
 
 updateSellPriceRange();
 
@@ -2018,8 +2106,10 @@ return;
 }
 
 
-if(!price ||
-Number(price) <= 0){
+if(
+!price ||
+Number(price) <= 0
+){
 
 setStatus(
 "❌ Enter a valid selling price."
@@ -2062,9 +2152,11 @@ return;
 const coin =
 ownershipSnapshot.data();
 
+
 const tier =
 coin.tier ||
 "Not Yet Ranked";
+
 
 if(!isPriceAllowed(
 tier,
@@ -2073,6 +2165,7 @@ price
 
 const range =
 getPriceRange(tier);
+
 
 setStatus(
 `❌ ${range.label} coins can only be listed from $${range.min} to $${range.max}.`
@@ -2221,6 +2314,7 @@ await loadMyListings();
 
 await loadMarketplace();
 
+
 }
 catch(error){
 
@@ -2344,11 +2438,16 @@ listing.tier
 
 </div>
 
+
 <div class="small">
+
 Allowed range:
 ${escapeHTML(
-getPriceRangeText(listing.tier)
+getPriceRangeText(
+listing.tier
+)
 )}
+
 </div>
 
 
@@ -2486,6 +2585,7 @@ await loadMyListings();
 
 await loadMarketplace();
 
+
 }
 catch(error){
 
@@ -2535,7 +2635,8 @@ db,
 );
 
 
-primaryMarketplace.innerHTML = "";
+primaryMarketplace.innerHTML =
+"";
 
 
 let found = false;
@@ -2701,7 +2802,8 @@ db,
 );
 
 
-userMarketplace.innerHTML = "";
+userMarketplace.innerHTML =
+"";
 
 
 let found = false;
@@ -2774,21 +2876,26 @@ listing.sellerName
 
 <div class="price">
 
-💰 Buying Price: $${escapeHTML(
+💰 Buying Price:
+$${escapeHTML(
 listing.price
 )}
 
 ${escapeHTML(
-listing.currency || "USDT"
+listing.currency ||
+"USDT"
 )}
 
 </div>
+
 
 <div class="small">
 
 Allowed range:
 ${escapeHTML(
-getPriceRangeText(listing.tier)
+getPriceRangeText(
+listing.tier
+)
 )}
 
 </div>
@@ -2823,7 +2930,8 @@ data-id="${escapeHTML(
 docSnap.id
 )}">
 
-🛒 Request to Buy for $${escapeHTML(
+🛒 Request to Buy for
+$${escapeHTML(
 listing.price
 )}
 
@@ -3011,6 +3119,7 @@ await loadCustomizeAssets();
 
 await loadSellAssets();
 
+
 }
 catch(error){
 
@@ -3101,7 +3210,10 @@ listing.price
 )){
 
 const range =
-getPriceRange(listing.tier);
+getPriceRange(
+listing.tier
+);
+
 
 setStatus(
 `❌ This listing price is outside the allowed ${range.label} range.`
@@ -3151,6 +3263,72 @@ if(buyerCoin.exists()){
 
 setStatus(
 "❌ You already own this asset."
+);
+
+return;
+
+}
+
+
+/*
+ * Prevent duplicate pending requests
+ * for the same listing.
+ */
+
+const existingRequestsQuery =
+query(
+collection(db, "tradeRequests"),
+
+where(
+"listingID",
+"==",
+listingID
+),
+
+where(
+"buyerUID",
+"==",
+currentUser.uid
+)
+
+);
+
+
+const existingRequests =
+await getDocs(
+existingRequestsQuery
+);
+
+
+let duplicatePending =
+false;
+
+
+existingRequests.forEach(
+docSnap => {
+
+const existingRequest =
+docSnap.data();
+
+
+if(
+existingRequest.status ===
+"pending_seller" ||
+existingRequest.status ===
+"seller_accepted"
+){
+
+duplicatePending = true;
+
+}
+
+});
+
+
+if(duplicatePending){
+
+setStatus(
+"❌ You already have a pending request for this coin."
 );
 
 return;
@@ -3210,10 +3388,12 @@ priceUSD:
 Number(listing.price),
 
 currency:
-listing.currency || "USDT",
+listing.currency ||
+"USDT",
 
 tier:
-listing.tier || "Not Yet Ranked",
+listing.tier ||
+"Not Yet Ranked",
 
 platformFee:
 "0.01",
@@ -3234,6 +3414,7 @@ new Date().toISOString()
 setStatus(
 "✅ Purchase request sent to seller. Waiting for seller response."
 );
+
 
 await loadMyTradeRequests();
 
@@ -3262,23 +3443,36 @@ async function loadSellerRequests(){
 if(!currentUser)
 return;
 
+
 sellerRequests.innerHTML =
-"Loading...";
+"Loading buyer requests...";
+
 
 try{
 
-const q =
-query(
-collection(db, "tradeRequests"),
-where("sellerUID", "==", currentUser.uid)
-);
+/*
+ * We intentionally read the collection and
+ * filter by sellerUID in JavaScript.
+ *
+ * This makes the seller request system work
+ * without requiring a Firestore composite index.
+ */
 
 const snapshot =
-await getDocs(q);
+await getDocs(
+collection(
+db,
+"tradeRequests"
+)
+);
 
-sellerRequests.innerHTML = "";
+
+sellerRequests.innerHTML =
+"";
+
 
 let found = false;
+
 
 snapshot.forEach(
 docSnap => {
@@ -3286,79 +3480,216 @@ docSnap => {
 const request =
 docSnap.data();
 
+
+/*
+ * IMPORTANT:
+ * Only show requests where the logged-in
+ * user is the seller.
+ */
+
 if(
-request.status !== "pending_seller"
-)
-return;
-
-found = true;
-
-const div =
-document.createElement("div");
-
-div.className = "coin";
-
-div.innerHTML = `
-
-<div class="coin-name">
-🪙 ${escapeHTML(request.name)}
-</div>
-
-<div class="coin-symbol">
-${escapeHTML(request.symbol)}
-</div>
-
-<div class="owner">
-Buyer: ${escapeHTML(request.buyerName)}
-</div>
-
-<div class="price">
-💰 Buying Price: $${escapeHTML(request.price)}
-${escapeHTML(request.currency || "USDT")}
-</div>
-
-<div class="tier">
-${escapeHTML(request.tier || "Not Yet Ranked")}
-</div>
-
-<div class="small">
-This request is waiting for your decision.
-</div>
-
-<button
-class="accept-seller-button accept-button"
-data-request="${escapeHTML(docSnap.id)}">
-✅ Accept Purchase
-</button>
-
-<button
-class="reject-seller-button reject-button"
-data-request="${escapeHTML(docSnap.id)}">
-❌ Reject Purchase
-</button>
-
-`;
-
-sellerRequests.appendChild(div);
-
-});
-
-if(!found){
-
-sellerRequests.innerHTML =
-'<div class="coin">No pending buyer requests.</div>';
+request.sellerUID !==
+currentUser.uid
+){
 
 return;
 
 }
 
+
+/*
+ * Only requests waiting for seller decision.
+ */
+
+if(
+request.status !==
+"pending_seller"
+){
+
+return;
+
+}
+
+
+found = true;
+
+
+const div =
+document.createElement("div");
+
+
+div.className =
+"coin";
+
+
+div.innerHTML = `
+
+<div class="coin-name">
+
+🪙 ${escapeHTML(
+request.name ||
+"Unnamed"
+)}
+
+</div>
+
+
+<div class="coin-symbol">
+
+${escapeHTML(
+request.symbol ||
+""
+)}
+
+</div>
+
+
+<div class="owner">
+
+👤 Buyer:
+
+${escapeHTML(
+request.buyerName ||
+"User"
+)}
+
+</div>
+
+
+<div class="price">
+
+💰 Buying Price:
+
+$${escapeHTML(
+request.price
+)}
+
+${escapeHTML(
+request.currency ||
+"USDT"
+)}
+
+</div>
+
+
+<div class="tier">
+
+${escapeHTML(
+request.tier ||
+"Not Yet Ranked"
+)}
+
+</div>
+
+
+<div class="small">
+
+Allowed price:
+
+${escapeHTML(
+getPriceRangeText(
+request.tier
+)
+)}
+
+</div>
+
+
+<div class="small">
+
+Request ID:
+
+${escapeHTML(
+request.requestID ||
+docSnap.id
+)}
+
+</div>
+
+
+<div class="small">
+
+The buyer wants to purchase your coin
+at the listed buying price.
+
+</div>
+
+
+<button
+class="accept-seller-button accept-button"
+data-request="${escapeHTML(
+docSnap.id
+)}">
+
+✅ Accept Purchase
+
+</button>
+
+
+<button
+class="reject-seller-button reject-button"
+data-request="${escapeHTML(
+docSnap.id
+)}">
+
+❌ Reject Purchase
+
+</button>
+
+`;
+
+
+sellerRequests.appendChild(div);
+
+});
+
+
+if(!found){
+
+sellerRequests.innerHTML = `
+
+<div class="coin">
+
+<div class="coin-name">
+
+📭 No Pending Buyer Requests
+
+</div>
+
+
+<div class="small">
+
+When another user requests to buy
+one of your listed coins, the request
+will appear here.
+
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+/* =========================
+   ACCEPT BUTTONS
+   ========================= */
+
 document
-.querySelectorAll(".accept-seller-button")
+.querySelectorAll(
+".accept-seller-button"
+)
 .forEach(button => {
 
 button.addEventListener(
 "click",
 async () => {
+
+button.disabled =
+true;
 
 await sellerAcceptTrade(
 button.dataset.request
@@ -3369,13 +3700,23 @@ button.dataset.request
 
 });
 
+
+/* =========================
+   REJECT BUTTONS
+   ========================= */
+
 document
-.querySelectorAll(".reject-seller-button")
+.querySelectorAll(
+".reject-seller-button"
+)
 .forEach(button => {
 
 button.addEventListener(
 "click",
 async () => {
+
+button.disabled =
+true;
 
 await sellerRejectTrade(
 button.dataset.request
@@ -3389,15 +3730,40 @@ button.dataset.request
 }
 catch(error){
 
-console.error(error);
+console.error(
+"SELLER REQUEST ERROR:",
+error
+);
 
-sellerRequests.innerHTML =
-"❌ Could not load seller requests.";
+
+sellerRequests.innerHTML = `
+
+<div class="coin">
+
+❌ Could not load buyer requests.
+
+<br><br>
+
+<span class="small">
+
+${escapeHTML(
+error.message
+)}
+
+</span>
+
+</div>
+
+`;
 
 }
 
 }
 
+
+/* =========================
+   SELLER ACCEPT
+   ========================= */
 
 async function sellerAcceptTrade(
 requestID
@@ -3405,33 +3771,49 @@ requestID
 
 if(!currentUser){
 
-setStatus("❌ Please sign in.");
+setStatus(
+"❌ Please sign in."
+);
 
 return;
 
 }
+
 
 try{
 
 const requestRef =
-doc(db, "tradeRequests", requestID);
+doc(
+db,
+"tradeRequests",
+requestID
+);
+
 
 const requestSnapshot =
-await getDoc(requestRef);
+await getDoc(
+requestRef
+);
+
 
 if(!requestSnapshot.exists()){
 
-setStatus("❌ Request not found.");
+setStatus(
+"❌ Request not found."
+);
 
 return;
 
 }
 
+
 const request =
 requestSnapshot.data();
 
+
 if(
-request.sellerUID !== currentUser.uid
+request.sellerUID !==
+currentUser.uid
 ){
 
 setStatus(
@@ -3442,8 +3824,10 @@ return;
 
 }
 
+
 if(
-request.status !== "pending_seller"
+request.status !==
+"pending_seller"
 ){
 
 setStatus(
@@ -3454,24 +3838,40 @@ return;
 
 }
 
+
 const listingRef =
-doc(db, "marketplace", request.listingID);
+doc(
+db,
+"marketplace",
+request.listingID
+);
+
 
 const listingSnapshot =
-await getDoc(listingRef);
+await getDoc(
+listingRef
+);
+
 
 if(!listingSnapshot.exists()){
 
-setStatus("❌ Listing no longer exists.");
+setStatus(
+"❌ Listing no longer exists."
+);
 
 return;
 
 }
 
+
 const listing =
 listingSnapshot.data();
 
-if(listing.status !== "active"){
+
+if(
+listing.status !==
+"active"
+){
 
 setStatus(
 "❌ This listing is no longer active."
@@ -3481,13 +3881,17 @@ return;
 
 }
 
+
 if(!isPriceAllowed(
 listing.tier,
 listing.price
 )){
 
 const range =
-getPriceRange(listing.tier);
+getPriceRange(
+listing.tier
+);
+
 
 setStatus(
 `❌ Listing price is outside the allowed ${range.label} range.`
@@ -3496,6 +3900,42 @@ setStatus(
 return;
 
 }
+
+
+/*
+ * Make sure the seller still owns the coin.
+ */
+
+const sellerCoinRef =
+doc(
+db,
+"users",
+currentUser.uid,
+"memeCoins",
+request.assetID
+);
+
+
+const sellerCoinSnapshot =
+await getDoc(
+sellerCoinRef
+);
+
+
+if(!sellerCoinSnapshot.exists()){
+
+setStatus(
+"❌ You no longer own this coin."
+);
+
+return;
+
+}
+
+
+/*
+ * Seller accepts.
+ */
 
 await updateDoc(
 requestRef,
@@ -3513,12 +3953,23 @@ new Date().toISOString()
 }
 );
 
+
 setStatus(
 "✅ You accepted the buyer. Waiting for Admin approval in the current test system."
 );
 
+
 await loadSellerRequests();
+
+
+if(
+currentUser.uid ===
+ADMIN_UID
+){
+
 await loadTradeRequests();
+
+}
 
 }
 catch(error){
@@ -3535,39 +3986,59 @@ error.message
 }
 
 
+/* =========================
+   SELLER REJECT
+   ========================= */
+
 async function sellerRejectTrade(
 requestID
 ){
 
 if(!currentUser){
 
-setStatus("❌ Please sign in.");
+setStatus(
+"❌ Please sign in."
+);
 
 return;
 
 }
+
 
 try{
 
 const requestRef =
-doc(db, "tradeRequests", requestID);
+doc(
+db,
+"tradeRequests",
+requestID
+);
+
 
 const requestSnapshot =
-await getDoc(requestRef);
+await getDoc(
+requestRef
+);
+
 
 if(!requestSnapshot.exists()){
 
-setStatus("❌ Request not found.");
+setStatus(
+"❌ Request not found."
+);
 
 return;
 
 }
 
+
 const request =
 requestSnapshot.data();
 
+
 if(
-request.sellerUID !== currentUser.uid
+request.sellerUID !==
+currentUser.uid
 ){
 
 setStatus(
@@ -3578,8 +4049,10 @@ return;
 
 }
 
+
 if(
-request.status !== "pending_seller"
+request.status !==
+"pending_seller"
 ){
 
 setStatus(
@@ -3589,6 +4062,7 @@ setStatus(
 return;
 
 }
+
 
 await updateDoc(
 requestRef,
@@ -3609,12 +4083,16 @@ currentUser.uid
 }
 );
 
+
 setStatus(
 "✅ Purchase request rejected."
 );
 
+
 await loadSellerRequests();
+
 await loadMyTradeRequests();
+
 
 }
 catch(error){
@@ -3640,21 +4118,36 @@ async function loadMyTradeRequests(){
 if(!currentUser)
 return;
 
+
 myTradeRequests.innerHTML =
 "Loading...";
+
 
 try{
 
 const q =
 query(
-collection(db, "tradeRequests"),
-where("buyerUID", "==", currentUser.uid)
+collection(
+db,
+"tradeRequests"
+),
+
+where(
+"buyerUID",
+"==",
+currentUser.uid
+)
+
 );
+
 
 const snapshot =
 await getDocs(q);
 
-myTradeRequests.innerHTML = "";
+
+myTradeRequests.innerHTML =
+"";
+
 
 if(snapshot.empty){
 
@@ -3665,52 +4158,118 @@ return;
 
 }
 
+
 snapshot.forEach(
 docSnap => {
 
 const request =
 docSnap.data();
 
+
 const div =
 document.createElement("div");
 
-div.className = "coin";
+
+div.className =
+"coin";
+
 
 let statusText =
 "Waiting for seller";
 
-if(request.status === "seller_accepted")
+
+if(
+request.status ===
+"seller_accepted"
+){
+
 statusText =
 "Seller accepted — waiting for Admin approval";
 
-if(request.status === "seller_rejected")
+}
+
+
+if(
+request.status ===
+"seller_rejected"
+){
+
 statusText =
 "Seller rejected";
 
-if(request.status === "approved")
-statusText =
-"Completed";
+}
 
-if(request.status === "rejected")
+
+if(
+request.status ===
+"approved"
+){
+
+statusText =
+"Completed — ownership transferred";
+
+}
+
+
+if(
+request.status ===
+"rejected"
+){
+
 statusText =
 "Admin rejected";
+
+}
+
 
 div.innerHTML = `
 
 <div class="coin-name">
-🪙 ${escapeHTML(request.name)}
+
+🪙 ${escapeHTML(
+request.name
+)}
+
 </div>
+
 
 <div class="price">
-💰 Buying Price: $${escapeHTML(request.price)}
-${escapeHTML(request.currency || "USDT")}
+
+💰 Buying Price:
+
+$${escapeHTML(
+request.price
+)}
+
+${escapeHTML(
+request.currency ||
+"USDT"
+)}
+
 </div>
 
+
+<div class="tier">
+
+${escapeHTML(
+request.tier ||
+"Not Yet Ranked"
+)}
+
+</div>
+
+
 <div class="request-status">
-Status: ${escapeHTML(statusText)}
+
+Status:
+${escapeHTML(
+statusText
+)}
+
 </div>
 
 `;
+
 
 myTradeRequests.appendChild(div);
 
@@ -3744,7 +4303,7 @@ return;
 
 
 tradeRequests.innerHTML =
-"Loading...";
+"Loading trade requests...";
 
 
 try{
@@ -3758,7 +4317,8 @@ db,
 );
 
 
-tradeRequests.innerHTML = "";
+tradeRequests.innerHTML =
+"";
 
 
 let found = false;
@@ -3812,6 +4372,7 @@ request.symbol
 <div class="owner">
 
 Seller:
+
 ${escapeHTML(
 request.sellerName
 )}
@@ -3822,6 +4383,7 @@ request.sellerName
 <div class="owner">
 
 Buyer:
+
 ${escapeHTML(
 request.buyerName
 )}
@@ -3832,21 +4394,39 @@ request.buyerName
 <div class="price">
 
 Buying Price:
+
 $${escapeHTML(
 request.price
 )}
 
 ${escapeHTML(
-request.currency || "USDT"
+request.currency ||
+"USDT"
 )}
 
 </div>
 
-<div class="small">
-Allowed range:
+
+<div class="tier">
+
 ${escapeHTML(
-getPriceRangeText(request.tier)
+request.tier ||
+"Not Yet Ranked"
 )}
+
+</div>
+
+
+<div class="small">
+
+Allowed range:
+
+${escapeHTML(
+getPriceRangeText(
+request.tier
+)
+)}
+
 </div>
 
 
@@ -3906,6 +4486,9 @@ button.addEventListener(
 "click",
 async () => {
 
+button.disabled =
+true;
+
 await approveTrade(
 button.dataset.request
 );
@@ -3925,6 +4508,9 @@ document
 button.addEventListener(
 "click",
 async () => {
+
+button.disabled =
+true;
 
 await rejectTrade(
 button.dataset.request
@@ -4090,8 +4676,10 @@ return;
 const sellerCoin =
 sellerCoinSnapshot.data();
 
+
 if(!isPriceAllowed(
-request.tier || sellerCoin.tier,
+request.tier ||
+sellerCoin.tier,
 request.price
 )){
 
@@ -4282,7 +4870,6 @@ await loadTradeRequests();
 
 await loadMarketplace();
 
-
 }
 catch(error){
 
@@ -4354,7 +4941,6 @@ setStatus(
 
 
 await loadTradeRequests();
-
 
 }
 catch(error){
@@ -4505,13 +5091,16 @@ document
 .getElementById("adminCoinName")
 .value = "";
 
+
 document
 .getElementById("adminCoinSymbol")
 .value = "";
 
+
 document
 .getElementById("adminCoinDescription")
 .value = "";
+
 
 document
 .getElementById("adminCoinPrice")
@@ -4562,7 +5151,8 @@ db,
 );
 
 
-leaderboardList.innerHTML = "";
+leaderboardList.innerHTML =
+"";
 
 
 const users = [];
@@ -4591,6 +5181,15 @@ userDoc.id,
 let luxuryCount =
 0;
 
+let goldCount =
+0;
+
+let silverCount =
+0;
+
+let bronzeCount =
+0;
+
 
 coinsSnapshot.forEach(
 coinDoc => {
@@ -4599,8 +5198,14 @@ const coin =
 coinDoc.data();
 
 
+const tier =
+normalizeTier(
+coin.tier
+);
+
+
 if(
-coin.tier ===
+tier ===
 "LUXURY"
 ){
 
@@ -4608,20 +5213,87 @@ luxuryCount++;
 
 }
 
+
+if(
+tier ===
+"GOLD"
+){
+
+goldCount++;
+
+}
+
+
+if(
+tier ===
+"SILVER"
+){
+
+silverCount++;
+
+}
+
+
+if(
+tier ===
+"BRONZE"
+){
+
+bronzeCount++;
+
+}
+
 });
 
 
+/*
+ * Higher tiers receive more
+ * leaderboard points.
+ */
+
+const leaderboardScore =
+
+(luxuryCount * 1000000) +
+
+(goldCount * 100000) +
+
+(silverCount * 10000) +
+
+(bronzeCount * 1000) +
+
+coinsSnapshot.size;
+
+
 users.push({
+
+uid:
+userDoc.id,
 
 name:
 userData.name ||
 "User",
 
+photoURL:
+userData.photoURL ||
+"",
+
 coins:
 coinsSnapshot.size,
 
 luxury:
-luxuryCount
+luxuryCount,
+
+gold:
+goldCount,
+
+silver:
+silverCount,
+
+bronze:
+bronzeCount,
+
+score:
+leaderboardScore
 
 });
 
@@ -4630,8 +5302,18 @@ luxuryCount
 
 users.sort(
 (a,b) =>
-b.coins - a.coins
+b.score - a.score
 );
+
+
+if(users.length === 0){
+
+leaderboardList.innerHTML =
+'<div class="coin">No collectors yet.</div>';
+
+return;
+
+}
 
 
 users.forEach(
@@ -4647,9 +5329,43 @@ div.className =
 
 div.innerHTML = `
 
-<strong>
+<div class="leaderboard-user">
+
+<div class="leaderboard-rank">
 
 #${index + 1}
+
+</div>
+
+
+${
+user.photoURL
+
+?
+
+`<img
+class="leaderboard-photo"
+src="${escapeHTML(
+user.photoURL
+)}"
+alt="Profile">`
+
+:
+
+`<div
+class="leaderboard-photo"
+style="background:#ffffff15;display:flex;align-items:center;justify-content:center;">
+
+👤
+
+</div>`
+
+}
+
+
+<div style="flex:1">
+
+<strong>
 
 ${escapeHTML(
 user.name
@@ -4657,15 +5373,38 @@ user.name
 
 </strong>
 
+
 <br><br>
+
 
 🪙 Coins:
 ${user.coins}
+
 
 <br>
 
 💎 Luxury:
 ${user.luxury}
+
+&nbsp;
+
+🥇 Gold:
+${user.gold}
+
+
+<br>
+
+🥈 Silver:
+${user.silver}
+
+&nbsp;
+
+🥉 Bronze:
+${user.bronze}
+
+</div>
+
+</div>
 
 `;
 
