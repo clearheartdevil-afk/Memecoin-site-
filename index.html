@@ -68,11 +68,6 @@ button:hover {
     opacity: .85;
 }
 
-button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
 .login {
     background: white;
     color: #4c1d95;
@@ -312,45 +307,121 @@ label {
     font-weight: bold;
 }
 
-.reject-button {
+.payment-box {
+    margin-top: 15px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #2563eb18;
+    border: 1px solid #60a5fa44;
+}
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 7px 0;
+    color: #dbeafe;
+}
+
+.payment-total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ffffff22;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.fee {
+    color: #fcd34d;
+}
+
+.payment-pending {
+    color: #facc15;
+    font-weight: bold;
+}
+
+.payment-verified {
+    color: #4ade80;
+    font-weight: bold;
+}
+
+.payment-failed {
+    color: #f87171;
+    font-weight: bold;
+}
+
+.pay-button {
+    background: #2563eb;
+    color: white;
+}
+
+.verify-button {
+    background: #22c55e;
+    color: white;
+}
+
+.test-payment-button {
+    background: #7c3aed;
+    color: white;
+}
+
+.wallet-box {
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: #00000055;
+    word-break: break-all;
+    color: #bfdbfe;
+}
+
+.copy-button {
+    background: #6366f1;
+    color: white;
+}
+
+.payment-modal {
+    position: fixed;
+    inset: 0;
+    background: #000000bb;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.payment-modal.active {
+    display: flex;
+}
+
+.payment-modal-content {
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    border-radius: 20px;
+    background: #17112d;
+    border: 1px solid #ffffff22;
+}
+
+.close-modal {
     background: #ef4444;
     color: white;
 }
 
-.social-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
+.transaction-hash {
+    font-size: 13px;
+    color: #c4b5fd;
+    word-break: break-all;
+    margin-top: 8px;
 }
 
-.social-links a {
-    display: inline-block;
-    padding: 7px 10px;
-    border-radius: 8px;
-    background: #ffffff12;
-    color: #ddd6fe;
-    text-decoration: none;
-    font-size: 12px;
-}
-
-.leaderboard-user {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.leaderboard-rank {
-    font-size: 25px;
-    font-weight: bold;
-    min-width: 45px;
-}
-
-.leaderboard-photo {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
+.history-item {
+    padding: 15px;
+    border-radius: 12px;
+    background: #00000030;
+    border: 1px solid #ffffff15;
 }
 
 </style>
@@ -404,107 +475,74 @@ Logout
 <div class="grid">
 
 <div class="card">
-
 <h2>🪙 My Collection</h2>
-
-<p>
-See all assets currently owned by you.
-</p>
-
+<p>See all assets currently owned by you.</p>
 <button onclick="showSection('collection')">
 Open Collection
 </button>
-
 </div>
 
 
 <div class="card">
-
 <h2>🏪 Marketplace</h2>
-
-<p>
-Buy primary assets or request a trade from another user.
-</p>
-
+<p>Buy primary assets or request a trade from another user.</p>
 <button onclick="showSection('marketplace')">
 Open Marketplace
 </button>
-
 </div>
 
 
 <div class="card">
-
 <h2>🎨 Customize</h2>
-
-<p>
-Customize an asset that you own.
-</p>
-
+<p>Customize an asset that you own.</p>
 <button onclick="showSection('customize')">
 Customize
 </button>
-
 </div>
 
 
 <div class="card">
-
 <h2>💰 Sell My Coin</h2>
-
-<p>
-Choose your own price and list your coin.
-</p>
-
+<p>Choose your own price and list your coin.</p>
 <button onclick="showSection('sell')">
 Sell Coin
 </button>
-
 </div>
 
 
 <div class="card">
-
 <h2>📩 Buyer Requests</h2>
-
-<p>
-Review users who want to buy your listed coins.
-</p>
-
-<button onclick="showSection('sellerRequestsSection')">
+<p>Review users who want to buy your listed coins.</p>
+<button onclick="showSection('sellerRequests')">
 Open Requests
 </button>
-
 </div>
 
 
 <div class="card">
+<h2>💳 Payment History</h2>
+<p>See your test payment records.</p>
+<button onclick="showSection('paymentHistory')">
+Payment History
+</button>
+</div>
 
+
+<div class="card">
 <h2>🏆 Quarterly Program</h2>
-
-<p>
-Luxury • Gold • Silver • Bronze
-</p>
-
+<p>Luxury • Gold • Silver • Bronze</p>
 <button onclick="showSection('tiers')">
 View Program
 </button>
-
 </div>
 
 
 <div class="card">
-
 <h2>📊 Leaderboard</h2>
-
-<p>
-See top collectors.
-</p>
-
+<p>See top collectors.</p>
 <button onclick="showSection('leaderboard')">
 View Leaderboard
 </button>
-
 </div>
 
 </div>
@@ -534,7 +572,11 @@ Loading collection...
 </div>
 
 <div class="notice">
-TEST MODE — no real money or cryptocurrency is transferred.
+🧪 TEST MODE — payments are simulated. No real USDT is transferred.
+</div>
+
+<div class="notice">
+💰 Platform fee: <strong>1%</strong>, paid by the buyer. The seller's listed price is not reduced.
 </div>
 
 <h3 style="margin-bottom:10px;">
@@ -577,11 +619,11 @@ Loading...
 </div>
 
 <div class="notice">
-Review the buyer and buying price. Accepting moves the request to Admin for final approval in the current test system.
+Review the buyer and buying price. The buyer must complete the payment before the trade can be completed.
 </div>
 
 <div id="sellerRequests" class="coin-list">
-Loading buyer requests...
+Loading...
 </div>
 
 </div>
@@ -597,46 +639,34 @@ Loading buyer requests...
 
 <div class="card">
 
-<label>
-Select Asset
-</label>
+<label>Select Asset</label>
 
 <select id="customAsset">
-<option value="">
-Loading your coins...
-</option>
+<option value="">Loading your coins...</option>
 </select>
 
-<label>
-Custom Name
-</label>
+<label>Custom Name</label>
 
 <input
 id="customName"
 placeholder="Example: Mohit's Moon"
 >
 
-<label>
-Custom Description
-</label>
+<label>Custom Description</label>
 
 <textarea
 id="customDescription"
 placeholder="Describe your design"
 ></textarea>
 
-<label>
-Image / Logo URL
-</label>
+<label>Image / Logo URL</label>
 
 <input
 id="customImage"
 placeholder="https://example.com/image.png"
 >
 
-<label>
-Custom Color
-</label>
+<label>Custom Color</label>
 
 <input
 id="customColor"
@@ -666,19 +696,13 @@ TEST MODE — no real money or cryptocurrency is transferred.
 
 <div class="card">
 
-<label>
-Select Coin to Sell
-</label>
+<label>Select Coin to Sell</label>
 
 <select id="sellAsset">
-<option value="">
-Loading your coins...
-</option>
+<option value="">Loading your coins...</option>
 </select>
 
-<label>
-Your Selling Price (USD-denominated)
-</label>
+<label>Your Selling Price (USD-denominated)</label>
 
 <input
 id="sellPrice"
@@ -692,16 +716,10 @@ placeholder="Example: 20"
 Select a coin to see its allowed selling range.
 </div>
 
-<label>
-Currency
-</label>
+<label>Currency</label>
 
 <select id="sellCurrency">
-
-<option value="USDT">
-USDT
-</option>
-
+<option value="USDT">USDT</option>
 </select>
 
 <button id="listForSale" class="sell-button">
@@ -712,11 +730,28 @@ USDT
 
 <br>
 
-<h3>
-Your Active Listings
-</h3>
+<h3>Your Active Listings</h3>
 
 <div id="myListings" class="coin-list">
+Loading...
+</div>
+
+</div>
+
+
+<!-- PAYMENT HISTORY -->
+
+<div id="paymentHistory" class="section hidden">
+
+<div class="section-title">
+💳 Payment History
+</div>
+
+<div class="notice">
+🧪 TEST MODE — these are simulated payment records only.
+</div>
+
+<div id="paymentHistoryList" class="coin-list">
 Loading...
 </div>
 
@@ -734,69 +769,23 @@ Loading...
 <div class="coin-list">
 
 <div class="coin">
-
 💎 <strong>LUXURY</strong>
-
-<p>
-Highest tier selected by Admin.
-Selling price: $2,000 – $10,000
-</p>
-
+<p>Highest tier selected by Admin.</p>
 </div>
 
 <div class="coin">
-
 🥇 <strong>GOLD</strong>
-
-<p>
-Premium tier selected by Admin.
-Selling price: $500 – $1,500
-</p>
-
+<p>Premium tier selected by Admin.</p>
 </div>
 
 <div class="coin">
-
 🥈 <strong>SILVER</strong>
-
-<p>
-Silver tier selected by Admin.
-Selling price: $50 – $350
-</p>
-
+<p>Silver tier selected by Admin.</p>
 </div>
 
 <div class="coin">
-
 🥉 <strong>BRONZE</strong>
-
-<p>
-Bronze tier selected by Admin.
-Selling price: $15 – $30
-</p>
-
-</div>
-
-<div class="coin">
-
-🪙 <strong>NORMAL</strong>
-
-<p>
-Normal coin.
-Selling price: $7 – $13
-</p>
-
-</div>
-
-<div class="coin">
-
-🆕 <strong>NOT YET RANKED</strong>
-
-<p>
-New / unreviewed coin.
-Selling price: $1 – $5
-</p>
-
+<p>Bronze tier selected by Admin.</p>
 </div>
 
 </div>
@@ -810,10 +799,6 @@ Selling price: $1 – $5
 
 <div class="section-title">
 📊 Collector Leaderboard
-</div>
-
-<div class="notice">
-Users with more coins and higher-tier / rare coins appear higher on the leaderboard.
 </div>
 
 <div id="leaderboardList">
@@ -842,45 +827,35 @@ Publish New Asset
 
 <br>
 
-<label>
-Asset Name
-</label>
+<label>Asset Name</label>
 
 <input
 id="adminCoinName"
 placeholder="Example: Moon Dog"
 >
 
-<label>
-Symbol
-</label>
+<label>Symbol</label>
 
 <input
 id="adminCoinSymbol"
 placeholder="MDOG"
 >
 
-<label>
-Description
-</label>
+<label>Description</label>
 
 <textarea
 id="adminCoinDescription"
 placeholder="Describe the asset"
 ></textarea>
 
-<label>
-Initial Price
-</label>
+<label>Initial Price</label>
 
 <input
 id="adminCoinPrice"
 placeholder="Example: 10"
 >
 
-<label>
-Payment Currency
-</label>
+<label>Payment Currency</label>
 
 <select id="adminCoinCurrency">
 
@@ -918,7 +893,7 @@ SOL
 </div>
 
 <div class="notice">
-Seller must accept first. Admin then gives the final approval in the current test version. Real payment verification will later trigger automatic transfer.
+Seller accepts first. Buyer then completes the test payment. After payment is marked verified, Admin can approve the trade.
 </div>
 
 <div id="tradeRequests"
@@ -936,8 +911,42 @@ Loading trade requests...
 
 
 <div class="footer">
-
 © 2026 MemeCoinSite
+</div>
+
+</div>
+
+
+<!-- PAYMENT MODAL -->
+
+<div id="paymentModal" class="payment-modal">
+
+<div class="payment-modal-content">
+
+<h2>
+💳 USDT Test Payment
+</h2>
+
+<br>
+
+<div class="notice">
+🧪 TEST MODE<br>
+No real USDT will be sent. This simulates the payment process.
+</div>
+
+<div id="paymentDetails"></div>
+
+<button
+id="simulatePaymentButton"
+class="test-payment-button">
+🧪 Simulate USDT Payment
+</button>
+
+<button
+id="closePaymentModal"
+class="close-modal">
+Close
+</button>
 
 </div>
 
@@ -1024,7 +1033,31 @@ const ADMIN_UID =
 "yoOUbX1BlZZmjGqewGSe2sI8Dn62";
 
 
+/*
+ * IMPORTANT:
+ * This is the TEST payment fee.
+ *
+ * 1% of the seller's price is
+ * added to the buyer's payment.
+ */
+
+const PLATFORM_FEE_PERCENT =
+1;
+
+
+/*
+ * Test USDT network label.
+ *
+ * This is only displayed in test mode.
+ */
+
+const TEST_USDT_NETWORK =
+"TEST-USDT";
+
+
 let currentUser = null;
+
+let currentPayment = null;
 
 
 /* =========================
@@ -1088,6 +1121,21 @@ document.getElementById("myTradeRequests");
 const sellPriceRange =
 document.getElementById("sellPriceRange");
 
+const paymentModal =
+document.getElementById("paymentModal");
+
+const paymentDetails =
+document.getElementById("paymentDetails");
+
+const simulatePaymentButton =
+document.getElementById("simulatePaymentButton");
+
+const closePaymentModal =
+document.getElementById("closePaymentModal");
+
+const paymentHistoryList =
+document.getElementById("paymentHistoryList");
+
 
 /* =========================
    STATUS
@@ -1117,6 +1165,10 @@ return String(value || "")
 }
 
 
+/* =========================
+   ID GENERATORS
+   ========================= */
+
 function generateID(){
 
 return "MC-" +
@@ -1124,6 +1176,79 @@ Math.random()
 .toString(36)
 .substring(2,10)
 .toUpperCase();
+
+}
+
+
+function generateTransactionID(){
+
+return "TX-" +
+Date.now() +
+"-" +
+Math.random()
+.toString(36)
+.substring(2,7)
+.toUpperCase();
+
+}
+
+
+function generatePaymentID(){
+
+return "PAY-" +
+Date.now() +
+"-" +
+Math.random()
+.toString(36)
+.substring(2,7)
+.toUpperCase();
+
+}
+
+
+/* =========================
+   MONEY FUNCTIONS
+   ========================= */
+
+function roundMoney(number){
+
+return Math.round(
+Number(number) * 100
+) / 100;
+
+}
+
+
+function calculatePlatformFee(price){
+
+return roundMoney(
+Number(price) *
+PLATFORM_FEE_PERCENT /
+100
+);
+
+}
+
+
+function calculateBuyerTotal(price){
+
+const amount =
+Number(price);
+
+const fee =
+calculatePlatformFee(amount);
+
+return roundMoney(
+amount + fee
+);
+
+}
+
+
+function formatMoney(number){
+
+return Number(number)
+.toFixed(2);
 
 }
 
@@ -1200,7 +1325,11 @@ function getPriceRange(tier){
 
 return TIER_PRICE_RANGES[
 normalizeTier(tier)
-] || TIER_PRICE_RANGES["NOT YET RANKED"];
+]
+||
+TIER_PRICE_RANGES[
+"NOT YET RANKED"
+];
 
 }
 
@@ -1286,7 +1415,8 @@ const sections = [
 "sell",
 "tiers",
 "leaderboard",
-"sellerRequestsSection"
+"sellerRequests",
+"paymentHistory"
 
 ];
 
@@ -1325,7 +1455,11 @@ loadMyTradeRequests();
 }
 
 
-if(section === "sellerRequestsSection"){
+if(section === "sellerRequests"){
+
+sellerRequestsSection.classList.remove(
+"hidden"
+);
 
 loadSellerRequests();
 
@@ -1347,6 +1481,13 @@ loadLeaderboard();
 
 }
 
+
+if(section === "paymentHistory"){
+
+loadPaymentHistory();
+
+}
+
 };
 
 
@@ -1360,7 +1501,9 @@ async () => {
 
 try{
 
-setStatus("Signing in...");
+setStatus(
+"Signing in..."
+);
 
 
 const result =
@@ -1591,9 +1734,7 @@ if(snapshot.empty){
 myCoins.innerHTML = `
 
 <div class="coin">
-
 You don't own any assets yet.
-
 </div>
 
 `;
@@ -1624,43 +1765,32 @@ div.className =
 div.innerHTML = `
 
 <div class="coin-name">
-
 🪙 ${escapeHTML(
 coin.customName ||
 coin.name ||
 "Unnamed"
 )}
-
 </div>
 
-
 <div class="coin-symbol">
-
 ${escapeHTML(
 coin.symbol || ""
 )}
-
 </div>
 
-
 <div class="coin-description">
-
 ${escapeHTML(
 coin.customDescription ||
 coin.description ||
 ""
 )}
-
 </div>
 
-
 <div class="tier">
-
 ${escapeHTML(
 coin.tier ||
 "Not Yet Ranked"
 )}
-
 </div>
 
 `;
@@ -1743,9 +1873,7 @@ const first =
 document.createElement("option");
 
 
-first.value =
-"";
-
+first.value = "";
 
 first.textContent =
 "Select an asset";
@@ -1979,9 +2107,7 @@ const first =
 document.createElement("option");
 
 
-first.value =
-"";
-
+first.value = "";
 
 first.textContent =
 "Select a coin to sell";
@@ -2045,7 +2171,6 @@ sellAsset.innerHTML =
 
 }
 
-
 updateSellPriceRange();
 
 }
@@ -2089,12 +2214,6 @@ document
 .trim();
 
 
-const currency =
-document
-.getElementById("sellCurrency")
-.value;
-
-
 if(!assetID){
 
 setStatus(
@@ -2106,10 +2225,8 @@ return;
 }
 
 
-if(
-!price ||
-Number(price) <= 0
-){
+if(!price ||
+Number(price) <= 0){
 
 setStatus(
 "❌ Enter a valid selling price."
@@ -2314,7 +2431,6 @@ await loadMyListings();
 
 await loadMarketplace();
 
-
 }
 catch(error){
 
@@ -2400,65 +2516,45 @@ div.className =
 div.innerHTML = `
 
 <div class="coin-name">
-
 🪙 ${escapeHTML(
 listing.name
 )}
-
 </div>
 
-
 <div class="coin-symbol">
-
 ${escapeHTML(
 listing.symbol
 )}
-
 </div>
 
-
 <div class="price">
-
 ${escapeHTML(
 listing.price
 )}
-
-${escapeHTML(
-listing.currency
-)}
-
+USDT
 </div>
 
-
 <div class="tier">
-
 ${escapeHTML(
 listing.tier
 )}
-
 </div>
 
-
 <div class="small">
-
 Allowed range:
 ${escapeHTML(
 getPriceRangeText(
 listing.tier
 )
 )}
-
 </div>
-
 
 <button
 class="cancel-button"
 data-listing="${escapeHTML(
 docSnap.id
 )}">
-
 Cancel Listing
-
 </button>
 
 `;
@@ -2585,7 +2681,6 @@ await loadMyListings();
 
 await loadMarketplace();
 
-
 }
 catch(error){
 
@@ -2635,8 +2730,7 @@ db,
 );
 
 
-primaryMarketplace.innerHTML =
-"";
+primaryMarketplace.innerHTML = "";
 
 
 let found = false;
@@ -2659,6 +2753,18 @@ return;
 found = true;
 
 
+const price =
+Number(asset.primaryPrice);
+
+
+const fee =
+calculatePlatformFee(price);
+
+
+const total =
+calculateBuyerTotal(price);
+
+
 const div =
 document.createElement("div");
 
@@ -2670,69 +2776,58 @@ div.className =
 div.innerHTML = `
 
 <div class="coin-name">
-
 🪙 ${escapeHTML(
 asset.name
 )}
-
 </div>
 
-
 <div class="coin-symbol">
-
 ${escapeHTML(
 asset.symbol
 )}
-
 </div>
 
-
 <div class="coin-description">
-
 ${escapeHTML(
 asset.description
 )}
-
 </div>
-
-
-<div class="price">
-
-Primary Price:
-
-${escapeHTML(
-asset.primaryPrice
-)}
-
-${escapeHTML(
-asset.primaryCurrency
-)}
-
-</div>
-
 
 <div class="tier">
-
 ${escapeHTML(
 asset.tier ||
 "Not Yet Ranked"
 )}
-
 </div>
 
+<div class="payment-box">
+
+<div class="payment-row">
+<span>Coin Price</span>
+<strong>$${formatMoney(price)}</strong>
+</div>
+
+<div class="payment-row fee">
+<span>Platform Fee (1%)</span>
+<strong>$${formatMoney(fee)}</strong>
+</div>
+
+<div class="payment-row payment-total">
+<span>Buyer Pays</span>
+<strong>$${formatMoney(total)} USDT</strong>
+</div>
+
+</div>
 
 <button
 class="buy-primary-button buy-button"
 data-id="${escapeHTML(
 docSnap.id
 )}">
-
-🛒 Buy 1
-
+💳 Buy for $${formatMoney(total)}
 </button>
 
 `;
-
 
 primaryMarketplace.appendChild(div);
 
@@ -2759,7 +2854,7 @@ button.addEventListener(
 "click",
 async () => {
 
-await primaryPurchase(
+await startPrimaryPayment(
 button.dataset.id
 );
 
@@ -2802,8 +2897,7 @@ db,
 );
 
 
-userMarketplace.innerHTML =
-"";
+userMarketplace.innerHTML = "";
 
 
 let found = false;
@@ -2826,6 +2920,18 @@ return;
 found = true;
 
 
+const price =
+Number(listing.price);
+
+
+const fee =
+calculatePlatformFee(price);
+
+
+const total =
+calculateBuyerTotal(price);
+
+
 const div =
 document.createElement("div");
 
@@ -2837,78 +2943,63 @@ div.className =
 div.innerHTML = `
 
 <div class="coin-name">
-
 🪙 ${escapeHTML(
 listing.name
 )}
-
 </div>
 
-
 <div class="coin-symbol">
-
 ${escapeHTML(
 listing.symbol
 )}
-
 </div>
 
-
 <div class="coin-description">
-
 ${escapeHTML(
 listing.description
 )}
-
 </div>
 
-
 <div class="owner">
-
 Seller:
-
 ${escapeHTML(
 listing.sellerName
 )}
-
 </div>
 
-
-<div class="price">
-
-💰 Buying Price:
-$${escapeHTML(
-listing.price
-)}
-
+<div class="tier">
 ${escapeHTML(
-listing.currency ||
-"USDT"
+listing.tier
 )}
-
 </div>
-
 
 <div class="small">
-
 Allowed range:
 ${escapeHTML(
 getPriceRangeText(
 listing.tier
 )
 )}
-
 </div>
 
+<div class="payment-box">
 
-<div class="tier">
-
-${escapeHTML(
-listing.tier
-)}
-
+<div class="payment-row">
+<span>Seller Price</span>
+<strong>$${formatMoney(price)}</strong>
 </div>
 
+<div class="payment-row fee">
+<span>Platform Fee (1%)</span>
+<strong>$${formatMoney(fee)}</strong>
+</div>
+
+<div class="payment-row payment-total">
+<span>Buyer Pays</span>
+<strong>$${formatMoney(total)} USDT</strong>
+</div>
+
+</div>
 
 ${
 listing.sellerUID ===
@@ -2929,12 +3020,7 @@ class="buy-user-button buy-button"
 data-id="${escapeHTML(
 docSnap.id
 )}">
-
-🛒 Request to Buy for
-$${escapeHTML(
-listing.price
-)}
-
+💳 Buy for $${formatMoney(total)}
 </button>
 
 `
@@ -2992,19 +3078,25 @@ userMarketplace.innerHTML =
 
 
 /* =========================
-   PRIMARY PURCHASE
+   PRIMARY PAYMENT
    ========================= */
 
-async function primaryPurchase(
+async function startPrimaryPayment(
 assetID
 ){
 
-try{
+if(!currentUser){
 
 setStatus(
-"Processing test purchase..."
+"❌ Please sign in."
 );
 
+return;
+
+}
+
+
+try{
 
 const assetRef =
 doc(
@@ -3035,6 +3127,18 @@ const asset =
 snapshot.data();
 
 
+const price =
+Number(asset.primaryPrice);
+
+
+const fee =
+calculatePlatformFee(price);
+
+
+const total =
+calculateBuyerTotal(price);
+
+
 const ownershipRef =
 doc(
 db,
@@ -3062,63 +3166,33 @@ return;
 }
 
 
-await setDoc(
-ownershipRef,
-{
+currentPayment = {
 
-coinID:
+type:
+"primary",
+
+assetID:
 assetID,
 
-name:
-asset.name,
+asset:
+asset,
 
-symbol:
-asset.symbol,
+price:
+price,
 
-description:
-asset.description || "",
+fee:
+fee,
 
-imageURL:
-asset.imageURL || "",
+total:
+total,
 
-tier:
-asset.tier ||
-"Not Yet Ranked",
+currency:
+"USDT"
 
-ownerUID:
-currentUser.uid,
-
-ownerName:
-currentUser.displayName ||
-"",
-
-acquisitionType:
-"primary-test-purchase",
-
-purchasePrice:
-asset.primaryPrice,
-
-purchaseCurrency:
-asset.primaryCurrency,
-
-acquiredAt:
-new Date().toISOString()
-
-}
-);
+};
 
 
-setStatus(
-"✅ Test purchase successful! You now own 1 unit."
-);
-
-
-await loadMyCoins();
-
-await loadCustomizeAssets();
-
-await loadSellAssets();
-
+showPaymentModal();
 
 }
 catch(error){
@@ -3126,7 +3200,7 @@ catch(error){
 console.error(error);
 
 setStatus(
-"❌ Purchase failed: " +
+"❌ Could not start payment: " +
 error.message
 );
 
@@ -3157,7 +3231,7 @@ return;
 try{
 
 setStatus(
-"Creating trade request..."
+"Creating purchase request..."
 );
 
 
@@ -3238,11 +3312,6 @@ return;
 }
 
 
-/*
- * Check whether buyer already owns
- * the asset.
- */
-
 const buyerCoinRef =
 doc(
 db,
@@ -3271,13 +3340,16 @@ return;
 
 
 /*
- * Prevent duplicate pending requests
- * for the same listing.
+ * Prevent duplicate active
+ * requests for the same listing.
  */
 
-const existingRequestsQuery =
+const duplicateQuery =
 query(
-collection(db, "tradeRequests"),
+collection(
+db,
+"tradeRequests"
+),
 
 where(
 "listingID",
@@ -3289,46 +3361,27 @@ where(
 "buyerUID",
 "==",
 currentUser.uid
+),
+
+where(
+"status",
+"==",
+"pending_seller"
 )
 
 );
 
 
-const existingRequests =
+const duplicateSnapshot =
 await getDocs(
-existingRequestsQuery
+duplicateQuery
 );
 
 
-let duplicatePending =
-false;
-
-
-existingRequests.forEach(
-docSnap => {
-
-const existingRequest =
-docSnap.data();
-
-
-if(
-existingRequest.status ===
-"pending_seller" ||
-existingRequest.status ===
-"seller_accepted"
-){
-
-duplicatePending = true;
-
-}
-
-});
-
-
-if(duplicatePending){
+if(!duplicateSnapshot.empty){
 
 setStatus(
-"❌ You already have a pending request for this coin."
+"❌ You already requested this coin."
 );
 
 return;
@@ -3343,6 +3396,22 @@ Date.now() +
 Math.random()
 .toString(36)
 .substring(2,7);
+
+
+const sellerPrice =
+Number(listing.price);
+
+
+const platformFee =
+calculatePlatformFee(
+sellerPrice
+);
+
+
+const buyerTotal =
+calculateBuyerTotal(
+sellerPrice
+);
 
 
 await setDoc(
@@ -3382,27 +3451,35 @@ symbol:
 listing.symbol,
 
 price:
-listing.price,
+sellerPrice,
 
 priceUSD:
-Number(listing.price),
+sellerPrice,
+
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+platformFee,
+
+buyerTotal:
+buyerTotal,
 
 currency:
-listing.currency ||
 "USDT",
 
 tier:
 listing.tier ||
 "Not Yet Ranked",
 
-platformFee:
-"0.01",
-
 status:
 "pending_seller",
 
 sellerResponse:
 "pending",
+
+paymentStatus:
+"not_started",
 
 createdAt:
 new Date().toISOString()
@@ -3412,12 +3489,11 @@ new Date().toISOString()
 
 
 setStatus(
-"✅ Purchase request sent to seller. Waiting for seller response."
+`✅ Request sent. Seller price $${formatMoney(sellerPrice)} + 1% fee $${formatMoney(platformFee)} = $${formatMoney(buyerTotal)} USDT.`
 );
 
 
 await loadMyTradeRequests();
-
 
 }
 catch(error){
@@ -3435,7 +3511,7 @@ error.message
 
 
 /* =========================
-   SELLER TRADE REQUESTS
+   SELLER REQUESTS
    ========================= */
 
 async function loadSellerRequests(){
@@ -3445,30 +3521,32 @@ return;
 
 
 sellerRequests.innerHTML =
-"Loading buyer requests...";
+"Loading...";
 
 
 try{
 
-/*
- * We intentionally read the collection and
- * filter by sellerUID in JavaScript.
- *
- * This makes the seller request system work
- * without requiring a Firestore composite index.
- */
-
-const snapshot =
-await getDocs(
+const q =
+query(
 collection(
 db,
 "tradeRequests"
+),
+
+where(
+"sellerUID",
+"==",
+currentUser.uid
 )
+
 );
 
 
-sellerRequests.innerHTML =
-"";
+const snapshot =
+await getDocs(q);
+
+
+sellerRequests.innerHTML = "";
 
 
 let found = false;
@@ -3481,37 +3559,36 @@ const request =
 docSnap.data();
 
 
-/*
- * IMPORTANT:
- * Only show requests where the logged-in
- * user is the seller.
- */
-
-if(
-request.sellerUID !==
-currentUser.uid
-){
-
-return;
-
-}
-
-
-/*
- * Only requests waiting for seller decision.
- */
-
 if(
 request.status !==
 "pending_seller"
-){
-
+)
 return;
-
-}
 
 
 found = true;
+
+
+const sellerPrice =
+Number(request.price);
+
+
+const fee =
+Number(
+request.platformFee ||
+calculatePlatformFee(
+sellerPrice
+)
+);
+
+
+const total =
+Number(
+request.buyerTotal ||
+calculateBuyerTotal(
+sellerPrice
+)
+);
 
 
 const div =
@@ -3525,119 +3602,71 @@ div.className =
 div.innerHTML = `
 
 <div class="coin-name">
-
 🪙 ${escapeHTML(
-request.name ||
-"Unnamed"
+request.name
 )}
-
 </div>
-
 
 <div class="coin-symbol">
-
 ${escapeHTML(
-request.symbol ||
-""
+request.symbol
 )}
-
 </div>
-
 
 <div class="owner">
-
-👤 Buyer:
-
+Buyer:
 ${escapeHTML(
-request.buyerName ||
-"User"
+request.buyerName
 )}
-
 </div>
 
+<div class="payment-box">
 
-<div class="price">
-
-💰 Buying Price:
-
-$${escapeHTML(
-request.price
-)}
-
-${escapeHTML(
-request.currency ||
-"USDT"
-)}
-
+<div class="payment-row">
+<span>Your Selling Price</span>
+<strong>$${formatMoney(sellerPrice)}</strong>
 </div>
 
+<div class="payment-row fee">
+<span>Buyer Platform Fee (1%)</span>
+<strong>$${formatMoney(fee)}</strong>
+</div>
+
+<div class="payment-row payment-total">
+<span>Buyer Will Pay</span>
+<strong>$${formatMoney(total)} USDT</strong>
+</div>
+
+</div>
 
 <div class="tier">
-
 ${escapeHTML(
 request.tier ||
 "Not Yet Ranked"
 )}
-
 </div>
-
 
 <div class="small">
-
-Allowed price:
-
-${escapeHTML(
-getPriceRangeText(
-request.tier
-)
-)}
-
+The buyer has requested to purchase this coin.
 </div>
-
-
-<div class="small">
-
-Request ID:
-
-${escapeHTML(
-request.requestID ||
-docSnap.id
-)}
-
-</div>
-
-
-<div class="small">
-
-The buyer wants to purchase your coin
-at the listed buying price.
-
-</div>
-
 
 <button
 class="accept-seller-button accept-button"
 data-request="${escapeHTML(
 docSnap.id
 )}">
-
 ✅ Accept Purchase
-
 </button>
-
 
 <button
 class="reject-seller-button reject-button"
 data-request="${escapeHTML(
 docSnap.id
 )}">
-
 ❌ Reject Purchase
-
 </button>
 
 `;
-
 
 sellerRequests.appendChild(div);
 
@@ -3646,37 +3675,13 @@ sellerRequests.appendChild(div);
 
 if(!found){
 
-sellerRequests.innerHTML = `
-
-<div class="coin">
-
-<div class="coin-name">
-
-📭 No Pending Buyer Requests
-
-</div>
-
-
-<div class="small">
-
-When another user requests to buy
-one of your listed coins, the request
-will appear here.
-
-</div>
-
-</div>
-
-`;
+sellerRequests.innerHTML =
+'<div class="coin">No pending buyer requests.</div>';
 
 return;
 
 }
 
-
-/* =========================
-   ACCEPT BUTTONS
-   ========================= */
 
 document
 .querySelectorAll(
@@ -3688,9 +3693,6 @@ button.addEventListener(
 "click",
 async () => {
 
-button.disabled =
-true;
-
 await sellerAcceptTrade(
 button.dataset.request
 );
@@ -3701,10 +3703,6 @@ button.dataset.request
 });
 
 
-/* =========================
-   REJECT BUTTONS
-   ========================= */
-
 document
 .querySelectorAll(
 ".reject-seller-button"
@@ -3714,9 +3712,6 @@ document
 button.addEventListener(
 "click",
 async () => {
-
-button.disabled =
-true;
 
 await sellerRejectTrade(
 button.dataset.request
@@ -3730,31 +3725,10 @@ button.dataset.request
 }
 catch(error){
 
-console.error(
-"SELLER REQUEST ERROR:",
-error
-);
+console.error(error);
 
-
-sellerRequests.innerHTML = `
-
-<div class="coin">
-
-❌ Could not load buyer requests.
-
-<br><br>
-
-<span class="small">
-
-${escapeHTML(
-error.message
-)}
-
-</span>
-
-</div>
-
-`;
+sellerRequests.innerHTML =
+"❌ Could not load seller requests.";
 
 }
 
@@ -3902,40 +3876,21 @@ return;
 }
 
 
-/*
- * Make sure the seller still owns the coin.
- */
+const sellerPrice =
+Number(request.price);
 
-const sellerCoinRef =
-doc(
-db,
-"users",
-currentUser.uid,
-"memeCoins",
-request.assetID
+
+const fee =
+calculatePlatformFee(
+sellerPrice
 );
 
 
-const sellerCoinSnapshot =
-await getDoc(
-sellerCoinRef
+const total =
+calculateBuyerTotal(
+sellerPrice
 );
 
-
-if(!sellerCoinSnapshot.exists()){
-
-setStatus(
-"❌ You no longer own this coin."
-);
-
-return;
-
-}
-
-
-/*
- * Seller accepts.
- */
 
 await updateDoc(
 requestRef,
@@ -3948,28 +3903,32 @@ sellerResponse:
 "accepted",
 
 sellerAcceptedAt:
-new Date().toISOString()
+new Date().toISOString(),
+
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+fee,
+
+buyerTotal:
+total,
+
+paymentStatus:
+"pending"
 
 }
 );
 
 
 setStatus(
-"✅ You accepted the buyer. Waiting for Admin approval in the current test system."
+`✅ Seller accepted. Buyer must pay $${formatMoney(total)} USDT.`
 );
 
 
 await loadSellerRequests();
 
-
-if(
-currentUser.uid ===
-ADMIN_UID
-){
-
 await loadTradeRequests();
-
-}
 
 }
 catch(error){
@@ -4074,6 +4033,9 @@ status:
 sellerResponse:
 "rejected",
 
+paymentStatus:
+"cancelled",
+
 rejectedAt:
 new Date().toISOString(),
 
@@ -4093,7 +4055,6 @@ await loadSellerRequests();
 
 await loadMyTradeRequests();
 
-
 }
 catch(error){
 
@@ -4110,7 +4071,7 @@ error.message
 
 
 /* =========================
-   BUYER TRADE REQUESTS
+   BUYER REQUESTS
    ========================= */
 
 async function loadMyTradeRequests(){
@@ -4145,8 +4106,7 @@ const snapshot =
 await getDocs(q);
 
 
-myTradeRequests.innerHTML =
-"";
+myTradeRequests.innerHTML = "";
 
 
 if(snapshot.empty){
@@ -4166,12 +4126,26 @@ const request =
 docSnap.data();
 
 
-const div =
-document.createElement("div");
+const sellerPrice =
+Number(request.price);
 
 
-div.className =
-"coin";
+const fee =
+Number(
+request.platformFee ||
+calculatePlatformFee(
+sellerPrice
+)
+);
+
+
+const total =
+Number(
+request.buyerTotal ||
+calculateBuyerTotal(
+sellerPrice
+)
+);
 
 
 let statusText =
@@ -4181,43 +4155,93 @@ let statusText =
 if(
 request.status ===
 "seller_accepted"
-){
-
+)
 statusText =
-"Seller accepted — waiting for Admin approval";
-
-}
+"Seller accepted — payment required";
 
 
 if(
 request.status ===
-"seller_rejected"
-){
-
+"payment_pending"
+)
 statusText =
-"Seller rejected";
+"Payment pending";
 
-}
+
+if(
+request.status ===
+"payment_verified"
+)
+statusText =
+"Payment verified — waiting for Admin approval";
 
 
 if(
 request.status ===
 "approved"
-){
-
+)
 statusText =
-"Completed — ownership transferred";
+"Completed";
 
-}
+
+if(
+request.status ===
+"seller_rejected"
+)
+statusText =
+"Seller rejected";
 
 
 if(
 request.status ===
 "rejected"
+)
+statusText =
+"Admin rejected";
+
+
+if(
+request.paymentStatus ===
+"verified"
 ){
 
 statusText =
-"Admin rejected";
+"Payment verified — waiting for Admin approval";
+
+}
+
+
+const div =
+document.createElement("div");
+
+
+div.className =
+"coin";
+
+
+let paymentButton = "";
+
+
+if(
+request.status ===
+"seller_accepted" &&
+request.paymentStatus !==
+"verified"
+){
+
+paymentButton = `
+
+<button
+class="pay-request-button pay-button"
+data-request="${escapeHTML(
+docSnap.id
+)}">
+
+💳 Pay $${formatMoney(total)} USDT
+
+</button>
+
+`;
 
 }
 
@@ -4225,53 +4249,74 @@ statusText =
 div.innerHTML = `
 
 <div class="coin-name">
-
 🪙 ${escapeHTML(
 request.name
 )}
-
 </div>
-
 
 <div class="price">
-
-💰 Buying Price:
-
-$${escapeHTML(
-request.price
-)}
-
-${escapeHTML(
-request.currency ||
-"USDT"
-)}
-
+Seller Price:
+$${formatMoney(sellerPrice)} USDT
 </div>
 
+<div class="payment-box">
 
-<div class="tier">
-
-${escapeHTML(
-request.tier ||
-"Not Yet Ranked"
-)}
-
+<div class="payment-row">
+<span>Coin Price</span>
+<strong>$${formatMoney(sellerPrice)}</strong>
 </div>
 
+<div class="payment-row fee">
+<span>Platform Fee (1%)</span>
+<strong>$${formatMoney(fee)}</strong>
+</div>
+
+<div class="payment-row payment-total">
+<span>Total Buyer Payment</span>
+<strong>$${formatMoney(total)} USDT</strong>
+</div>
+
+</div>
 
 <div class="request-status">
-
 Status:
-${escapeHTML(
-statusText
-)}
-
+${escapeHTML(statusText)}
 </div>
+
+<div class="small">
+Payment status:
+${escapeHTML(
+request.paymentStatus ||
+"not_started"
+)}
+</div>
+
+${paymentButton}
 
 `;
 
 
 myTradeRequests.appendChild(div);
+
+});
+
+
+document
+.querySelectorAll(
+".pay-request-button"
+)
+.forEach(button => {
+
+button.addEventListener(
+"click",
+async () => {
+
+await startTradePayment(
+button.dataset.request
+);
+
+}
+);
 
 });
 
@@ -4289,6 +4334,697 @@ myTradeRequests.innerHTML =
 
 
 /* =========================
+   START TRADE PAYMENT
+   ========================= */
+
+async function startTradePayment(
+requestID
+){
+
+if(!currentUser){
+
+setStatus(
+"❌ Please sign in."
+);
+
+return;
+
+}
+
+
+try{
+
+const requestRef =
+doc(
+db,
+"tradeRequests",
+requestID
+);
+
+
+const snapshot =
+await getDoc(
+requestRef
+);
+
+
+if(!snapshot.exists()){
+
+setStatus(
+"❌ Purchase request not found."
+);
+
+return;
+
+}
+
+
+const request =
+snapshot.data();
+
+
+if(
+request.buyerUID !==
+currentUser.uid
+){
+
+setStatus(
+"❌ This is not your purchase request."
+);
+
+return;
+
+}
+
+
+if(
+request.status !==
+"seller_accepted"
+){
+
+setStatus(
+"❌ Seller has not accepted this request yet."
+);
+
+return;
+
+}
+
+
+const sellerPrice =
+Number(request.price);
+
+
+const fee =
+calculatePlatformFee(
+sellerPrice
+);
+
+
+const total =
+calculateBuyerTotal(
+sellerPrice
+);
+
+
+currentPayment = {
+
+type:
+"trade",
+
+requestID:
+requestID,
+
+request:
+request,
+
+price:
+sellerPrice,
+
+fee:
+fee,
+
+total:
+total,
+
+currency:
+"USDT"
+
+};
+
+
+showPaymentModal();
+
+}
+catch(error){
+
+console.error(error);
+
+setStatus(
+"❌ Could not start payment: " +
+error.message
+);
+
+}
+
+}
+
+
+/* =========================
+   PAYMENT MODAL
+   ========================= */
+
+function showPaymentModal(){
+
+if(!currentPayment)
+return;
+
+
+const price =
+currentPayment.price;
+
+
+const fee =
+currentPayment.fee;
+
+
+const total =
+currentPayment.total;
+
+
+paymentDetails.innerHTML = `
+
+<div class="payment-box">
+
+<div class="payment-row">
+<span>Coin Price</span>
+<strong>$${formatMoney(price)}</strong>
+</div>
+
+<div class="payment-row fee">
+<span>Platform Fee (1%)</span>
+<strong>$${formatMoney(fee)}</strong>
+</div>
+
+<div class="payment-row payment-total">
+<span>Total You Pay</span>
+<strong>$${formatMoney(total)} USDT</strong>
+</div>
+
+</div>
+
+<div class="small">
+Network:
+${escapeHTML(
+TEST_USDT_NETWORK
+)}
+</div>
+
+<div class="wallet-box">
+TEST PAYMENT ADDRESS
+</div>
+
+<div class="notice" style="margin-top:15px;">
+In real mode, this area will contain the actual USDT payment address and blockchain payment instructions.
+</div>
+
+`;
+
+
+simulatePaymentButton.style.display =
+"inline-block";
+
+
+paymentModal.classList.add(
+"active"
+);
+
+}
+
+
+/* =========================
+   CLOSE PAYMENT
+   ========================= */
+
+closePaymentModal.addEventListener(
+"click",
+() => {
+
+paymentModal.classList.remove(
+"active"
+);
+
+currentPayment = null;
+
+});
+
+
+/* =========================
+   SIMULATE PAYMENT
+   ========================= */
+
+simulatePaymentButton.addEventListener(
+"click",
+async () => {
+
+if(!currentUser ||
+!currentPayment
+)
+return;
+
+
+try{
+
+simulatePaymentButton.disabled =
+true;
+
+
+simulatePaymentButton.textContent =
+"Processing test payment...";
+
+
+const paymentID =
+generatePaymentID();
+
+
+const transactionHash =
+"TEST-" +
+Date.now() +
+"-" +
+Math.random()
+.toString(36)
+.substring(2,12)
+.toUpperCase();
+
+
+/*
+ * PRIMARY PURCHASE
+ */
+
+if(
+currentPayment.type ===
+"primary"
+){
+
+const asset =
+currentPayment.asset;
+
+
+const ownershipRef =
+doc(
+db,
+"users",
+currentUser.uid,
+"memeCoins",
+currentPayment.assetID
+);
+
+
+const existing =
+await getDoc(
+ownershipRef
+);
+
+
+if(existing.exists()){
+
+setStatus(
+"❌ You already own this asset."
+);
+
+simulatePaymentButton.disabled =
+false;
+
+return;
+
+}
+
+
+await setDoc(
+ownershipRef,
+{
+
+coinID:
+currentPayment.assetID,
+
+name:
+asset.name,
+
+symbol:
+asset.symbol,
+
+description:
+asset.description || "",
+
+imageURL:
+asset.imageURL || "",
+
+tier:
+asset.tier ||
+"Not Yet Ranked",
+
+ownerUID:
+currentUser.uid,
+
+ownerName:
+currentUser.displayName ||
+"",
+
+acquisitionType:
+"primary-test-purchase",
+
+purchasePrice:
+currentPayment.price,
+
+purchaseCurrency:
+"USDT",
+
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+currentPayment.fee,
+
+buyerTotal:
+currentPayment.total,
+
+paymentStatus:
+"verified",
+
+paymentID:
+paymentID,
+
+transactionHash:
+transactionHash,
+
+acquiredAt:
+new Date().toISOString()
+
+}
+);
+
+
+await setDoc(
+doc(
+db,
+"transactions",
+generateTransactionID()
+),
+{
+
+paymentID:
+paymentID,
+
+assetID:
+currentPayment.assetID,
+
+buyerUID:
+currentUser.uid,
+
+buyerName:
+currentUser.displayName ||
+"",
+
+sellerUID:
+ADMIN_UID,
+
+amount:
+currentPayment.price,
+
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+currentPayment.fee,
+
+buyerTotal:
+currentPayment.total,
+
+currency:
+"USDT",
+
+paymentStatus:
+"verified",
+
+transactionHash:
+transactionHash,
+
+status:
+"completed",
+
+type:
+"primary-test-purchase",
+
+createdAt:
+new Date().toISOString()
+
+}
+);
+
+
+setStatus(
+`✅ Test payment verified! You paid $${formatMoney(currentPayment.total)} USDT. Asset transferred to you.`
+);
+
+
+paymentModal.classList.remove(
+"active"
+);
+
+
+currentPayment = null;
+
+
+await loadMyCoins();
+
+await loadCustomizeAssets();
+
+await loadSellAssets();
+
+await loadMarketplace();
+
+await loadPaymentHistory();
+
+return;
+
+}
+
+
+/*
+ * USER-TO-USER PURCHASE
+ */
+
+if(
+currentPayment.type ===
+"trade"
+){
+
+const requestID =
+currentPayment.requestID;
+
+
+const requestRef =
+doc(
+db,
+"tradeRequests",
+requestID
+);
+
+
+const requestSnapshot =
+await getDoc(
+requestRef
+);
+
+
+if(!requestSnapshot.exists()){
+
+setStatus(
+"❌ Purchase request not found."
+);
+
+return;
+
+}
+
+
+const request =
+requestSnapshot.data();
+
+
+if(
+request.buyerUID !==
+currentUser.uid
+){
+
+setStatus(
+"❌ You are not the buyer."
+);
+
+return;
+
+}
+
+
+if(
+request.status !==
+"seller_accepted"
+){
+
+setStatus(
+"❌ This trade is not ready for payment."
+);
+
+return;
+
+}
+
+
+const expectedPrice =
+Number(request.price);
+
+
+const expectedFee =
+calculatePlatformFee(
+expectedPrice
+);
+
+
+const expectedTotal =
+calculateBuyerTotal(
+expectedPrice
+);
+
+
+await updateDoc(
+requestRef,
+{
+
+status:
+"payment_verified",
+
+paymentStatus:
+"verified",
+
+paymentID:
+paymentID,
+
+transactionHash:
+transactionHash,
+
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+expectedFee,
+
+buyerTotal:
+expectedTotal,
+
+paymentVerifiedAt:
+new Date().toISOString()
+
+}
+);
+
+
+/*
+ * Create payment transaction
+ * but DO NOT transfer ownership yet.
+ */
+
+await setDoc(
+doc(
+db,
+"transactions",
+generateTransactionID()
+),
+{
+
+paymentID:
+paymentID,
+
+requestID:
+requestID,
+
+listingID:
+request.listingID,
+
+assetID:
+request.assetID,
+
+sellerUID:
+request.sellerUID,
+
+sellerName:
+request.sellerName,
+
+buyerUID:
+request.buyerUID,
+
+buyerName:
+request.buyerName,
+
+amount:
+expectedPrice,
+
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+expectedFee,
+
+buyerTotal:
+expectedTotal,
+
+currency:
+"USDT",
+
+paymentStatus:
+"verified",
+
+transactionHash:
+transactionHash,
+
+status:
+"payment_verified",
+
+type:
+"user-to-user-test-trade",
+
+createdAt:
+new Date().toISOString()
+
+}
+);
+
+
+setStatus(
+`✅ Test payment verified! You paid $${formatMoney(expectedTotal)} USDT. Waiting for Admin approval.`
+);
+
+
+paymentModal.classList.remove(
+"active"
+);
+
+
+currentPayment = null;
+
+
+await loadMyTradeRequests();
+
+await loadTradeRequests();
+
+await loadPaymentHistory();
+
+}
+
+}
+catch(error){
+
+console.error(error);
+
+setStatus(
+"❌ Test payment failed: " +
+error.message
+);
+
+}
+finally{
+
+simulatePaymentButton.disabled =
+false;
+
+simulatePaymentButton.textContent =
+"🧪 Simulate USDT Payment";
+
+}
+
+});
+
+
+/* =========================
    ADMIN TRADE REQUESTS
    ========================= */
 
@@ -4303,7 +5039,7 @@ return;
 
 
 tradeRequests.innerHTML =
-"Loading trade requests...";
+"Loading...";
 
 
 try{
@@ -4317,8 +5053,7 @@ db,
 );
 
 
-tradeRequests.innerHTML =
-"";
+tradeRequests.innerHTML = "";
 
 
 let found = false;
@@ -4333,12 +5068,41 @@ docSnap.data();
 
 if(
 request.status !==
-"seller_accepted"
+"seller_accepted" &&
+request.status !==
+"payment_verified"
 )
 return;
 
 
 found = true;
+
+
+const sellerPrice =
+Number(request.price);
+
+
+const fee =
+Number(
+request.platformFee ||
+calculatePlatformFee(
+sellerPrice
+)
+);
+
+
+const total =
+Number(
+request.buyerTotal ||
+calculateBuyerTotal(
+sellerPrice
+)
+);
+
+
+const paymentVerified =
+request.paymentStatus ===
+"verified";
 
 
 const div =
@@ -4352,90 +5116,95 @@ div.className =
 div.innerHTML = `
 
 <div class="coin-name">
-
 🪙 ${escapeHTML(
 request.name
 )}
-
 </div>
 
-
 <div class="coin-symbol">
-
 ${escapeHTML(
 request.symbol
 )}
-
 </div>
 
-
 <div class="owner">
-
 Seller:
-
 ${escapeHTML(
 request.sellerName
 )}
-
 </div>
 
-
 <div class="owner">
-
 Buyer:
-
 ${escapeHTML(
 request.buyerName
 )}
+</div>
+
+<div class="payment-box">
+
+<div class="payment-row">
+<span>Seller Price</span>
+<strong>$${formatMoney(
+sellerPrice
+)}</strong>
+</div>
+
+<div class="payment-row fee">
+<span>Buyer Platform Fee (1%)</span>
+<strong>$${formatMoney(
+fee
+)}</strong>
+</div>
+
+<div class="payment-row payment-total">
+<span>Buyer Paid / Must Pay</span>
+<strong>$${formatMoney(
+total
+)} USDT</strong>
+</div>
 
 </div>
 
+<div class="${
+paymentVerified
+? "payment-verified"
+: "payment-pending"
+}">
 
-<div class="price">
-
-Buying Price:
-
-$${escapeHTML(
-request.price
-)}
-
-${escapeHTML(
-request.currency ||
-"USDT"
-)}
+${
+paymentVerified
+? "🟢 Payment Verified"
+: "🟡 Payment Pending"
+}
 
 </div>
 
+${
+request.transactionHash
+?
 
-<div class="tier">
-
-${escapeHTML(
-request.tier ||
-"Not Yet Ranked"
+`<div class="transaction-hash">
+Transaction: ${escapeHTML(
+request.transactionHash
 )}
+</div>`
 
-</div>
+:
 
+""
+
+}
+
+${
+paymentVerified
+?
+
+`
 
 <div class="small">
-
-Allowed range:
-
-${escapeHTML(
-getPriceRangeText(
-request.tier
-)
-)}
-
+Payment has been verified in TEST MODE. Ownership can now be transferred.
 </div>
-
-
-<div class="small">
-
-Seller accepted this purchase request.
-
-</div>
-
 
 <button
 class="approve-button"
@@ -4443,10 +5212,23 @@ data-request="${escapeHTML(
 docSnap.id
 )}">
 
-✅ Approve Trade
+✅ Approve Trade & Transfer Coin
 
 </button>
 
+`
+
+:
+
+`
+
+<div class="small">
+Admin approval is blocked until payment is verified.
+</div>
+
+`
+
+}
 
 <button
 class="reject-button"
@@ -4486,9 +5268,6 @@ button.addEventListener(
 "click",
 async () => {
 
-button.disabled =
-true;
-
 await approveTrade(
 button.dataset.request
 );
@@ -4508,9 +5287,6 @@ document
 button.addEventListener(
 "click",
 async () => {
-
-button.disabled =
-true;
 
 await rejectTrade(
 button.dataset.request
@@ -4595,11 +5371,13 @@ requestSnapshot.data();
 
 if(
 request.status !==
+"payment_verified" &&
+request.status !==
 "seller_accepted"
 ){
 
 setStatus(
-"❌ This request is not ready for Admin approval."
+"❌ This request is not ready."
 );
 
 return;
@@ -4608,8 +5386,24 @@ return;
 
 
 /*
- * Get seller ownership.
+ * IMPORTANT:
+ * In this version Admin cannot
+ * approve before payment is verified.
  */
+
+if(
+request.paymentStatus !==
+"verified"
+){
+
+setStatus(
+"❌ Payment must be verified before ownership transfer."
+);
+
+return;
+
+}
+
 
 const sellerCoinRef =
 doc(
@@ -4639,10 +5433,6 @@ return;
 
 }
 
-
-/*
- * Check buyer doesn't already own it.
- */
 
 const buyerCoinRef =
 doc(
@@ -4717,6 +5507,24 @@ request.price,
 purchaseCurrency:
 request.currency,
 
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+request.platformFee,
+
+buyerTotal:
+request.buyerTotal,
+
+paymentStatus:
+"verified",
+
+paymentID:
+request.paymentID,
+
+transactionHash:
+request.transactionHash,
+
 previousOwnerUID:
 request.sellerUID,
 
@@ -4737,7 +5545,7 @@ sellerCoinRef
 
 
 /*
- * Mark listing as sold.
+ * Mark listing sold.
  */
 
 const listingRef =
@@ -4764,11 +5572,23 @@ request.buyerName,
 soldAt:
 new Date().toISOString(),
 
-platformFee:
-"0.01",
+paymentStatus:
+"verified",
 
-platformFeeCurrency:
-request.currency
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+request.platformFee,
+
+buyerTotal:
+request.buyerTotal,
+
+paymentID:
+request.paymentID,
+
+transactionHash:
+request.transactionHash
 
 }
 );
@@ -4789,31 +5609,26 @@ approvedAt:
 new Date().toISOString(),
 
 approvedBy:
-currentUser.uid
+currentUser.uid,
+
+ownershipTransferred:
+true
 
 }
 );
 
 
 /*
- * Create transaction record.
+ * Create final transaction record.
  */
-
-const transactionID =
-"TX-" +
-Date.now();
-
 
 await setDoc(
 doc(
 db,
 "transactions",
-transactionID
+generateTransactionID()
 ),
 {
-
-transactionID:
-transactionID,
 
 requestID:
 requestID,
@@ -4839,14 +5654,26 @@ request.buyerName,
 amount:
 request.price,
 
+platformFeePercent:
+PLATFORM_FEE_PERCENT,
+
+platformFee:
+request.platformFee,
+
+buyerTotal:
+request.buyerTotal,
+
 currency:
 request.currency,
 
-platformFee:
-"0.01",
+paymentID:
+request.paymentID,
 
-platformFeeCurrency:
-request.currency,
+transactionHash:
+request.transactionHash,
+
+paymentStatus:
+"verified",
 
 status:
 "completed",
@@ -4862,7 +5689,7 @@ new Date().toISOString()
 
 
 setStatus(
-"✅ Trade approved! Ownership transferred."
+"✅ Trade approved! Payment verified and ownership transferred."
 );
 
 
@@ -4941,6 +5768,7 @@ setStatus(
 
 
 await loadTradeRequests();
+
 
 }
 catch(error){
@@ -5033,6 +5861,19 @@ return;
 }
 
 
+if(
+Number(price) <= 0
+){
+
+setStatus(
+"❌ Enter a valid price."
+);
+
+return;
+
+}
+
+
 try{
 
 const coinID =
@@ -5091,16 +5932,13 @@ document
 .getElementById("adminCoinName")
 .value = "";
 
-
 document
 .getElementById("adminCoinSymbol")
 .value = "";
 
-
 document
 .getElementById("adminCoinDescription")
 .value = "";
-
 
 document
 .getElementById("adminCoinPrice")
@@ -5122,6 +5960,146 @@ error.message
 }
 
 });
+
+
+/* =========================
+   PAYMENT HISTORY
+   ========================= */
+
+async function loadPaymentHistory(){
+
+if(!currentUser)
+return;
+
+
+paymentHistoryList.innerHTML =
+"Loading...";
+
+
+try{
+
+const q =
+query(
+collection(
+db,
+"transactions"
+),
+
+where(
+"buyerUID",
+"==",
+currentUser.uid
+)
+
+);
+
+
+const snapshot =
+await getDocs(q);
+
+
+paymentHistoryList.innerHTML = "";
+
+
+if(snapshot.empty){
+
+paymentHistoryList.innerHTML =
+'<div class="coin">No payment records yet.</div>';
+
+return;
+
+}
+
+
+snapshot.forEach(
+docSnap => {
+
+const tx =
+docSnap.data();
+
+
+const div =
+document.createElement("div");
+
+
+div.className =
+"history-item";
+
+
+div.innerHTML = `
+
+<strong>
+💳 ${escapeHTML(
+tx.type ||
+"Payment"
+)}
+</strong>
+
+<div class="small">
+Coin price:
+$${formatMoney(
+tx.amount || 0
+)} USDT
+</div>
+
+<div class="small">
+Platform fee:
+$${formatMoney(
+tx.platformFee || 0
+)} USDT
+</div>
+
+<div class="small">
+Total paid:
+$${formatMoney(
+tx.buyerTotal ||
+0
+)} USDT
+</div>
+
+<div class="small payment-verified">
+Payment:
+${escapeHTML(
+tx.paymentStatus ||
+tx.status ||
+"unknown"
+)}
+</div>
+
+${
+tx.transactionHash
+?
+
+`<div class="transaction-hash">
+${escapeHTML(
+tx.transactionHash
+)}
+</div>`
+
+:
+
+""
+
+}
+
+`;
+
+
+paymentHistoryList.appendChild(div);
+
+});
+
+}
+catch(error){
+
+console.error(error);
+
+paymentHistoryList.innerHTML =
+"❌ Could not load payment history.";
+
+}
+
+}
 
 
 /* =========================
@@ -5151,8 +6129,7 @@ db,
 );
 
 
-leaderboardList.innerHTML =
-"";
+leaderboardList.innerHTML = "";
 
 
 const users = [];
@@ -5181,15 +6158,6 @@ userDoc.id,
 let luxuryCount =
 0;
 
-let goldCount =
-0;
-
-let silverCount =
-0;
-
-let bronzeCount =
-0;
-
 
 coinsSnapshot.forEach(
 coinDoc => {
@@ -5198,14 +6166,10 @@ const coin =
 coinDoc.data();
 
 
-const tier =
+if(
 normalizeTier(
 coin.tier
-);
-
-
-if(
-tier ===
+) ===
 "LUXURY"
 ){
 
@@ -5213,87 +6177,20 @@ luxuryCount++;
 
 }
 
-
-if(
-tier ===
-"GOLD"
-){
-
-goldCount++;
-
-}
-
-
-if(
-tier ===
-"SILVER"
-){
-
-silverCount++;
-
-}
-
-
-if(
-tier ===
-"BRONZE"
-){
-
-bronzeCount++;
-
-}
-
 });
 
 
-/*
- * Higher tiers receive more
- * leaderboard points.
- */
-
-const leaderboardScore =
-
-(luxuryCount * 1000000) +
-
-(goldCount * 100000) +
-
-(silverCount * 10000) +
-
-(bronzeCount * 1000) +
-
-coinsSnapshot.size;
-
-
 users.push({
-
-uid:
-userDoc.id,
 
 name:
 userData.name ||
 "User",
 
-photoURL:
-userData.photoURL ||
-"",
-
 coins:
 coinsSnapshot.size,
 
 luxury:
-luxuryCount,
-
-gold:
-goldCount,
-
-silver:
-silverCount,
-
-bronze:
-bronzeCount,
-
-score:
-leaderboardScore
+luxuryCount
 
 });
 
@@ -5302,18 +6199,8 @@ leaderboardScore
 
 users.sort(
 (a,b) =>
-b.score - a.score
+b.coins - a.coins
 );
-
-
-if(users.length === 0){
-
-leaderboardList.innerHTML =
-'<div class="coin">No collectors yet.</div>';
-
-return;
-
-}
 
 
 users.forEach(
@@ -5329,82 +6216,22 @@ div.className =
 
 div.innerHTML = `
 
-<div class="leaderboard-user">
-
-<div class="leaderboard-rank">
-
-#${index + 1}
-
-</div>
-
-
-${
-user.photoURL
-
-?
-
-`<img
-class="leaderboard-photo"
-src="${escapeHTML(
-user.photoURL
-)}"
-alt="Profile">`
-
-:
-
-`<div
-class="leaderboard-photo"
-style="background:#ffffff15;display:flex;align-items:center;justify-content:center;">
-
-👤
-
-</div>`
-
-}
-
-
-<div style="flex:1">
-
 <strong>
-
+#${index + 1}
 ${escapeHTML(
 user.name
 )}
-
 </strong>
-
 
 <br><br>
 
-
 🪙 Coins:
 ${user.coins}
-
 
 <br>
 
 💎 Luxury:
 ${user.luxury}
-
-&nbsp;
-
-🥇 Gold:
-${user.gold}
-
-
-<br>
-
-🥈 Silver:
-${user.silver}
-
-&nbsp;
-
-🥉 Bronze:
-${user.bronze}
-
-</div>
-
-</div>
 
 `;
 
