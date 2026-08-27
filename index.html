@@ -70,7 +70,7 @@
         }
 
         button:disabled {
-            opacity: 0.6;
+            opacity: 0.55;
             cursor: not-allowed;
             transform: none;
         }
@@ -173,39 +173,22 @@
             font-size: 13px;
         }
 
-        .logout-button {
-            margin-top: 20px;
-            background: #ef4444;
-            color: white;
-        }
-
         .dashboard-title {
             margin-top: 28px;
             margin-bottom: 15px;
             font-size: 21px;
         }
 
-        .dashboard-grid {
+        .coming-soon {
             display: grid;
-            gap: 15px;
+            gap: 12px;
         }
 
         .feature {
-            padding: 20px;
-            border-radius: 16px;
+            padding: 18px;
+            border-radius: 14px;
             background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
             color: #d1d5db;
-        }
-
-        .feature-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .feature h3 {
-            color: white;
-            margin-bottom: 7px;
         }
 
         .create-coin-button {
@@ -216,7 +199,7 @@
 
         #createCoinForm {
             display: none;
-            margin-top: 15px;
+            margin-top: 12px;
             padding: 20px;
             border-radius: 16px;
             background: rgba(0, 0, 0, 0.22);
@@ -309,27 +292,28 @@
         }
 
         .my-coins-header h3 {
-            font-size: 18px;
-            color: white;
+            font-size: 20px;
         }
 
         .refresh-button {
-            padding: 8px 13px;
             background: rgba(255, 255, 255, 0.12);
             color: white;
+            padding: 9px 14px;
             font-size: 13px;
         }
 
-        #coinsLoading,
-        #noCoins {
-            padding: 20px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #cbd5e1;
+        #coinsLoading {
+            display: none;
+            padding: 15px;
+            color: #c4b5fd;
         }
 
         #noCoins {
             display: none;
+            padding: 22px 15px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #9ca3af;
         }
 
         #coinsList {
@@ -341,7 +325,7 @@
             padding: 18px;
             border-radius: 16px;
             background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(167, 139, 250, 0.20);
+            border: 1px solid rgba(255, 255, 255, 0.09);
             text-align: left;
         }
 
@@ -350,59 +334,43 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 12px;
-            margin-bottom: 12px;
         }
 
-        .coin-card-name {
+        .coin-card h4 {
             font-size: 20px;
-            font-weight: bold;
-            color: white;
+            margin-bottom: 5px;
         }
 
         .coin-symbol {
             display: inline-block;
-            margin-top: 5px;
-            padding: 4px 8px;
-            border-radius: 7px;
-            background: rgba(139, 92, 246, 0.25);
+            padding: 5px 9px;
+            border-radius: 8px;
+            background: rgba(167, 139, 250, 0.2);
             color: #c4b5fd;
             font-size: 12px;
             font-weight: bold;
         }
 
-        .coin-status {
-            padding: 5px 9px;
-            border-radius: 8px;
-            background: rgba(16, 185, 129, 0.15);
-            color: #a7f3d0;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
         .coin-description {
-            color: #cbd5e1;
-            font-size: 14px;
+            margin-top: 14px;
+            color: #d1d5db;
             line-height: 1.5;
-            margin-bottom: 14px;
+            font-size: 14px;
         }
 
         .coin-details {
             display: grid;
             gap: 8px;
+            margin-top: 15px;
+            padding-top: 13px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .coin-detail {
             display: flex;
             justify-content: space-between;
             gap: 15px;
-            padding: 9px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             font-size: 13px;
-        }
-
-        .coin-detail:last-child {
-            border-bottom: none;
         }
 
         .coin-detail-label {
@@ -411,51 +379,30 @@
 
         .coin-detail-value {
             color: white;
-            font-weight: bold;
             text-align: right;
             word-break: break-word;
         }
 
-        .coin-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 14px;
-        }
-
-        .copy-coin-button {
-            background: #6366f1;
-            color: white;
-            padding: 9px 12px;
-            font-size: 12px;
-        }
-
         .delete-coin-button {
-            background: #dc2626;
+            margin-top: 15px;
+            width: 100%;
+            background: #ef4444;
             color: white;
-            padding: 9px 12px;
-            font-size: 12px;
+            padding: 10px;
+            font-size: 13px;
         }
 
-        .coming-soon-box {
-            padding: 20px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+        .future-feature {
+            padding: 18px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #d1d5db;
         }
 
-        .coming-soon-box .icon {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
-
-        .coming-soon-box h3 {
-            margin-bottom: 5px;
+        .logout-button {
+            margin-top: 20px;
+            background: #ef4444;
             color: white;
-        }
-
-        .coming-soon-box p {
-            color: #9ca3af;
-            font-size: 14px;
         }
 
         .footer {
@@ -494,8 +441,13 @@
                 flex-direction: column;
             }
 
-            .coin-status {
-                align-self: flex-start;
+            .coin-detail {
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .coin-detail-value {
+                text-align: left;
             }
         }
     </style>
@@ -510,7 +462,7 @@
     <h1>MemeCoinSite</h1>
 
     <p class="subtitle">
-        Create, manage and discover your own MemeCoins.
+        Create, manage and explore your own MemeCoins.
     </p>
 
     <button id="loginBtn" class="login-button">
@@ -546,7 +498,6 @@
 
             </div>
 
-
             <div class="id-box">
 
                 <div class="id-title">
@@ -561,27 +512,25 @@
 
             </div>
 
-
             <h3 class="dashboard-title">
                 🚀 Dashboard
             </h3>
 
-
-            <div class="dashboard-grid">
+            <div class="coming-soon">
 
                 <!-- CREATE MEMECOIN -->
 
                 <div class="feature">
 
-                    <div class="feature-icon">
+                    <div style="font-size: 30px;">
                         🪙
                     </div>
 
-                    <h3>
+                    <h3 style="margin-top: 8px;">
                         Create MemeCoin
                     </h3>
 
-                    <p>
+                    <p style="margin-top: 7px; color: #d1d5db;">
                         Create your own MemeCoin and save it to your account.
                     </p>
 
@@ -593,7 +542,6 @@
 
                 </div>
 
-
                 <!-- CREATE MEMECOIN FORM -->
 
                 <div id="createCoinForm">
@@ -602,10 +550,7 @@
                         🪙 Create Your MemeCoin
                     </h3>
 
-
-                    <label
-                        class="form-label"
-                        for="coinName">
+                    <label class="form-label" for="coinName">
                         MemeCoin Name
                     </label>
 
@@ -616,10 +561,7 @@
                         maxlength="50"
                         placeholder="Example: Moon Dog">
 
-
-                    <label
-                        class="form-label"
-                        for="coinSymbol">
+                    <label class="form-label" for="coinSymbol">
                         Symbol
                     </label>
 
@@ -630,10 +572,7 @@
                         maxlength="10"
                         placeholder="Example: MDOG">
 
-
-                    <label
-                        class="form-label"
-                        for="coinDescription">
+                    <label class="form-label" for="coinDescription">
                         Description
                     </label>
 
@@ -643,10 +582,7 @@
                         maxlength="500"
                         placeholder="Tell people about your MemeCoin..."></textarea>
 
-
-                    <label
-                        class="form-label"
-                        for="coinSupply">
+                    <label class="form-label" for="coinSupply">
                         Total Supply
                     </label>
 
@@ -657,7 +593,6 @@
                         min="1"
                         step="1"
                         placeholder="Example: 1000000000">
-
 
                     <div class="form-buttons">
 
@@ -677,7 +612,6 @@
 
                     </div>
 
-
                     <div id="coinResult">
 
                         <div>
@@ -690,27 +624,14 @@
 
                 </div>
 
-
                 <!-- MY MEMECOINS -->
 
                 <div class="feature my-coins-section">
 
-                    <div class="feature-icon">
-                        📊
-                    </div>
-
-                    <h3>
-                        My MemeCoins
-                    </h3>
-
-                    <p>
-                        View and manage the MemeCoins you have created.
-                    </p>
-
                     <div class="my-coins-header">
 
                         <h3>
-                            Your Coins
+                            📊 My MemeCoins
                         </h3>
 
                         <button
@@ -721,61 +642,29 @@
 
                     </div>
 
-
                     <div id="coinsLoading">
                         Loading your MemeCoins...
                     </div>
 
-
                     <div id="noCoins">
-                        You haven't created any MemeCoins yet.
+                        🪙 You haven't created any MemeCoins yet.
                     </div>
-
 
                     <div id="coinsList"></div>
 
                 </div>
 
+                <!-- FUTURE FEATURES -->
 
-                <!-- WALLET -->
-
-                <div class="coming-soon-box">
-
-                    <div class="icon">
-                        💰
-                    </div>
-
-                    <h3>
-                        Wallet
-                    </h3>
-
-                    <p>
-                        Wallet functionality coming soon.
-                    </p>
-
+                <div class="future-feature">
+                    💰 Wallet — Coming Soon
                 </div>
 
-
-                <!-- TRANSACTIONS -->
-
-                <div class="coming-soon-box">
-
-                    <div class="icon">
-                        💳
-                    </div>
-
-                    <h3>
-                        Transactions
-                    </h3>
-
-                    <p>
-                        Transaction history coming soon.
-                    </p>
-
+                <div class="future-feature">
+                    💳 Transactions — Coming Soon
                 </div>
 
             </div>
-
 
             <button
                 id="logoutBtn"
@@ -786,7 +675,6 @@
         </div>
 
     </div>
-
 
     <div class="footer">
         © 2026 MemeCoinSite
@@ -900,77 +788,49 @@
     // Create MemeCoin elements
 
     const showCreateCoinBtn =
-        document.getElementById(
-            "showCreateCoinBtn"
-        );
+        document.getElementById("showCreateCoinBtn");
 
     const createCoinForm =
-        document.getElementById(
-            "createCoinForm"
-        );
+        document.getElementById("createCoinForm");
 
     const cancelCreateCoinBtn =
-        document.getElementById(
-            "cancelCreateCoinBtn"
-        );
+        document.getElementById("cancelCreateCoinBtn");
 
     const createCoinBtn =
-        document.getElementById(
-            "createCoinBtn"
-        );
+        document.getElementById("createCoinBtn");
 
     const coinName =
-        document.getElementById(
-            "coinName"
-        );
+        document.getElementById("coinName");
 
     const coinSymbol =
-        document.getElementById(
-            "coinSymbol"
-        );
+        document.getElementById("coinSymbol");
 
     const coinDescription =
-        document.getElementById(
-            "coinDescription"
-        );
+        document.getElementById("coinDescription");
 
     const coinSupply =
-        document.getElementById(
-            "coinSupply"
-        );
+        document.getElementById("coinSupply");
 
     const coinResult =
-        document.getElementById(
-            "coinResult"
-        );
+        document.getElementById("coinResult");
 
     const coinResultId =
-        document.getElementById(
-            "coinResultId"
-        );
+        document.getElementById("coinResultId");
 
 
     // My MemeCoins elements
 
     const refreshCoinsBtn =
-        document.getElementById(
-            "refreshCoinsBtn"
-        );
+        document.getElementById("refreshCoinsBtn");
 
     const coinsLoading =
-        document.getElementById(
-            "coinsLoading"
-        );
+        document.getElementById("coinsLoading");
 
     const noCoins =
-        document.getElementById(
-            "noCoins"
-        );
+        document.getElementById("noCoins");
 
     const coinsList =
-        document.getElementById(
-            "coinsList"
-        );
+        document.getElementById("coinsList");
 
 
     // Current logged-in user
@@ -1065,7 +925,6 @@
     async function loadMyMemeCoins() {
 
         if (!currentUser) {
-
             return;
         }
 
@@ -1076,7 +935,8 @@
         noCoins.style.display =
             "none";
 
-        coinsList.innerHTML = "";
+        coinsList.innerHTML =
+            "";
 
 
         try {
@@ -1091,9 +951,7 @@
 
 
             const snapshot =
-                await getDocs(
-                    coinsRef
-                );
+                await getDocs(coinsRef);
 
 
             coinsLoading.style.display =
@@ -1112,280 +970,34 @@
             const coins = [];
 
 
-            snapshot.forEach(
-                (coinDocument) => {
+            snapshot.forEach((coinDoc) => {
 
-                    coins.push({
-                        id: coinDocument.id,
-                        ...coinDocument.data()
-                    });
+                coins.push({
+                    id: coinDoc.id,
+                    ...coinDoc.data()
+                });
 
-                }
-            );
+            });
 
 
-            coins.sort(
-                (a, b) => {
+            coins.sort((a, b) => {
 
-                    return String(
-                        b.createdAt || ""
-                    ).localeCompare(
-                        String(
-                            a.createdAt || ""
-                        )
-                    );
+                const dateA =
+                    new Date(a.createdAt || 0);
 
-                }
-            );
+                const dateB =
+                    new Date(b.createdAt || 0);
 
+                return dateB - dateA;
 
-            coins.forEach(
-                (coin) => {
+            });
 
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
 
-                    card.className =
-                        "coin-card";
+            coins.forEach((coin) => {
 
+                createCoinCard(coin);
 
-                    const createdDate =
-                        coin.createdAt
-                            ? new Date(
-                                coin.createdAt
-                            ).toLocaleString()
-                            : "Not available";
-
-
-                    card.innerHTML = `
-
-                        <div class="coin-card-top">
-
-                            <div>
-
-                                <div class="coin-card-name">
-                                    🪙 ${escapeHTML(coin.name || "Unnamed Coin")}
-                                </div>
-
-                                <span class="coin-symbol">
-                                    $${escapeHTML(coin.symbol || "N/A")}
-                                </span>
-
-                            </div>
-
-                            <span class="coin-status">
-                                ${escapeHTML(coin.status || "created")}
-                            </span>
-
-                        </div>
-
-
-                        <div class="coin-description">
-                            ${escapeHTML(coin.description || "No description.")}
-                        </div>
-
-
-                        <div class="coin-details">
-
-                            <div class="coin-detail">
-
-                                <span class="coin-detail-label">
-                                    Total Supply
-                                </span>
-
-                                <span class="coin-detail-value">
-                                    ${escapeHTML(coin.totalSupply || "0")}
-                                </span>
-
-                            </div>
-
-
-                            <div class="coin-detail">
-
-                                <span class="coin-detail-label">
-                                    Coin ID
-                                </span>
-
-                                <span class="coin-detail-value">
-                                    ${escapeHTML(coin.coinID || coin.id)}
-                                </span>
-
-                            </div>
-
-
-                            <div class="coin-detail">
-
-                                <span class="coin-detail-label">
-                                    Created
-                                </span>
-
-                                <span class="coin-detail-value">
-                                    ${escapeHTML(createdDate)}
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="coin-actions">
-
-                            <button
-                                class="copy-coin-button"
-                                data-coin-id="${escapeHTML(coin.coinID || coin.id)}">
-                                📋 Copy ID
-                            </button>
-
-                            <button
-                                class="delete-coin-button"
-                                data-document-id="${escapeHTML(coin.id)}">
-                                🗑️ Delete
-                            </button>
-
-                        </div>
-
-                    `;
-
-
-                    coinsList.appendChild(
-                        card
-                    );
-
-                }
-            );
-
-
-            // Copy coin ID buttons
-
-            document
-                .querySelectorAll(
-                    ".copy-coin-button"
-                )
-                .forEach(
-                    (button) => {
-
-                        button.addEventListener(
-                            "click",
-                            async () => {
-
-                                const id =
-                                    button.dataset.coinId;
-
-                                try {
-
-                                    await navigator.clipboard.writeText(
-                                        id
-                                    );
-
-                                    button.textContent =
-                                        "✅ Copied!";
-
-                                    setTimeout(
-                                        () => {
-
-                                            button.textContent =
-                                                "📋 Copy ID";
-
-                                        },
-                                        2000
-                                    );
-
-                                } catch (error) {
-
-                                    status.textContent =
-                                        "Unable to copy Coin ID.";
-
-                                }
-
-                            }
-                        );
-
-                    }
-                );
-
-
-            // Delete buttons
-
-            document
-                .querySelectorAll(
-                    ".delete-coin-button"
-                )
-                .forEach(
-                    (button) => {
-
-                        button.addEventListener(
-                            "click",
-                            async () => {
-
-                                const documentId =
-                                    button.dataset.documentId;
-
-
-                                const confirmed =
-                                    confirm(
-                                        "Are you sure you want to delete this MemeCoin?"
-                                    );
-
-
-                                if (!confirmed) {
-
-                                    return;
-                                }
-
-
-                                try {
-
-                                    button.disabled =
-                                        true;
-
-                                    button.textContent =
-                                        "Deleting...";
-
-
-                                    const coinRef =
-                                        doc(
-                                            db,
-                                            "users",
-                                            currentUser.uid,
-                                            "memeCoins",
-                                            documentId
-                                        );
-
-
-                                    await deleteDoc(
-                                        coinRef
-                                    );
-
-
-                                    status.textContent =
-                                        "✅ MemeCoin deleted.";
-
-                                    await loadMyMemeCoins();
-
-
-                                } catch (error) {
-
-                                    console.error(error);
-
-                                    status.textContent =
-                                        "❌ Could not delete MemeCoin: " +
-                                        error.message;
-
-                                    button.disabled =
-                                        false;
-
-                                    button.textContent =
-                                        "🗑️ Delete";
-
-                                }
-
-                            }
-                        );
-
-                    }
-                );
+            });
 
 
         } catch (error) {
@@ -1398,23 +1010,255 @@
             status.textContent =
                 "❌ Could not load your MemeCoins: " +
                 error.message;
-
         }
-
     }
 
 
-    // Protect displayed Firestore text
+    // Create MemeCoin card
 
-    function escapeHTML(value) {
+    function createCoinCard(coin) {
 
-        return String(value)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+        const card =
+            document.createElement("div");
 
+        card.className =
+            "coin-card";
+
+
+        const top =
+            document.createElement("div");
+
+        top.className =
+            "coin-card-top";
+
+
+        const titleArea =
+            document.createElement("div");
+
+
+        const title =
+            document.createElement("h4");
+
+        title.textContent =
+            coin.name || "Unnamed Coin";
+
+
+        const symbol =
+            document.createElement("span");
+
+        symbol.className =
+            "coin-symbol";
+
+        symbol.textContent =
+            "$" + (coin.symbol || "N/A");
+
+
+        titleArea.appendChild(title);
+        titleArea.appendChild(symbol);
+
+
+        top.appendChild(titleArea);
+
+
+        card.appendChild(top);
+
+
+        const description =
+            document.createElement("p");
+
+        description.className =
+            "coin-description";
+
+        description.textContent =
+            coin.description ||
+            "No description provided.";
+
+
+        card.appendChild(description);
+
+
+        const details =
+            document.createElement("div");
+
+        details.className =
+            "coin-details";
+
+
+        // Coin ID
+
+        const idRow =
+            document.createElement("div");
+
+        idRow.className =
+            "coin-detail";
+
+        idRow.innerHTML =
+            '<span class="coin-detail-label">Coin ID</span>';
+
+        const idValue =
+            document.createElement("span");
+
+        idValue.className =
+            "coin-detail-value";
+
+        idValue.textContent =
+            coin.coinID || coin.id;
+
+        idRow.appendChild(idValue);
+
+        details.appendChild(idRow);
+
+
+        // Total Supply
+
+        const supplyRow =
+            document.createElement("div");
+
+        supplyRow.className =
+            "coin-detail";
+
+        supplyRow.innerHTML =
+            '<span class="coin-detail-label">Total Supply</span>';
+
+        const supplyValue =
+            document.createElement("span");
+
+        supplyValue.className =
+            "coin-detail-value";
+
+        supplyValue.textContent =
+            Number(
+                coin.totalSupply || 0
+            ).toLocaleString();
+
+        supplyRow.appendChild(supplyValue);
+
+        details.appendChild(supplyRow);
+
+
+        // Created Date
+
+        const dateRow =
+            document.createElement("div");
+
+        dateRow.className =
+            "coin-detail";
+
+        dateRow.innerHTML =
+            '<span class="coin-detail-label">Created</span>';
+
+        const dateValue =
+            document.createElement("span");
+
+        dateValue.className =
+            "coin-detail-value";
+
+
+        if (coin.createdAt) {
+
+            dateValue.textContent =
+                new Date(
+                    coin.createdAt
+                ).toLocaleString();
+
+        } else {
+
+            dateValue.textContent =
+                "Unknown";
+        }
+
+
+        dateRow.appendChild(dateValue);
+
+        details.appendChild(dateRow);
+
+
+        card.appendChild(details);
+
+
+        // Delete button
+
+        const deleteButton =
+            document.createElement("button");
+
+        deleteButton.className =
+            "delete-coin-button";
+
+        deleteButton.textContent =
+            "🗑️ Delete MemeCoin";
+
+
+        deleteButton.addEventListener(
+            "click",
+            () => deleteMemeCoin(coin.id)
+        );
+
+
+        card.appendChild(deleteButton);
+
+
+        coinsList.appendChild(card);
+    }
+
+
+    // Delete MemeCoin
+
+    async function deleteMemeCoin(coinID) {
+
+        if (!currentUser) {
+
+            status.textContent =
+                "❌ Please sign in first.";
+
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this MemeCoin?"
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        try {
+
+            status.textContent =
+                "Deleting MemeCoin...";
+
+
+            const coinRef =
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid,
+                    "memeCoins",
+                    coinID
+                );
+
+
+            await deleteDoc(coinRef);
+
+
+            status.textContent =
+                "✅ MemeCoin deleted successfully.";
+
+
+            await loadMyMemeCoins();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "❌ Could not delete MemeCoin: " +
+                error.message;
+        }
     }
 
 
@@ -1431,7 +1275,6 @@
                 "none";
 
             coinName.focus();
-
         }
     );
 
@@ -1445,14 +1288,20 @@
             createCoinForm.style.display =
                 "none";
 
-            coinName.value = "";
-            coinSymbol.value = "";
-            coinDescription.value = "";
-            coinSupply.value = "";
+            coinName.value =
+                "";
+
+            coinSymbol.value =
+                "";
+
+            coinDescription.value =
+                "";
+
+            coinSupply.value =
+                "";
 
             coinResult.style.display =
                 "none";
-
         }
     );
 
@@ -1599,7 +1448,6 @@
 
                     status:
                         "created"
-
                 };
 
 
@@ -1620,10 +1468,17 @@
                     "block";
 
 
-                coinName.value = "";
-                coinSymbol.value = "";
-                coinDescription.value = "";
-                coinSupply.value = "";
+                coinName.value =
+                    "";
+
+                coinSymbol.value =
+                    "";
+
+                coinDescription.value =
+                    "";
+
+                coinSupply.value =
+                    "";
 
 
                 // Immediately update My MemeCoins
@@ -1646,9 +1501,7 @@
 
                 createCoinBtn.textContent =
                     "🪙 Create MemeCoin";
-
             }
-
         }
     );
 
@@ -1659,31 +1512,13 @@
         "click",
         async () => {
 
-            if (!currentUser) {
-
-                status.textContent =
-                    "❌ Please sign in first.";
-
-                return;
-            }
-
-
-            refreshCoinsBtn.disabled =
-                true;
-
-            refreshCoinsBtn.textContent =
-                "Loading...";
-
+            status.textContent =
+                "Refreshing your MemeCoins...";
 
             await loadMyMemeCoins();
 
-
-            refreshCoinsBtn.disabled =
-                false;
-
-            refreshCoinsBtn.textContent =
-                "🔄 Refresh";
-
+            status.textContent =
+                "✅ MemeCoins refreshed.";
         }
     );
 
@@ -1723,9 +1558,7 @@
 
 
                 const userSnapshot =
-                    await getDoc(
-                        userRef
-                    );
+                    await getDoc(userRef);
 
 
                 let userData;
@@ -1761,7 +1594,6 @@
 
                         createdAt:
                             new Date().toISOString()
-
                     };
 
 
@@ -1769,7 +1601,6 @@
                         userRef,
                         userData
                     );
-
                 }
 
 
@@ -1783,8 +1614,6 @@
                 );
 
 
-                // Load user's coins
-
                 await loadMyMemeCoins();
 
 
@@ -1795,9 +1624,7 @@
                 status.textContent =
                     "❌ Login failed: " +
                     error.message;
-
             }
-
         }
     );
 
@@ -1823,15 +1650,12 @@
                     "✅ Copied!";
 
 
-                setTimeout(
-                    () => {
+                setTimeout(() => {
 
-                        copyIdBtn.textContent =
-                            "📋 Copy ID";
+                    copyIdBtn.textContent =
+                        "📋 Copy ID";
 
-                    },
-                    2000
-                );
+                }, 2000);
 
 
             } catch (error) {
@@ -1840,9 +1664,7 @@
 
                 status.textContent =
                     "Unable to copy ID.";
-
             }
-
         }
     );
 
@@ -1872,6 +1694,9 @@
                 coinsList.innerHTML =
                     "";
 
+                noCoins.style.display =
+                    "none";
+
                 status.textContent =
                     "You have been logged out.";
 
@@ -1881,9 +1706,7 @@
 
                 status.textContent =
                     "Logout failed.";
-
             }
-
         }
     );
 
@@ -1924,9 +1747,7 @@
 
 
                 const userSnapshot =
-                    await getDoc(
-                        userRef
-                    );
+                    await getDoc(userRef);
 
 
                 if (userSnapshot.exists()) {
@@ -1942,7 +1763,6 @@
 
 
                     await loadMyMemeCoins();
-
                 }
 
             } catch (error) {
@@ -1951,9 +1771,7 @@
 
                 status.textContent =
                     "Could not load your profile.";
-
             }
-
         }
     );
 
