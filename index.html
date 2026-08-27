@@ -7,633 +7,806 @@
 <title>MemeCoinSite</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-:root {
-    --bg: #090b12;
-    --card: #111522;
-    --card2: #171c2b;
-    --border: #282f43;
-    --text: #f4f7ff;
-    --muted: #9aa4ba;
-    --primary: #7c5cff;
-    --primary2: #9b83ff;
-    --green: #25d695;
-    --red: #ff5d73;
-    --yellow: #ffc857;
+:root{
+    --bg:#090b12;
+    --card:#111521;
+    --card2:#171c2a;
+    --border:#272e40;
+    --text:#f5f7fb;
+    --muted:#8e98aa;
+    --green:#35e38b;
+    --red:#ff5c72;
+    --yellow:#ffc857;
+    --blue:#5b8cff;
+    --purple:#9b6cff;
 }
 
-body {
-    min-height: 100vh;
-    font-family: Arial, Helvetica, sans-serif;
+body{
+    min-height:100vh;
     background:
-        radial-gradient(circle at top right, rgba(124,92,255,.15), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(37,214,149,.08), transparent 30%),
+        radial-gradient(circle at 10% 10%,rgba(91,140,255,.12),transparent 30%),
+        radial-gradient(circle at 90% 20%,rgba(155,108,255,.12),transparent 30%),
         var(--bg);
-    color: var(--text);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 button,
 input,
-textarea,
-select {
-    font: inherit;
+select{
+    font:inherit;
 }
 
-button {
-    cursor: pointer;
+button{
+    cursor:pointer;
 }
 
-.hidden {
-    display: none !important;
+.hidden{
+    display:none!important;
 }
 
 /* HEADER */
 
-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(9,11,18,.94);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(9,11,18,.94);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid var(--border);
 }
 
-.navbar {
-    max-width: 1250px;
-    margin: auto;
-    min-height: 72px;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+.navbar{
+    max-width:1400px;
+    margin:auto;
+    min-height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 22px;
+    gap:20px;
 }
 
-.logo {
-    font-size: 23px;
-    font-weight: 900;
-    color: white;
-    white-space: nowrap;
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+    font-weight:800;
+    white-space:nowrap;
 }
 
-.logo span {
-    color: var(--primary2);
+.logo-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#5b8cff,#9b6cff);
+    box-shadow:0 8px 25px rgba(91,140,255,.25);
 }
 
-.nav-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+.nav-links{
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
 }
 
-.nav-btn {
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    padding: 10px 13px;
-    border-radius: 10px;
+.nav-btn{
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    padding:10px 13px;
+    border-radius:10px;
+    transition:.2s;
 }
 
 .nav-btn:hover,
-.nav-btn.active {
-    color: white;
-    background: var(--card2);
+.nav-btn.active{
+    color:white;
+    background:var(--card2);
 }
 
-.wallet-btn {
-    background: var(--primary);
-    color: white;
-    border: 0;
-    padding: 10px 15px;
-    border-radius: 10px;
-    font-weight: 700;
+.wallet{
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
-.wallet-btn:hover {
-    background: var(--primary2);
+.wallet-balance{
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:9px 13px;
+    border-radius:10px;
+    font-size:13px;
+}
+
+.user-avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#35e38b,#5b8cff);
+    color:#06110b;
+    font-weight:800;
 }
 
 /* MAIN */
 
-main {
-    max-width: 1250px;
-    margin: auto;
-    padding: 35px 20px 80px;
+main{
+    max-width:1400px;
+    margin:auto;
+    padding:30px 22px 70px;
 }
 
-.hero {
-    padding: 35px 0 25px;
+.page{
+    display:none;
 }
 
-.hero h1 {
-    font-size: clamp(35px, 6vw, 64px);
-    line-height: 1;
-    max-width: 800px;
-    margin-bottom: 18px;
+.page.active{
+    display:block;
 }
 
-.gradient-text {
-    background: linear-gradient(90deg, #8c6cff, #d08cff, #43e7b2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+/* HERO */
+
+.hero{
+    padding:50px 0 35px;
+    display:grid;
+    grid-template-columns:1.4fr .6fr;
+    gap:25px;
+    align-items:center;
 }
 
-.hero p {
-    color: var(--muted);
-    max-width: 700px;
-    font-size: 17px;
-    line-height: 1.6;
+.hero h1{
+    font-size:clamp(38px,5vw,68px);
+    line-height:1;
+    margin-bottom:20px;
 }
 
-.hero-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 25px;
+.gradient-text{
+    background:linear-gradient(90deg,#5b8cff,#9b6cff,#35e38b);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.7;
+    max-width:700px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:12px;
+    margin-top:25px;
+    flex-wrap:wrap;
 }
 
 .primary-btn,
 .secondary-btn,
-.danger-btn {
-    border: 0;
-    padding: 12px 18px;
-    border-radius: 11px;
-    font-weight: 700;
+.danger-btn{
+    border:0;
+    border-radius:11px;
+    padding:12px 18px;
+    font-weight:700;
+    transition:.2s;
 }
 
-.primary-btn {
-    background: var(--primary);
-    color: white;
+.primary-btn{
+    background:var(--green);
+    color:#06110b;
 }
 
-.secondary-btn {
-    background: var(--card2);
-    color: white;
-    border: 1px solid var(--border);
+.primary-btn:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.08);
 }
 
-.danger-btn {
-    background: rgba(255,93,115,.12);
-    color: #ff8090;
-    border: 1px solid rgba(255,93,115,.25);
+.secondary-btn{
+    background:var(--card2);
+    border:1px solid var(--border);
+    color:white;
 }
 
-.primary-btn:hover {
-    background: var(--primary2);
+.secondary-btn:hover{
+    border-color:#4b5875;
 }
 
-/* STATS */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin: 25px 0 35px;
+.danger-btn{
+    background:rgba(255,92,114,.12);
+    color:#ff8293;
+    border:1px solid rgba(255,92,114,.25);
 }
 
-.stat {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 15px;
-    padding: 20px;
+.stats-box{
+    background:linear-gradient(145deg,#121725,#0d111b);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:25px;
 }
 
-.stat-label {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 7px;
+.stat{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 0;
+    border-bottom:1px solid var(--border);
 }
 
-.stat-value {
-    font-size: 25px;
-    font-weight: 800;
+.stat:last-child{
+    border-bottom:0;
+}
+
+.stat span:first-child{
+    color:var(--muted);
+}
+
+.stat strong{
+    font-size:18px;
 }
 
 /* SECTION */
 
-.section {
-    margin-top: 35px;
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin:30px 0 18px;
+    flex-wrap:wrap;
 }
 
-.section-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 17px;
+.section-header h2{
+    font-size:25px;
 }
 
-.section-head h2 {
-    font-size: 25px;
+.section-header p{
+    color:var(--muted);
+    margin-top:5px;
 }
 
-.section-head p {
-    color: var(--muted);
-    font-size: 14px;
+.filters{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-/* SEARCH */
-
-.market-tools {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+.search-box,
+.select-box{
+    background:var(--card);
+    border:1px solid var(--border);
+    color:white;
+    border-radius:10px;
+    padding:11px 13px;
+    outline:none;
 }
 
-.search {
-    flex: 1;
-    min-width: 220px;
+.search-box{
+    min-width:230px;
 }
 
-.search input,
-.form-control,
-textarea,
-select {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: white;
-    padding: 12px 14px;
-    border-radius: 10px;
-    outline: none;
-}
-
-.search input:focus,
-.form-control:focus,
-textarea:focus,
-select:focus {
-    border-color: var(--primary);
+.search-box:focus,
+.select-box:focus{
+    border-color:var(--blue);
 }
 
 /* COIN GRID */
 
-.coin-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 17px;
+.coin-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
 }
 
-.coin-card {
-    background: linear-gradient(145deg, var(--card), #0e121d);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    overflow: hidden;
-    transition: .2s;
+.coin-card{
+    background:linear-gradient(145deg,var(--card),#0e121d);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:18px;
+    transition:.25s;
+    position:relative;
+    overflow:hidden;
 }
 
-.coin-card:hover {
-    transform: translateY(-3px);
-    border-color: #424b68;
+.coin-card:hover{
+    transform:translateY(-4px);
+    border-color:#3b4660;
 }
 
-.coin-image {
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.coin-image{
+    height:170px;
+    border-radius:14px;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:65px;
     background:
-        radial-gradient(circle, rgba(124,92,255,.18), transparent 55%),
-        #0d111b;
-    font-size: 70px;
+        radial-gradient(circle,#ffffff22,transparent 45%),
+        linear-gradient(135deg,#1d2740,#171323);
+    border:1px solid #30384d;
+    position:relative;
 }
 
-.coin-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.coin-image .small-symbol{
+    position:absolute;
+    bottom:10px;
+    right:12px;
+    font-size:12px;
+    background:#0008;
+    padding:5px 8px;
+    border-radius:6px;
 }
 
-.coin-body {
-    padding: 17px;
+.coin-title-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:5px;
 }
 
-.coin-title {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    align-items: flex-start;
+.coin-title{
+    font-size:19px;
+    font-weight:800;
 }
 
-.coin-title h3 {
-    font-size: 19px;
+.coin-symbol{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:12px;
 }
 
-.symbol {
-    color: var(--primary2);
-    font-size: 13px;
-    font-weight: 700;
-    margin-top: 4px;
+.badge{
+    display:inline-flex;
+    align-items:center;
+    padding:5px 8px;
+    border-radius:7px;
+    font-size:11px;
+    font-weight:700;
+    white-space:nowrap;
 }
 
-.description {
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.5;
-    margin: 12px 0;
-    min-height: 40px;
+.badge.green{
+    color:#65efa8;
+    background:rgba(53,227,139,.1);
 }
 
-.badge {
-    display: inline-block;
-    padding: 5px 8px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 700;
-    background: rgba(255,200,87,.1);
-    color: var(--yellow);
+.badge.yellow{
+    color:#ffd66f;
+    background:rgba(255,200,87,.1);
 }
 
-.price-box {
-    background: rgba(255,255,255,.025);
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 10px;
-    margin-top: 10px;
+.badge.blue{
+    color:#80a4ff;
+    background:rgba(91,140,255,.1);
 }
 
-.price-row {
-    display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
-    gap: 10px;
+.badge.purple{
+    color:#ba9aff;
+    background:rgba(155,108,255,.1);
 }
 
-.price-row span:first-child {
-    color: var(--muted);
+.badge.red{
+    color:#ff8798;
+    background:rgba(255,92,114,.1);
 }
 
-.price-row strong {
-    color: white;
+.coin-info{
+    display:grid;
+    gap:8px;
+    margin:15px 0;
 }
 
-.coin-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 13px;
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
 }
 
-.coin-actions button {
-    flex: 1;
+.info-row span:first-child{
+    color:var(--muted);
 }
 
-/* DASHBOARD */
-
-.dashboard {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 18px;
+.coin-price{
+    font-size:23px;
+    font-weight:800;
+    margin:12px 0;
 }
 
-.panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 17px;
-    padding: 20px;
+.coin-price small{
+    color:var(--muted);
+    font-size:12px;
+    font-weight:normal;
 }
 
-.panel h3 {
-    margin-bottom: 15px;
+.card-actions{
+    display:flex;
+    gap:8px;
 }
 
-.owner {
-    color: var(--muted);
-    font-size: 13px;
+.card-actions button{
+    flex:1;
 }
 
-.owner strong {
-    color: white;
+/* TABLE */
+
+.table-wrap{
+    overflow-x:auto;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
 }
 
-/* LIST */
-
-.list-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 13px 0;
-    border-bottom: 1px solid var(--border);
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:800px;
 }
 
-.list-item:last-child {
-    border-bottom: 0;
+th,
+td{
+    text-align:left;
+    padding:15px;
+    border-bottom:1px solid var(--border);
 }
 
-.list-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+th{
+    color:var(--muted);
+    font-size:12px;
+    text-transform:uppercase;
 }
 
-.mini-coin {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: var(--card2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    font-size: 22px;
+td{
+    font-size:14px;
 }
 
-.mini-coin img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+tr:last-child td{
+    border-bottom:0;
+}
+
+/* FORMS */
+
+.form-card{
+    max-width:850px;
+    margin:30px auto;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:25px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    color:#c6ccda;
+    font-size:13px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    background:#0b0f18;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px;
+    color:white;
+    outline:none;
+}
+
+.form-group textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+    border-color:var(--blue);
+}
+
+.help-text{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.5;
+}
+
+.preview{
+    margin-top:20px;
+    padding:18px;
+    border:1px dashed #3a445b;
+    border-radius:14px;
 }
 
 /* MODAL */
 
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 500;
-    background: rgba(0,0,0,.72);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+    z-index:1000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
 }
 
-.modal {
-    width: min(650px, 100%);
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #101420;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 30px 100px rgba(0,0,0,.5);
+.modal-overlay.show{
+    display:flex;
 }
 
-.modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 20px;
+.modal{
+    width:min(700px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#111621;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 30px 100px #000;
 }
 
-.close {
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    font-size: 25px;
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
 }
 
-.close:hover {
-    color: white;
+.close-btn{
+    width:35px;
+    height:35px;
+    border-radius:9px;
+    border:1px solid var(--border);
+    background:var(--card2);
+    color:white;
 }
 
-.form-group {
-    margin-bottom: 15px;
+.purchase-summary{
+    background:#0b0f18;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+    margin:15px 0;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 7px;
-    color: #dbe1f0;
-    font-size: 13px;
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
 }
 
-textarea {
-    min-height: 100px;
-    resize: vertical;
+.summary-row:last-child{
+    border-bottom:0;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+.summary-total{
+    font-size:21px;
+    font-weight:800;
 }
 
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 20px;
+.fee-note{
+    margin-top:12px;
+    padding:12px;
+    border-radius:10px;
+    background:rgba(255,200,87,.08);
+    border:1px solid rgba(255,200,87,.2);
+    color:#ffd978;
+    font-size:13px;
+    line-height:1.5;
 }
 
-/* PAYMENT */
+/* DESIGN */
 
-.payment-summary {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    padding: 16px;
-    border-radius: 12px;
-    margin: 15px 0;
+.design-preview{
+    height:220px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:80px;
+    margin-bottom:20px;
+    border:1px solid var(--border);
+    background:linear-gradient(135deg,#202a45,#241934);
 }
 
-.total {
-    font-size: 24px;
-    font-weight: 900;
-    margin-top: 10px;
+.color-row{
+    display:flex;
+    gap:10px;
+    align-items:center;
 }
 
-.fee {
-    color: var(--yellow);
+.color-row input{
+    width:60px;
+    height:42px;
+    padding:3px;
 }
 
-.success {
-    color: var(--green);
+/* HISTORY */
+
+.history-item{
+    position:relative;
+    padding:18px 18px 18px 35px;
+    border-left:2px solid #33405b;
 }
 
-.error {
-    color: var(--red);
+.history-item::before{
+    content:"";
+    position:absolute;
+    left:-7px;
+    top:21px;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--blue);
 }
 
-/* TOAST */
-
-.toast-container {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.history-item h4{
+    margin-bottom:5px;
 }
 
-.toast {
-    min-width: 270px;
-    max-width: 400px;
-    background: #151a28;
-    border: 1px solid var(--border);
-    padding: 14px 16px;
-    border-radius: 11px;
-    box-shadow: 0 10px 40px rgba(0,0,0,.3);
+.history-item p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
 }
 
-.toast.success-toast {
-    border-color: rgba(37,214,149,.4);
-}
+/* NOTICE */
 
-.toast.error-toast {
-    border-color: rgba(255,93,115,.4);
+.notice{
+    padding:15px;
+    background:rgba(91,140,255,.08);
+    border:1px solid rgba(91,140,255,.2);
+    border-radius:12px;
+    color:#a9c0ff;
+    font-size:13px;
+    line-height:1.6;
+    margin:15px 0;
 }
 
 /* EMPTY */
 
-.empty {
-    padding: 40px 20px;
-    text-align: center;
-    color: var(--muted);
-    border: 1px dashed var(--border);
-    border-radius: 15px;
+.empty{
+    text-align:center;
+    padding:60px 20px;
+    background:var(--card);
+    border:1px dashed var(--border);
+    border-radius:16px;
+    color:var(--muted);
 }
 
-/* RESPONSIVE */
+/* TOAST */
 
-@media(max-width: 950px) {
-    .coin-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:2000;
+    background:#171d2a;
+    border:1px solid #34405a;
+    border-radius:12px;
+    padding:15px 18px;
+    min-width:270px;
+    transform:translateY(120px);
+    opacity:0;
+    transition:.3s;
+    box-shadow:0 15px 40px #0008;
+}
 
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
 
-    .dashboard {
-        grid-template-columns: 1fr;
+.toast.success{
+    border-color:rgba(53,227,139,.4);
+}
+
+.toast.error{
+    border-color:rgba(255,92,114,.4);
+}
+
+/* FOOTER */
+
+footer{
+    border-top:1px solid var(--border);
+    padding:25px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:1100px){
+    .coin-grid{
+        grid-template-columns:repeat(3,1fr);
     }
 }
 
-@media(max-width: 650px) {
-    .navbar {
-        align-items: flex-start;
-        flex-direction: column;
+@media(max-width:850px){
+    .hero{
+        grid-template-columns:1fr;
     }
 
-    .nav-buttons {
-        width: 100%;
-        justify-content: flex-start;
-        overflow-x: auto;
+    .coin-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .coin-grid {
-        grid-template-columns: 1fr;
+    .nav-links{
+        display:none;
     }
 
-    .stats {
-        grid-template-columns: 1fr 1fr;
+    .form-grid{
+        grid-template-columns:1fr;
     }
 
-    .form-grid {
-        grid-template-columns: 1fr;
+    .form-group.full{
+        grid-column:auto;
+    }
+}
+
+@media(max-width:600px){
+    main{
+        padding:20px 14px 50px;
     }
 
-    main {
-        padding-left: 13px;
-        padding-right: 13px;
+    .navbar{
+        padding:0 14px;
+    }
+
+    .wallet-balance{
+        display:none;
+    }
+
+    .coin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding-top:25px;
+    }
+
+    .hero h1{
+        font-size:42px;
+    }
+
+    .section-header{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .filters{
+        width:100%;
+    }
+
+    .search-box{
+        width:100%;
     }
 }
 </style>
@@ -645,31 +818,25 @@ textarea {
     <div class="navbar">
 
         <div class="logo">
-            Meme<span>CoinSite</span>
+            <div class="logo-icon">🪙</div>
+            <span>MemeCoinSite</span>
         </div>
 
-        <div class="nav-buttons">
+        <nav class="nav-links">
+            <button class="nav-btn active" onclick="showPage('home',this)">Home</button>
+            <button class="nav-btn" onclick="showPage('marketplace',this)">Marketplace</button>
+            <button class="nav-btn" onclick="showPage('mycoins',this)">My Coins</button>
+            <button class="nav-btn" onclick="showPage('listings',this)">My Listings</button>
+            <button class="nav-btn" onclick="showPage('history',this)">History</button>
+        </nav>
 
-            <button class="nav-btn active" onclick="showPage('market', this)">
-                Marketplace
-            </button>
+        <div class="wallet">
+            <div class="wallet-balance">
+                USDT Balance:
+                <strong id="walletBalance">$100.00</strong>
+            </div>
 
-            <button class="nav-btn" onclick="showPage('portfolio', this)">
-                My Coins
-            </button>
-
-            <button class="nav-btn" onclick="showPage('listings', this)">
-                My Listings
-            </button>
-
-            <button class="nav-btn" onclick="showPage('history', this)">
-                History
-            </button>
-
-            <button class="wallet-btn" onclick="openLogin()">
-                Login
-            </button>
-
+            <div class="user-avatar">U</div>
         </div>
 
     </div>
@@ -677,130 +844,144 @@ textarea {
 
 <main>
 
-<!-- MARKETPLACE -->
+<!-- HOME -->
 
-<section id="marketPage">
+<section id="home" class="page active">
 
     <div class="hero">
 
-        <h1>
-            Buy, customize &
-            <span class="gradient-text">
-                trade meme coins.
-            </span>
-        </h1>
+        <div>
+            <h1>
+                Buy. Own.
+                <span class="gradient-text">Redesign.</span>
+            </h1>
 
-        <p>
-            Discover unique meme coin designs, buy coins from MemeCoinSite
-            or other users, keep the previous design, or customize your
-            newly purchased coin.
-        </p>
+            <p>
+                MemeCoinSite is a marketplace where users can buy
+                unique meme coins, own them, customize their designs,
+                and resell them within the permitted pricing tiers.
+            </p>
 
-        <div class="hero-actions">
+            <div class="hero-buttons">
+                <button class="primary-btn"
+                        onclick="showPage('marketplace')">
+                    Explore Marketplace
+                </button>
 
-            <button class="primary-btn" onclick="scrollToMarketplace()">
-                Explore Coins
-            </button>
-
-            <button class="secondary-btn" onclick="showPage('portfolio')">
-                My Collection
-            </button>
-
-        </div>
-
-    </div>
-
-    <div class="stats">
-
-        <div class="stat">
-            <div class="stat-label">Available Coins</div>
-            <div class="stat-value" id="availableCount">0</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-label">Listed Coins</div>
-            <div class="stat-value" id="listedCount">0</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-label">My Coins</div>
-            <div class="stat-value" id="myCoinCount">0</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-label">Platform Fee</div>
-            <div class="stat-value">1%</div>
-        </div>
-
-    </div>
-
-    <div class="section" id="marketplace">
-
-        <div class="section-head">
-            <div>
-                <h2>Marketplace</h2>
-                <p>Buy directly from the platform or from another owner.</p>
+                <button class="secondary-btn"
+                        onclick="showPage('mycoins')">
+                    My Coins
+                </button>
             </div>
         </div>
 
-        <div class="market-tools">
+        <div class="stats-box">
 
-            <div class="search">
-                <input
-                    id="searchInput"
-                    type="text"
-                    placeholder="Search coin name or symbol..."
-                    oninput="renderMarketplace()"
-                >
+            <div class="stat">
+                <span>Total Coins</span>
+                <strong id="statCoins">0</strong>
             </div>
 
-            <select id="filterSelect" onchange="renderMarketplace()">
-                <option value="all">All Coins</option>
-                <option value="admin">Admin Listings</option>
-                <option value="user">User Listings</option>
-            </select>
+            <div class="stat">
+                <span>Marketplace Listings</span>
+                <strong id="statListings">0</strong>
+            </div>
+
+            <div class="stat">
+                <span>Your Coins</span>
+                <strong id="statOwned">0</strong>
+            </div>
+
+            <div class="stat">
+                <span>Platform Fee</span>
+                <strong>1%</strong>
+            </div>
 
         </div>
 
-        <div id="coinGrid" class="coin-grid"></div>
-
     </div>
+
+    <div class="section-header">
+        <div>
+            <h2>Featured MemeCoins</h2>
+            <p>Coins currently available in the marketplace.</p>
+        </div>
+    </div>
+
+    <div id="featuredCoins" class="coin-grid"></div>
 
 </section>
 
 
-<!-- PORTFOLIO -->
+<!-- MARKETPLACE -->
 
-<section id="portfolioPage" class="hidden">
+<section id="marketplace" class="page">
 
-    <div class="hero">
-        <h1>
-            My <span class="gradient-text">Collection</span>
-        </h1>
+    <div class="section-header">
 
-        <p>
-            Manage the meme coins you currently own and customize your
-            designs.
-        </p>
+        <div>
+            <h2>Marketplace</h2>
+            <p>Buy coins from MemeCoinSite or other users.</p>
+        </div>
+
+        <div class="filters">
+            <input
+                id="marketSearch"
+                class="search-box"
+                placeholder="Search coin..."
+                oninput="renderMarketplace()"
+            >
+
+            <select
+                id="tierFilter"
+                class="select-box"
+                onchange="renderMarketplace()"
+            >
+                <option value="all">All Tiers</option>
+                <option value="new">New / Unreviewed</option>
+                <option value="bronze">Bronze</option>
+                <option value="silver">Silver</option>
+                <option value="gold">Gold</option>
+                <option value="diamond">Diamond</option>
+            </select>
+        </div>
+
     </div>
 
-    <div id="portfolioGrid" class="coin-grid"></div>
+    <div id="marketplaceGrid" class="coin-grid"></div>
+
+</section>
+
+
+<!-- MY COINS -->
+
+<section id="mycoins" class="page">
+
+    <div class="section-header">
+
+        <div>
+            <h2>My Coins</h2>
+            <p>Coins you currently own.</p>
+        </div>
+
+    </div>
+
+    <div id="myCoinsGrid" class="coin-grid"></div>
 
 </section>
 
 
 <!-- MY LISTINGS -->
 
-<section id="listingsPage" class="hidden">
+<section id="listings" class="page">
 
-    <div class="hero">
-        <h1>
-            My <span class="gradient-text">Listings</span>
-        </h1>
+    <div class="section-header">
 
-        <p>
-            Manage coins you have listed for sale.
-        </p>
+        <div>
+            <h2>My Listings</h2>
+            <p>Coins you have listed for other users.</p>
+        </div>
+
     </div>
 
     <div id="myListings"></div>
@@ -810,20 +991,115 @@ textarea {
 
 <!-- HISTORY -->
 
-<section id="historyPage" class="hidden">
+<section id="history" class="page">
 
-    <div class="hero">
-        <h1>
-            Transaction <span class="gradient-text">History</span>
-        </h1>
+    <div class="section-header">
 
-        <p>
-            Your purchases, sales and ownership changes.
-        </p>
+        <div>
+            <h2>Ownership & Design History</h2>
+            <p>
+                See how a coin was designed and who previously owned it.
+            </p>
+        </div>
+
     </div>
 
-    <div class="panel">
-        <div id="historyList"></div>
+    <div id="historyContainer"></div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="admin" class="page">
+
+    <div class="section-header">
+        <div>
+            <h2>Admin Coin Creation</h2>
+            <p>Create coins that users can later buy.</p>
+        </div>
+    </div>
+
+    <div class="form-card">
+
+        <div class="notice">
+            Admin-created coins can be purchased by users.
+            Users cannot create completely new coins. They can only
+            customize coins that they already own.
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Coin Name</label>
+                <input id="adminCoinName"
+                       placeholder="Example: Golden Cat">
+            </div>
+
+            <div class="form-group">
+                <label>Symbol</label>
+                <input id="adminCoinSymbol"
+                       placeholder="Example: GCAT">
+            </div>
+
+            <div class="form-group">
+                <label>Initial Price (USDT)</label>
+                <input id="adminCoinPrice"
+                       type="number"
+                       min="1"
+                       step="0.01"
+                       placeholder="5">
+            </div>
+
+            <div class="form-group">
+                <label>Tier</label>
+
+                <select id="adminCoinTier">
+                    <option value="new">New / Unreviewed</option>
+                    <option value="bronze">Bronze</option>
+                    <option value="silver">Silver</option>
+                    <option value="gold">Gold</option>
+                    <option value="diamond">Diamond</option>
+                </select>
+
+            </div>
+
+            <div class="form-group full">
+                <label>Description</label>
+
+                <textarea
+                    id="adminCoinDescription"
+                    placeholder="Describe the coin..."
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Coin Emoji / Design</label>
+                <input id="adminCoinEmoji"
+                       value="🪙"
+                       placeholder="🐱">
+            </div>
+
+            <div class="form-group">
+                <label>Design Color</label>
+
+                <div class="color-row">
+                    <input id="adminCoinColor"
+                           type="color"
+                           value="#5b8cff">
+                </div>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <button class="primary-btn"
+                onclick="adminCreateCoin()">
+            + Create Coin
+        </button>
+
     </div>
 
 </section>
@@ -831,88 +1107,83 @@ textarea {
 </main>
 
 
-<!-- LOGIN MODAL -->
+<footer>
+    © 2026 MemeCoinSite — Demo marketplace frontend
+</footer>
 
-<div id="loginModal" class="modal-overlay hidden">
+
+<!-- PURCHASE MODAL -->
+
+<div id="purchaseModal" class="modal-overlay">
 
     <div class="modal">
 
         <div class="modal-header">
-            <h2>Login</h2>
+            <div>
+                <h2>Buy MemeCoin</h2>
+                <p style="color:var(--muted);margin-top:5px;">
+                    Review your payment before confirming.
+                </p>
+            </div>
 
-            <button class="close" onclick="closeModal('loginModal')">
-                ×
+            <button class="close-btn"
+                    onclick="closeModal('purchaseModal')">
+                ✕
             </button>
         </div>
 
-        <div class="form-group">
-
-            <label>Email</label>
-
-            <input
-                id="loginEmail"
-                class="form-control"
-                type="email"
-                placeholder="you@example.com"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Password</label>
-
-            <input
-                id="loginPassword"
-                class="form-control"
-                type="password"
-                placeholder="Password"
-            >
-
-        </div>
-
-        <div class="modal-actions">
-
-            <button
-                class="secondary-btn"
-                onclick="closeModal('loginModal')"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="primary-btn"
-                onclick="loginDemo()"
-            >
-                Login
-            </button>
-
-        </div>
-
-        <p style="color:var(--muted);font-size:12px;margin-top:15px;">
-            Firebase Authentication will be connected to this interface
-            in the backend step.
-        </p>
+        <div id="purchaseContent"></div>
 
     </div>
 
 </div>
 
 
-<!-- COIN DETAILS -->
+<!-- CUSTOMIZE MODAL -->
 
-<div id="detailsModal" class="modal-overlay hidden">
+<div id="customizeModal" class="modal-overlay">
 
     <div class="modal">
 
         <div class="modal-header">
 
-            <h2 id="detailsTitle">
-                Coin
-            </h2>
+            <div>
+                <h2>Customize Your Coin</h2>
 
-            <button class="close" onclick="closeModal('detailsModal')">
-                ×
+                <p style="color:var(--muted);margin-top:5px;">
+                    You can redesign a coin you already own.
+                </p>
+            </div>
+
+            <button class="close-btn"
+                    onclick="closeModal('customizeModal')">
+                ✕
+            </button>
+
+        </div>
+
+        <div id="customizeContent"></div>
+
+    </div>
+
+</div>
+
+
+<!-- DETAILS MODAL -->
+
+<div id="detailsModal" class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Coin Details</h2>
+            </div>
+
+            <button class="close-btn"
+                    onclick="closeModal('detailsModal')">
+                ✕
             </button>
 
         </div>
@@ -924,265 +1195,10 @@ textarea {
 </div>
 
 
-<!-- BUY MODAL -->
-
-<div id="buyModal" class="modal-overlay hidden">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <h2>Confirm Purchase</h2>
-
-            <button class="close" onclick="closeModal('buyModal')">
-                ×
-            </button>
-
-        </div>
-
-        <div id="buyContent"></div>
-
-        <div class="modal-actions">
-
-            <button
-                class="secondary-btn"
-                onclick="closeModal('buyModal')"
-            >
-                Cancel
-            </button>
-
-            <button
-                id="confirmBuyButton"
-                class="primary-btn"
-                onclick="confirmPurchase()"
-            >
-                Pay & Buy
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- CUSTOMIZE MODAL -->
-
-<div id="customizeModal" class="modal-overlay hidden">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <h2>Customize Coin</h2>
-
-            <button class="close" onclick="closeModal('customizeModal')">
-                ×
-            </button>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Coin Name</label>
-
-            <input
-                id="customName"
-                class="form-control"
-                placeholder="Coin name"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Symbol</label>
-
-            <input
-                id="customSymbol"
-                class="form-control"
-                placeholder="SYMBOL"
-                maxlength="10"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Design / Image URL</label>
-
-            <input
-                id="customImage"
-                class="form-control"
-                placeholder="https://..."
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Description</label>
-
-            <textarea
-                id="customDescription"
-                placeholder="Describe your design..."
-            ></textarea>
-
-        </div>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>Primary Color</label>
-
-                <input
-                    id="customColor1"
-                    class="form-control"
-                    type="color"
-                    value="#7c5cff"
-                >
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Secondary Color</label>
-
-                <input
-                    id="customColor2"
-                    class="form-control"
-                    type="color"
-                    value="#25d695"
-                >
-
-            </div>
-
-        </div>
-
-        <div class="modal-actions">
-
-            <button
-                class="secondary-btn"
-                onclick="closeModal('customizeModal')"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="primary-btn"
-                onclick="saveCustomization()"
-            >
-                Save Design
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- LIST COIN MODAL -->
-
-<div id="listingModal" class="modal-overlay hidden">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <h2>List Coin For Sale</h2>
-
-            <button class="close" onclick="closeModal('listingModal')">
-                ×
-            </button>
-
-        </div>
-
-        <div id="listingCoinInfo"></div>
-
-        <div class="form-group">
-
-            <label>Your Selling Price (USDT)</label>
-
-            <input
-                id="listingPrice"
-                class="form-control"
-                type="number"
-                step="0.01"
-                min="0.01"
-                placeholder="5.00"
-            >
-
-        </div>
-
-        <div
-            id="minimumPriceMessage"
-            style="color:var(--muted);font-size:12px;"
-        ></div>
-
-        <div class="modal-actions">
-
-            <button
-                class="secondary-btn"
-                onclick="closeModal('listingModal')"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="primary-btn"
-                onclick="createListing()"
-            >
-                List Coin
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<div id="toastContainer" class="toast-container"></div>
+<div id="toast" class="toast"></div>
 
 
 <script>
-
-/*
-============================================================
-MEMECOINSITE
-FRONT-END APPLICATION
-============================================================
-
-IMPORTANT:
-
-This file is intentionally structured so that Firebase can be
-connected without rebuilding the entire interface.
-
-REAL MONEY / USDT TRANSACTIONS MUST NOT BE TRUSTED TO THIS
-CLIENT-SIDE CODE.
-
-The final production flow will be:
-
-Buyer
-   ↓
-USDT payment
-   ↓
-Backend verifies payment
-   ↓
-1% platform fee calculated
-   ↓
-Seller receives listing price
-   ↓
-Ownership transferred
-   ↓
-Transaction recorded
-
-That secure backend/rules step comes after this interface.
-============================================================
-*/
-
 
 /* =========================================================
    CONFIGURATION
@@ -1190,748 +1206,275 @@ That secure backend/rules step comes after this interface.
 
 const PLATFORM_FEE_PERCENT = 1;
 
-
-/*
-Tier pricing.
-
-These are examples based on the pricing system we discussed.
-
-The important rule is:
-
-SELLING PRICE >= MINIMUM PRICE
-
-Users cannot bypass the minimum.
-*/
-
-const PRICE_TIERS = [
-    {
-        name: "New / Unreviewed",
-        min: 1,
-        max: 5
-    },
-    {
-        name: "Bronze",
-        min: 5,
-        max: 25
-    },
-    {
-        name: "Silver",
-        min: 25,
-        max: 100
-    },
-    {
-        name: "Gold",
-        min: 100,
-        max: 500
-    },
-    {
-        name: "Premium",
-        min: 500,
-        max: Infinity
-    }
-];
-
-
-/* =========================================================
-   DEMO USER
-========================================================= */
-
-/*
-This is temporary.
-
-Firebase Authentication will replace this later.
-*/
-
-let currentUser = {
-    uid: "demo-user-001",
-    name: "Black Devil",
-    email: "demo@example.com"
+const CURRENT_USER = {
+    id: "user_001",
+    name: "Black Devil"
 };
 
 
 /* =========================================================
-   DEMO COIN DATA
+   TIER RULES
+========================================================= */
+
+const TIER_RULES = {
+
+    new:{
+        name:"New / Unreviewed",
+        min:1,
+        max:5
+    },
+
+    bronze:{
+        name:"Bronze",
+        min:5,
+        max:25
+    },
+
+    silver:{
+        name:"Silver",
+        min:25,
+        max:100
+    },
+
+    gold:{
+        name:"Gold",
+        min:100,
+        max:500
+    },
+
+    diamond:{
+        name:"Diamond",
+        min:500,
+        max:5000
+    }
+
+};
+
+
+/* =========================================================
+   DEMO DATABASE
 ========================================================= */
 
 let coins = [
 
     {
-        id: "GCAT-001",
+        id:"coin_001",
+        name:"Golden Cat",
+        symbol:"GCAT",
+        emoji:"🐱",
+        color:"#ffc857",
+        tier:"new",
+        description:"My first custom MemeCoin design.",
+        adminCreated:true,
+        ownerId:null,
+        ownerName:null,
+        listing:null,
 
-        name: "Golden Cat",
-
-        symbol: "GCAT",
-
-        description:
-            "My first custom MemeCoin design.",
-
-        image: "",
-
-        price: 5,
-
-        ownerId: "admin",
-
-        ownerName: "MemeCoinSite",
-
-        sellerType: "admin",
-
-        tier: "New / Unreviewed",
-
-        minPrice: 1,
-
-        maxPrice: 5,
-
-        listed: true,
-
-        originalIssuer: "MemeCoinSite",
-
-        designHistory: [
-
+        history:[
             {
-                owner: "MemeCoinSite",
-                name: "Golden Cat",
-                symbol: "GCAT",
-                description:
-                    "Original Golden Cat design.",
-                image: "",
-                date: new Date().toISOString()
+                owner:"MemeCoinSite Admin",
+                action:"Created coin",
+                design:"Original Golden Cat design",
+                date:"2026-08-20"
             }
-
-        ],
-
-        colors: {
-            primary: "#ffc857",
-            secondary: "#7c5cff"
-        }
+        ]
     },
 
-
     {
-        id: "BDVL-001",
+        id:"coin_002",
+        name:"Black Devil",
+        symbol:"BDEV",
+        emoji:"😈",
+        color:"#9b6cff",
+        tier:"new",
+        description:"A dark meme coin created by MemeCoinSite.",
+        adminCreated:true,
+        ownerId:"user_001",
+        ownerName:"Black Devil",
+        listing:null,
 
-        name: "Black Devil",
-
-        symbol: "BDVL",
-
-        description:
-            "A dark custom meme coin design.",
-
-        image: "",
-
-        price: 10,
-
-        ownerId: "admin",
-
-        ownerName: "MemeCoinSite",
-
-        sellerType: "admin",
-
-        tier: "Bronze",
-
-        minPrice: 5,
-
-        maxPrice: 25,
-
-        listed: true,
-
-        originalIssuer: "MemeCoinSite",
-
-        designHistory: [
-
+        history:[
             {
-                owner: "MemeCoinSite",
-                name: "Black Devil",
-                symbol: "BDVL",
-                description:
-                    "Original Black Devil design.",
-                image: "",
-                date: new Date().toISOString()
+                owner:"MemeCoinSite Admin",
+                action:"Created coin",
+                design:"Original Devil design",
+                date:"2026-08-19"
+            },
+            {
+                owner:"Black Devil",
+                action:"Purchased coin",
+                design:"Original Devil design",
+                date:"2026-08-21"
             }
-
-        ],
-
-        colors: {
-            primary: "#7c5cff",
-            secondary: "#ff5d73"
-        }
+        ]
     },
 
+    {
+        id:"coin_003",
+        name:"Rocket Dog",
+        symbol:"RDOG",
+        emoji:"🚀",
+        color:"#5b8cff",
+        tier:"bronze",
+        description:"To the moon with Rocket Dog.",
+        adminCreated:true,
+        ownerId:null,
+        ownerName:null,
+        listing:{
+            sellerId:"user_002",
+            sellerName:"MoonWalker",
+            price:12
+        },
 
-    /*
-    This demonstrates a user-to-user listing.
-
-    User Black Devil currently owns it.
-    */
+        history:[
+            {
+                owner:"MemeCoinSite Admin",
+                action:"Created coin",
+                design:"Original Rocket Dog design",
+                date:"2026-08-10"
+            },
+            {
+                owner:"MoonWalker",
+                action:"Purchased coin",
+                design:"Rocket Dog design",
+                date:"2026-08-15"
+            }
+        ]
+    },
 
     {
-        id: "MOON-001",
+        id:"coin_004",
+        name:"Pepe King",
+        symbol:"PPEK",
+        emoji:"🐸",
+        color:"#35e38b",
+        tier:"silver",
+        description:"A legendary meme design.",
+        adminCreated:true,
+        ownerId:null,
+        ownerName:null,
+        listing:null,
 
-        name: "Moon Dog",
-
-        symbol: "MDOG",
-
-        description:
-            "Previously customized by another owner.",
-
-        image: "",
-
-        price: 8,
-
-        ownerId: "seller-002",
-
-        ownerName: "CryptoWolf",
-
-        sellerType: "user",
-
-        sellerId: "seller-002",
-
-        tier: "Bronze",
-
-        minPrice: 5,
-
-        maxPrice: 25,
-
-        listed: true,
-
-        originalIssuer: "MemeCoinSite",
-
-        designHistory: [
-
+        history:[
             {
-                owner: "MemeCoinSite",
-                name: "Moon Dog",
-                symbol: "MDOG",
-                description:
-                    "Original Moon Dog.",
-                image: "",
-                date: "2026-08-01T10:00:00Z"
-            },
-
-            {
-                owner: "CryptoWolf",
-                name: "Moon Dog",
-                symbol: "MDOG",
-                description:
-                    "Customized by CryptoWolf.",
-                image: "",
-                date: "2026-08-10T10:00:00Z"
+                owner:"MemeCoinSite Admin",
+                action:"Created coin",
+                design:"Original Pepe King",
+                date:"2026-08-01"
             }
-
-        ],
-
-        colors: {
-            primary: "#25d695",
-            secondary: "#7c5cff"
-        }
+        ]
     }
 
 ];
 
 
 /* =========================================================
-   USER OWNED COINS
+   WALLET
 ========================================================= */
 
-let ownedCoins = [
-
-    {
-        id: "OWN-001",
-
-        coinId: "USERCOIN-001",
-
-        name: "Fire Shiba",
-
-        symbol: "FSHIBA",
-
-        description:
-            "My customized Fire Shiba.",
-
-        image: "",
-
-        price: 15,
-
-        ownerId: currentUser.uid,
-
-        ownerName: currentUser.name,
-
-        sellerType: null,
-
-        listed: false,
-
-        originalIssuer: "MemeCoinSite",
-
-        tier: "Bronze",
-
-        minPrice: 5,
-
-        maxPrice: 25,
-
-        designHistory: [
-
-            {
-                owner: "MemeCoinSite",
-                name: "Fire Shiba",
-                symbol: "FSHIBA",
-                description:
-                    "Original Fire Shiba.",
-                image: "",
-                date: "2026-08-01T10:00:00Z"
-            },
-
-            {
-                owner: "Black Devil",
-                name: "Fire Shiba",
-                symbol: "FSHIBA",
-                description:
-                    "Customized Fire Shiba.",
-                image: "",
-                date: "2026-08-15T10:00:00Z"
-            }
-
-        ],
-
-        colors: {
-            primary: "#ff5d73",
-            secondary: "#ffc857"
-        }
-    }
-
-];
+let walletBalance = 100;
 
 
 /* =========================================================
-   TRANSACTION HISTORY
-========================================================= */
-
-let transactions = [
-
-    {
-        id: "TX-DEMO-001",
-
-        type: "purchase",
-
-        coinName: "Fire Shiba",
-
-        symbol: "FSHIBA",
-
-        amount: 15,
-
-        fee: 0.15,
-
-        total: 15.15,
-
-        status: "Completed",
-
-        date: "2026-08-15T10:00:00Z"
-    }
-
-];
-
-
-/* =========================================================
-   CURRENT STATE
+   STATE
 ========================================================= */
 
 let selectedCoinId = null;
 
-let selectedOwnedCoinId = null;
-
 
 /* =========================================================
-   LOCAL STORAGE
+   HELPERS
 ========================================================= */
 
-function saveLocalData() {
+function money(value){
 
-    localStorage.setItem(
-        "memecoin_ownedCoins",
-        JSON.stringify(ownedCoins)
-    );
+    return "$" + Number(value).toFixed(2);
 
-    localStorage.setItem(
-        "memecoin_coins",
-        JSON.stringify(coins)
-    );
-
-    localStorage.setItem(
-        "memecoin_transactions",
-        JSON.stringify(transactions)
-    );
 }
 
 
-function loadLocalData() {
+function feeFor(price){
 
-    const savedOwned =
-        localStorage.getItem("memecoin_ownedCoins");
+    return Number(price) * PLATFORM_FEE_PERCENT / 100;
 
-    const savedCoins =
-        localStorage.getItem("memecoin_coins");
-
-    const savedTransactions =
-        localStorage.getItem("memecoin_transactions");
+}
 
 
-    if (savedOwned) {
+function buyerTotal(price){
 
-        try {
+    return Number(price) + feeFor(price);
 
-            ownedCoins =
-                JSON.parse(savedOwned);
-
-        } catch (e) {}
-
-    }
+}
 
 
-    if (savedCoins) {
+function getTierName(tier){
 
-        try {
+    return TIER_RULES[tier]?.name || tier;
 
-            coins =
-                JSON.parse(savedCoins);
-
-        } catch (e) {}
-
-    }
+}
 
 
-    if (savedTransactions) {
+function getCoin(id){
 
-        try {
+    return coins.find(c => c.id === id);
 
-            transactions =
-                JSON.parse(savedTransactions);
+}
 
-        } catch (e) {}
 
-    }
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
 
 /* =========================================================
-   PAGE NAVIGATION
+   NAVIGATION
 ========================================================= */
 
-function showPage(page, clickedButton = null) {
+function showPage(pageId,button){
 
-    document
-        .getElementById("marketPage")
-        .classList.add("hidden");
+    document.querySelectorAll(".page")
+        .forEach(page => page.classList.remove("active"));
 
-    document
-        .getElementById("portfolioPage")
-        .classList.add("hidden");
+    const page = document.getElementById(pageId);
 
-    document
-        .getElementById("listingsPage")
-        .classList.add("hidden");
-
-    document
-        .getElementById("historyPage")
-        .classList.add("hidden");
-
-
-    if (page === "market") {
-
-        document
-            .getElementById("marketPage")
-            .classList.remove("hidden");
-
-        renderMarketplace();
-
+    if(page){
+        page.classList.add("active");
     }
 
-
-    if (page === "portfolio") {
-
-        document
-            .getElementById("portfolioPage")
-            .classList.remove("hidden");
-
-        renderPortfolio();
-
-    }
-
-
-    if (page === "listings") {
-
-        document
-            .getElementById("listingsPage")
-            .classList.remove("hidden");
-
-        renderListings();
-
-    }
-
-
-    if (page === "history") {
-
-        document
-            .getElementById("historyPage")
-            .classList.remove("hidden");
-
-        renderHistory();
-
-    }
-
-
-    document
-        .querySelectorAll(".nav-btn")
+    document.querySelectorAll(".nav-btn")
         .forEach(btn => btn.classList.remove("active"));
 
-
-    if (clickedButton) {
-
-        clickedButton.classList.add("active");
-
+    if(button){
+        button.classList.add("active");
     }
 
-}
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
-
-/* =========================================================
-   SCROLL
-========================================================= */
-
-function scrollToMarketplace() {
-
-    document
-        .getElementById("marketplace")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
-}
-
-
-/* =========================================================
-   MODAL FUNCTIONS
-========================================================= */
-
-function closeModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.add("hidden");
-
-}
-
-
-function openModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.remove("hidden");
-
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-function openLogin() {
-
-    openModal("loginModal");
-
-}
-
-
-function loginDemo() {
-
-    const email =
-        document.getElementById("loginEmail").value.trim();
-
-
-    if (!email) {
-
-        showToast(
-            "Please enter your email.",
-            "error"
-        );
-
-        return;
-
+    if(pageId === "marketplace"){
+        renderMarketplace();
     }
 
-
-    currentUser.email = email;
-
-
-    closeModal("loginModal");
-
-
-    showToast(
-        "Login successful.",
-        "success"
-    );
-
-    updateStats();
-
-}
-
-
-/* =========================================================
-   FEE CALCULATION
-========================================================= */
-
-function calculateFee(price) {
-
-    return price * PLATFORM_FEE_PERCENT / 100;
-
-}
-
-
-function calculateBuyerTotal(price) {
-
-    const fee =
-        calculateFee(price);
-
-    return price + fee;
-
-}
-
-
-/* =========================================================
-   PRICE TIER
-========================================================= */
-
-function getTierForPrice(price) {
-
-    for (const tier of PRICE_TIERS) {
-
-        if (
-            price >= tier.min &&
-            price <= tier.max
-        ) {
-
-            return tier;
-
-        }
-
+    if(pageId === "mycoins"){
+        renderMyCoins();
     }
 
-    return PRICE_TIERS[
-        PRICE_TIERS.length - 1
-    ];
-
-}
-
-
-/* =========================================================
-   VALIDATE SELLING PRICE
-========================================================= */
-
-function validateListingPrice(coin, price) {
-
-    const min =
-        Number(coin.minPrice || 1);
-
-    if (price < min) {
-
-        return {
-            valid: false,
-
-            message:
-                `Selling price cannot be lower than the minimum price of ${min} USDT.`
-        };
-
+    if(pageId === "listings"){
+        renderMyListings();
     }
 
-    return {
-        valid: true
-    };
-
-}
-
-
-/* =========================================================
-   MARKETPLACE RENDER
-========================================================= */
-
-function renderMarketplace() {
-
-    const grid =
-        document.getElementById("coinGrid");
-
-
-    const search =
-        document
-            .getElementById("searchInput")
-            .value
-            .toLowerCase()
-            .trim();
-
-
-    const filter =
-        document
-            .getElementById("filterSelect")
-            .value;
-
-
-    let marketplaceCoins =
-        coins.filter(c => c.listed);
-
-
-    if (filter === "admin") {
-
-        marketplaceCoins =
-            marketplaceCoins.filter(
-                c => c.sellerType === "admin"
-            );
-
+    if(pageId === "history"){
+        renderHistory();
     }
-
-
-    if (filter === "user") {
-
-        marketplaceCoins =
-            marketplaceCoins.filter(
-                c => c.sellerType === "user"
-            );
-
-    }
-
-
-    if (search) {
-
-        marketplaceCoins =
-            marketplaceCoins.filter(c =>
-
-                c.name
-                    .toLowerCase()
-                    .includes(search)
-
-                ||
-
-                c.symbol
-                    .toLowerCase()
-                    .includes(search)
-
-            );
-
-    }
-
-
-    if (!marketplaceCoins.length) {
-
-        grid.innerHTML = `
-            <div class="empty">
-                No coins found.
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    grid.innerHTML =
-        marketplaceCoins
-            .map(renderCoinCard)
-            .join("");
 
 }
 
@@ -1940,846 +1483,522 @@ function renderMarketplace() {
    COIN CARD
 ========================================================= */
 
-function renderCoinCard(coin) {
+function coinCard(coin,mode="market"){
 
-    const alreadyOwned =
-        isOwnedByCurrentUser(coin);
+    const tier = TIER_RULES[coin.tier];
+
+    let price = null;
+
+    if(mode === "market"){
+
+        if(coin.listing){
+            price = coin.listing.price;
+        }
+        else{
+            /*
+                Demo admin price.
+                In the real Firebase version this will come
+                from the database.
+            */
+            price = tier.min;
+        }
+
+    }
+
+    let sellerText = coin.listing
+        ? coin.listing.sellerName
+        : "MemeCoinSite Admin";
 
 
-    const fee =
-        calculateFee(coin.price);
+    let actionHTML = "";
 
+    if(mode === "market"){
 
-    const buyerTotal =
-        calculateBuyerTotal(coin.price);
+        if(coin.ownerId === CURRENT_USER.id){
+
+            actionHTML = `
+                <button class="secondary-btn"
+                        onclick="customizeCoin('${coin.id}')">
+                    Customize
+                </button>
+            `;
+
+        }
+        else{
+
+            actionHTML = `
+                <button class="primary-btn"
+                        onclick="openPurchase('${coin.id}')">
+                    Buy
+                </button>
+            `;
+
+        }
+
+    }
+
+    if(mode === "owned"){
+
+        actionHTML = `
+            <button class="secondary-btn"
+                    onclick="customizeCoin('${coin.id}')">
+                🎨 Customize
+            </button>
+
+            <button class="primary-btn"
+                    onclick="openSell('${coin.id}')">
+                Sell
+            </button>
+        `;
+
+    }
 
 
     return `
 
         <div class="coin-card">
 
-            <div
-                class="coin-image"
-                style="
-                    background:
-                    radial-gradient(
-                        circle,
-                        ${coin.colors?.primary || "#7c5cff"}33,
-                        transparent 60%
-                    ),
-                    #0d111b;
-                "
-            >
+            <div class="coin-image"
+                 style="background:
+                 radial-gradient(circle,${escapeHTML(coin.color)}44,transparent 45%),
+                 linear-gradient(135deg,#1d2740,#171323);">
 
-                ${
-                    coin.image
-                    ?
-                    `<img src="${escapeHTML(coin.image)}">`
-                    :
-                    "🪙"
-                }
+                <span>${escapeHTML(coin.emoji)}</span>
+
+                <span class="small-symbol">
+                    ${escapeHTML(coin.symbol)}
+                </span>
 
             </div>
 
-
-            <div class="coin-body">
+            <div class="coin-title-row">
 
                 <div class="coin-title">
-
-                    <div>
-
-                        <h3>
-                            🪙 ${escapeHTML(coin.name)}
-                        </h3>
-
-                        <div class="symbol">
-                            ${escapeHTML(coin.symbol)}
-                        </div>
-
-                    </div>
-
-                    <span class="badge">
-                        ${escapeHTML(coin.tier)}
-                    </span>
-
+                    ${escapeHTML(coin.name)}
                 </div>
 
+                <span class="badge ${coin.tier === "diamond" ? "purple" :
+                    coin.tier === "gold" ? "yellow" :
+                    coin.tier === "silver" ? "blue" :
+                    coin.tier === "bronze" ? "green" : "yellow"}">
 
-                <div class="description">
+                    ${escapeHTML(tier.name)}
 
-                    ${escapeHTML(coin.description)}
-
-                </div>
-
-
-                <div class="owner">
-
-                    Seller:
-                    <strong>
-                        ${escapeHTML(coin.ownerName)}
-                    </strong>
-
-                </div>
-
-
-                <div class="price-box">
-
-                    <div class="price-row">
-
-                        <span>Seller Price</span>
-
-                        <strong>
-                            ${formatUSDT(coin.price)} USDT
-                        </strong>
-
-                    </div>
-
-
-                    <div class="price-row">
-
-                        <span>Platform Fee (1%)</span>
-
-                        <strong class="fee">
-                            +${formatUSDT(fee)} USDT
-                        </strong>
-
-                    </div>
-
-
-                    <div class="price-row">
-
-                        <span>Buyer Pays</span>
-
-                        <strong>
-                            ${formatUSDT(buyerTotal)} USDT
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="coin-actions">
-
-                    <button
-                        class="secondary-btn"
-                        onclick="viewCoin('${coin.id}')"
-                    >
-                        View
-                    </button>
-
-
-                    ${
-                        alreadyOwned
-
-                        ?
-
-                        `
-                        <button
-                            class="secondary-btn"
-                            disabled
-                            style="opacity:.5;cursor:not-allowed;"
-                        >
-                            You Own This
-                        </button>
-                        `
-
-                        :
-
-                        `
-                        <button
-                            class="primary-btn"
-                            onclick="openBuy('${coin.id}')"
-                        >
-                            Buy
-                        </button>
-                        `
-                    }
-
-                </div>
+                </span>
 
             </div>
 
-        </div>
+            <div class="coin-symbol">
+                ${escapeHTML(coin.symbol)}
+            </div>
 
-    `;
+            <div class="coin-info">
 
-}
-
-
-/* =========================================================
-   VIEW COIN
-========================================================= */
-
-function viewCoin(id) {
-
-    const coin =
-        coins.find(c => c.id === id);
-
-
-    if (!coin) return;
-
-
-    document.getElementById("detailsTitle").textContent =
-        `${coin.name} (${coin.symbol})`;
-
-
-    const history =
-        coin.designHistory || [];
-
-
-    document.getElementById("detailsContent").innerHTML = `
-
-        <div
-            class="coin-image"
-            style="height:230px;"
-        >
-
-            ${
-                coin.image
-                ?
-                `<img src="${escapeHTML(coin.image)}">`
-                :
-                "🪙"
-            }
-
-        </div>
-
-
-        <div style="margin-top:18px;">
-
-            <p style="color:var(--muted);line-height:1.6;">
-                ${escapeHTML(coin.description)}
-            </p>
-
-
-            <div class="price-box">
-
-                <div class="price-row">
-
+                <div class="info-row">
                     <span>Seller</span>
-
-                    <strong>
-                        ${escapeHTML(coin.ownerName)}
-                    </strong>
-
+                    <strong>${escapeHTML(sellerText)}</strong>
                 </div>
 
-
-                <div class="price-row">
-
-                    <span>Price</span>
-
+                <div class="info-row">
+                    <span>Allowed range</span>
                     <strong>
-                        ${formatUSDT(coin.price)} USDT
+                        ${money(tier.min)} – ${money(tier.max)}
                     </strong>
-
                 </div>
-
-
-                <div class="price-row">
-
-                    <span>Minimum Allowed</span>
-
-                    <strong>
-                        ${formatUSDT(coin.minPrice)} USDT
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <h3 style="margin-top:20px;">
-                Design History
-            </h3>
-
-
-            <div style="margin-top:10px;">
 
                 ${
-                    history.length
-
+                    coin.ownerName
                     ?
-
-                    history
-                        .map((h, index) => `
-
-                            <div class="list-item">
-
-                                <div>
-
-                                    <strong>
-                                        Version ${index + 1}
-                                    </strong>
-
-                                    <div class="owner">
-                                        Designed by:
-                                        ${escapeHTML(h.owner)}
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        `)
-                        .join("")
-
+                    `
+                    <div class="info-row">
+                        <span>Current owner</span>
+                        <strong>${escapeHTML(coin.ownerName)}</strong>
+                    </div>
+                    `
                     :
-
-                    `<div class="empty">
-                        No design history.
-                    </div>`
-
+                    ""
                 }
 
             </div>
 
-        </div>
-
-    `;
-
-
-    openModal("detailsModal");
-
-}
-
-
-/* =========================================================
-   OPEN BUY
-========================================================= */
-
-function openBuy(id) {
-
-    const coin =
-        coins.find(c => c.id === id);
-
-
-    if (!coin) return;
-
-
-    if (isOwnedByCurrentUser(coin)) {
-
-        showToast(
-            "You already own this asset.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    selectedCoinId = id;
-
-
-    const fee =
-        calculateFee(coin.price);
-
-
-    const total =
-        calculateBuyerTotal(coin.price);
-
-
-    document.getElementById("buyContent").innerHTML = `
-
-        <div>
-
-            <h3>
-                🪙 ${escapeHTML(coin.name)}
-            </h3>
-
-            <p class="owner" style="margin-top:5px;">
-                ${escapeHTML(coin.symbol)}
-            </p>
-
-
-            <div class="payment-summary">
-
-                <div class="price-row">
-
-                    <span>Coin Price</span>
-
-                    <strong>
-                        ${formatUSDT(coin.price)} USDT
-                    </strong>
-
+            ${
+                price !== null
+                ?
+                `
+                <div class="coin-price">
+                    ${money(price)}
+                    <small>USDT</small>
                 </div>
+                `
+                :
+                ""
+            }
 
+            <div class="card-actions">
 
-                <div class="price-row">
+                ${actionHTML}
 
-                    <span>Platform Fee</span>
-
-                    <strong class="fee">
-                        ${formatUSDT(fee)} USDT
-                    </strong>
-
-                </div>
-
-
-                <div class="price-row">
-
-                    <span>Total Buyer Payment</span>
-
-                    <strong class="total">
-                        ${formatUSDT(total)} USDT
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div
-                style="
-                    padding:12px;
-                    border-radius:10px;
-                    background:rgba(37,214,149,.07);
-                    border:1px solid rgba(37,214,149,.2);
-                    color:var(--muted);
-                    font-size:13px;
-                    line-height:1.5;
-                "
-            >
-
-                The seller receives the listed price:
-                <strong style="color:white;">
-                    ${formatUSDT(coin.price)} USDT
-                </strong>.
-
-                The 1% platform fee is paid separately
-                by the buyer.
+                <button class="secondary-btn"
+                        onclick="showCoinDetails('${coin.id}')">
+                    Details
+                </button>
 
             </div>
 
         </div>
-
     `;
 
+}
 
-    openModal("buyModal");
+
+/* =========================================================
+   FEATURED
+========================================================= */
+
+function renderFeatured(){
+
+    const container =
+        document.getElementById("featuredCoins");
+
+    const available = coins
+        .filter(c => c.ownerId !== CURRENT_USER.id)
+        .slice(0,4);
+
+    container.innerHTML =
+        available.length
+        ?
+        available.map(c => coinCard(c,"market")).join("")
+        :
+        `<div class="empty">No featured coins available.</div>`;
 
 }
 
 
 /* =========================================================
-   CONFIRM PURCHASE
+   MARKETPLACE
 ========================================================= */
 
-async function confirmPurchase() {
+function renderMarketplace(){
 
-    const coin =
-        coins.find(c => c.id === selectedCoinId);
+    const container =
+        document.getElementById("marketplaceGrid");
 
+    const search =
+        (document.getElementById("marketSearch")?.value || "")
+        .toLowerCase();
 
-    if (!coin) return;
+    const tier =
+        document.getElementById("tierFilter")?.value || "all";
 
 
-    if (isOwnedByCurrentUser(coin)) {
+    const filtered = coins.filter(coin => {
 
-        showToast(
-            "You already own this asset.",
-            "error"
-        );
+        if(coin.ownerId === CURRENT_USER.id){
+            return false;
+        }
 
-        closeModal("buyModal");
+        const matchesSearch =
+            coin.name.toLowerCase().includes(search) ||
+            coin.symbol.toLowerCase().includes(search);
 
-        return;
+        const matchesTier =
+            tier === "all" || coin.tier === tier;
 
-    }
-
-
-    const button =
-        document.getElementById(
-            "confirmBuyButton"
-        );
-
-
-    button.disabled = true;
-
-    button.textContent =
-        "Processing...";
-
-
-    /*
-    IMPORTANT:
-
-    THIS IS ONLY A FRONT-END SIMULATION.
-
-    In the production version this exact point will call
-    Firebase/backend payment verification.
-
-    The browser must NEVER be allowed to decide that a USDT
-    payment was successful.
-    */
-
-
-    await wait(1000);
-
-
-    /*
-    Simulated successful payment.
-    */
-
-    completePurchase(coin);
-
-
-    button.disabled = false;
-
-    button.textContent =
-        "Pay & Buy";
-
-}
-
-
-/* =========================================================
-   COMPLETE PURCHASE
-========================================================= */
-
-function completePurchase(coin) {
-
-    const price =
-        Number(coin.price);
-
-
-    const fee =
-        calculateFee(price);
-
-
-    const total =
-        calculateBuyerTotal(price);
-
-
-    /*
-    Remove from marketplace.
-    */
-
-    coin.listed = false;
-
-
-    /*
-    Ownership transfer.
-
-    Admin listing:
-        Admin → Current User
-
-    User listing:
-        Previous User → Current User
-    */
-
-    coin.ownerId =
-        currentUser.uid;
-
-
-    coin.ownerName =
-        currentUser.name;
-
-
-    coin.sellerType = null;
-
-    coin.sellerId = null;
-
-
-    /*
-    Preserve design history.
-    */
-
-    if (!coin.designHistory) {
-
-        coin.designHistory = [];
-
-    }
-
-
-    /*
-    Add purchased coin to user's collection.
-    */
-
-    const existing =
-        ownedCoins.find(
-            c => c.coinId === coin.id
-        );
-
-
-    if (!existing) {
-
-        ownedCoins.push({
-
-            id:
-                "OWN-" +
-                Date.now(),
-
-            coinId:
-                coin.id,
-
-            name:
-                coin.name,
-
-            symbol:
-                coin.symbol,
-
-            description:
-                coin.description,
-
-            image:
-                coin.image,
-
-            price:
-                coin.price,
-
-            ownerId:
-                currentUser.uid,
-
-            ownerName:
-                currentUser.name,
-
-            listed:
-                false,
-
-            originalIssuer:
-                coin.originalIssuer,
-
-            tier:
-                coin.tier,
-
-            minPrice:
-                coin.minPrice,
-
-            maxPrice:
-                coin.maxPrice,
-
-            designHistory:
-                [...coin.designHistory],
-
-            colors:
-                coin.colors
-
-        });
-
-    }
-
-
-    /*
-    Transaction record.
-    */
-
-    transactions.unshift({
-
-        id:
-            "TX-" +
-            Date.now(),
-
-        type:
-            "purchase",
-
-        coinName:
-            coin.name,
-
-        symbol:
-            coin.symbol,
-
-        amount:
-            price,
-
-        fee:
-            fee,
-
-        total:
-            total,
-
-        status:
-            "Completed",
-
-        date:
-            new Date().toISOString()
+        return matchesSearch && matchesTier;
 
     });
 
 
-    saveLocalData();
+    if(!filtered.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No coins match your search.
+            </div>`;
+
+        return;
+    }
 
 
-    closeModal("buyModal");
-
-
-    renderMarketplace();
-
-    renderPortfolio();
-
-    updateStats();
-
-
-    showToast(
-        `${coin.name} purchased successfully.`,
-        "success"
-    );
+    container.innerHTML =
+        filtered.map(c => coinCard(c,"market")).join("");
 
 }
 
 
 /* =========================================================
-   PORTFOLIO
+   MY COINS
 ========================================================= */
 
-function renderPortfolio() {
+function renderMyCoins(){
 
-    const grid =
-        document.getElementById(
-            "portfolioGrid"
-        );
+    const container =
+        document.getElementById("myCoinsGrid");
+
+    const owned =
+        coins.filter(c => c.ownerId === CURRENT_USER.id);
+
+    if(!owned.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                <h3>You don't own any coins yet.</h3>
+                <br>
+                <button class="primary-btn"
+                        onclick="showPage('marketplace')">
+                    Explore Marketplace
+                </button>
+            </div>`;
+
+        return;
+    }
+
+    container.innerHTML =
+        owned.map(c => coinCard(c,"owned")).join("");
+
+}
 
 
-    if (!ownedCoins.length) {
+/* =========================================================
+   PURCHASE
+========================================================= */
 
-        grid.innerHTML = `
+function openPurchase(coinId){
 
-            <div class="empty">
+    const coin = getCoin(coinId);
 
-                You don't own any coins yet.
+    if(!coin){
+        return;
+    }
 
+    if(coin.ownerId === CURRENT_USER.id){
+
+        toast("You already own this asset.","error");
+        return;
+
+    }
+
+
+    let price;
+
+    if(coin.listing){
+
+        price = Number(coin.listing.price);
+
+    }
+    else{
+
+        /*
+            For admin-created coins, the current demo uses
+            the minimum price of the tier.
+
+            Later this will be replaced by the actual
+            admin listing price stored in Firebase.
+        */
+
+        price = Number(TIER_RULES[coin.tier].min);
+
+    }
+
+
+    const fee = feeFor(price);
+
+    const total = buyerTotal(price);
+
+    selectedCoinId = coinId;
+
+
+    document.getElementById("purchaseContent").innerHTML = `
+
+        <div class="design-preview"
+             style="background:
+             radial-gradient(circle,${escapeHTML(coin.color)}55,transparent 50%),
+             linear-gradient(135deg,#202a45,#241934);">
+
+            ${escapeHTML(coin.emoji)}
+
+        </div>
+
+        <h2>
+            ${escapeHTML(coin.name)}
+        </h2>
+
+        <p style="color:var(--muted);margin-top:5px;">
+            ${escapeHTML(coin.symbol)}
+        </p>
+
+        <div class="purchase-summary">
+
+            <div class="summary-row">
+                <span>Coin price</span>
+                <strong>${money(price)} USDT</strong>
             </div>
 
-        `;
+            <div class="summary-row">
+                <span>Platform fee (${PLATFORM_FEE_PERCENT}%)</span>
+                <strong>${money(fee)} USDT</strong>
+            </div>
+
+            <div class="summary-row summary-total">
+                <span>Total buyer payment</span>
+                <strong>${money(total)} USDT</strong>
+            </div>
+
+        </div>
+
+        <div class="fee-note">
+
+            The ${PLATFORM_FEE_PERCENT}% platform fee is added
+            <strong>on top of the coin price</strong> and is paid
+            by the buyer.
+
+            <br><br>
+
+            Seller price remains
+            <strong>${money(price)} USDT</strong>.
+
+        </div>
+
+        <div class="notice">
+
+            🔐 In the final version, ownership will transfer only
+            after the USDT transaction has been independently
+            verified on the blockchain.
+
+        </div>
+
+        <button class="primary-btn"
+                style="width:100%;margin-top:10px;"
+                onclick="simulateUSDTPayment()">
+
+            Pay ${money(total)} USDT
+
+        </button>
+
+    `;
+
+
+    document
+        .getElementById("purchaseModal")
+        .classList.add("show");
+
+}
+
+
+/* =========================================================
+   SIMULATED PAYMENT
+========================================================= */
+
+function simulateUSDTPayment(){
+
+    const coin = getCoin(selectedCoinId);
+
+    if(!coin){
+        return;
+    }
+
+
+    let price = coin.listing
+        ? Number(coin.listing.price)
+        : Number(TIER_RULES[coin.tier].min);
+
+
+    const total = buyerTotal(price);
+
+
+    if(walletBalance < total){
+
+        toast(
+            "Insufficient USDT balance.",
+            "error"
+        );
 
         return;
 
     }
 
 
-    grid.innerHTML =
-        ownedCoins
-            .map(coin => `
+    /*
+        DEMO ONLY
 
-                <div class="coin-card">
+        Real version:
 
-                    <div
-                        class="coin-image"
-                        style="
-                            background:
-                            radial-gradient(
-                                circle,
-                                ${coin.colors?.primary || "#7c5cff"}33,
-                                transparent 60%
-                            ),
-                            #0d111b;
-                        "
-                    >
-
-                        ${
-                            coin.image
-                            ?
-                            `<img src="${escapeHTML(coin.image)}">`
-                            :
-                            "🪙"
-                        }
-
-                    </div>
+        1. Create payment request
+        2. Buyer sends USDT
+        3. Backend verifies blockchain transaction
+        4. Backend confirms payment
+        5. Ownership changes
+        6. Seller receives sale amount
+        7. Platform keeps 1% fee
+    */
 
 
-                    <div class="coin-body">
-
-                        <div class="coin-title">
-
-                            <div>
-
-                                <h3>
-                                    ${escapeHTML(coin.name)}
-                                </h3>
-
-                                <div class="symbol">
-                                    ${escapeHTML(coin.symbol)}
-                                </div>
-
-                            </div>
-
-                            <span class="badge">
-                                Owned
-                            </span>
-
-                        </div>
+    walletBalance -= total;
 
 
-                        <div class="description">
-                            ${escapeHTML(coin.description)}
-                        </div>
+    const previousOwner =
+        coin.ownerName ||
+        (coin.listing ? coin.listing.sellerName : "MemeCoinSite Admin");
 
 
-                        <div class="price-box">
-
-                            <div class="price-row">
-
-                                <span>Minimum Price</span>
-
-                                <strong>
-                                    ${formatUSDT(coin.minPrice)}
-                                    USDT
-                                </strong>
-
-                            </div>
+    const sellerId =
+        coin.listing
+        ? coin.listing.sellerId
+        : "admin";
 
 
-                            <div class="price-row">
-
-                                <span>Status</span>
-
-                                <strong class="success">
-                                    ${
-                                        coin.listed
-                                        ? "Listed"
-                                        : "Not Listed"
-                                    }
-                                </strong>
-
-                            </div>
-
-                        </div>
+    const sellerName =
+        coin.listing
+        ? coin.listing.sellerName
+        : "MemeCoinSite Admin";
 
 
-                        <div class="coin-actions">
+    /*
+        Ownership transfer
+    */
 
-                            <button
-                                class="secondary-btn"
-                                onclick="openCustomize('${coin.id}')"
-                            >
-                                Customize
-                            </button>
+    coin.ownerId = CURRENT_USER.id;
+    coin.ownerName = CURRENT_USER.name;
 
 
-                            ${
-                                coin.listed
+    /*
+        Remove listing after successful purchase
+    */
 
-                                ?
+    coin.listing = null;
 
-                                `
-                                <button
-                                    class="danger-btn"
-                                    onclick="cancelListing('${coin.id}')"
-                                >
-                                    Cancel Listing
-                                </button>
-                                `
 
-                                :
+    /*
+        Add history
+    */
 
-                                `
-                                <button
-                                    class="primary-btn"
-                                    onclick="openListing('${coin.id}')"
-                                >
-                                    Sell
-                                </button>
-                                `
-                            }
+    coin.history.push({
 
-                        </div>
+        owner:CURRENT_USER.name,
 
-                    </div>
+        action:"Purchased coin",
 
-                </div>
+        design:"Inherited previous owner's design",
 
-            `)
-            .join("");
+        previousOwner:previousOwner,
+
+        date:new Date().toISOString().slice(0,10)
+
+    });
+
+
+    closeModal("purchaseModal");
+
+
+    updateWalletUI();
+
+    renderAll();
+
+
+    toast(
+        `Payment successful. ${coin.name} is now yours.`,
+        "success"
+    );
 
 }
 
@@ -2788,221 +2007,192 @@ function renderPortfolio() {
    CUSTOMIZATION
 ========================================================= */
 
-function openCustomize(ownedId) {
+function customizeCoin(coinId){
 
-    const coin =
-        ownedCoins.find(
-            c => c.id === ownedId
-        );
+    const coin = getCoin(coinId);
 
-
-    if (!coin) return;
+    if(!coin){
+        return;
+    }
 
 
-    selectedOwnedCoinId = ownedId;
+    if(coin.ownerId !== CURRENT_USER.id){
 
-
-    document.getElementById("customName").value =
-        coin.name || "";
-
-
-    document.getElementById("customSymbol").value =
-        coin.symbol || "";
-
-
-    document.getElementById("customImage").value =
-        coin.image || "";
-
-
-    document.getElementById("customDescription").value =
-        coin.description || "";
-
-
-    document.getElementById("customColor1").value =
-        coin.colors?.primary || "#7c5cff";
-
-
-    document.getElementById("customColor2").value =
-        coin.colors?.secondary || "#25d695";
-
-
-    openModal("customizeModal");
-
-}
-
-
-/* =========================================================
-   SAVE CUSTOMIZATION
-========================================================= */
-
-function saveCustomization() {
-
-    const coin =
-        ownedCoins.find(
-            c => c.id === selectedOwnedCoinId
-        );
-
-
-    if (!coin) return;
-
-
-    const oldName =
-        coin.name;
-
-
-    const newName =
-        document
-            .getElementById("customName")
-            .value
-            .trim();
-
-
-    const newSymbol =
-        document
-            .getElementById("customSymbol")
-            .value
-            .trim()
-            .toUpperCase();
-
-
-    const newImage =
-        document
-            .getElementById("customImage")
-            .value
-            .trim();
-
-
-    const newDescription =
-        document
-            .getElementById("customDescription")
-            .value
-            .trim();
-
-
-    if (!newName || !newSymbol) {
-
-        showToast(
-            "Coin name and symbol are required.",
+        toast(
+            "You can only customize coins you own.",
             "error"
         );
 
         return;
-
     }
 
 
-    /*
-    Preserve previous design.
-    */
+    selectedCoinId = coinId;
 
-    if (!coin.designHistory) {
 
-        coin.designHistory = [];
+    document.getElementById("customizeContent").innerHTML = `
+
+        <div id="designPreview"
+             class="design-preview"
+             style="background:
+             radial-gradient(circle,${escapeHTML(coin.color)}55,transparent 50%),
+             linear-gradient(135deg,#202a45,#241934);">
+
+            ${escapeHTML(coin.emoji)}
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Coin Display Emoji</label>
+
+                <input
+                    id="customEmoji"
+                    value="${escapeHTML(coin.emoji)}"
+                    maxlength="4"
+                    oninput="updateDesignPreview()"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Design Color</label>
+
+                <div class="color-row">
+
+                    <input
+                        id="customColor"
+                        type="color"
+                        value="${escapeHTML(coin.color)}"
+                        oninput="updateDesignPreview()"
+                    >
+
+                    <span class="help-text">
+                        Choose the new design color.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label>Design Description</label>
+
+                <textarea id="customDescription">${escapeHTML(
+                    coin.description
+                )}</textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="notice">
+
+            You are redesigning an asset you already own.
+
+            <br><br>
+
+            The coin itself remains the same asset.
+            Your new design will become part of its ownership
+            history.
+
+        </div>
+
+
+        <button class="primary-btn"
+                style="width:100%;"
+                onclick="saveCustomization()">
+
+            Save New Design
+
+        </button>
+
+    `;
+
+
+    document
+        .getElementById("customizeModal")
+        .classList.add("show");
+
+}
+
+
+function updateDesignPreview(){
+
+    const emoji =
+        document.getElementById("customEmoji")?.value || "🪙";
+
+    const color =
+        document.getElementById("customColor")?.value || "#5b8cff";
+
+    const preview =
+        document.getElementById("designPreview");
+
+
+    if(preview){
+
+        preview.innerHTML = emoji;
+
+        preview.style.background =
+            `radial-gradient(circle,${color}55,transparent 50%),
+             linear-gradient(135deg,#202a45,#241934)`;
 
     }
 
+}
 
-    coin.designHistory.push({
 
-        owner:
-            currentUser.name,
+function saveCustomization(){
 
-        name:
-            newName,
+    const coin = getCoin(selectedCoinId);
 
-        symbol:
-            newSymbol,
+    if(!coin){
+        return;
+    }
 
-        description:
-            newDescription,
 
-        image:
-            newImage,
+    const emoji =
+        document.getElementById("customEmoji").value.trim() || "🪙";
 
-        date:
-            new Date().toISOString()
+    const color =
+        document.getElementById("customColor").value;
+
+    const description =
+        document.getElementById("customDescription").value.trim();
+
+
+    coin.emoji = emoji;
+    coin.color = color;
+    coin.description = description;
+
+
+    coin.history.push({
+
+        owner:CURRENT_USER.name,
+
+        action:"Redesigned coin",
+
+        design:`${emoji} custom design`,
+
+        date:new Date().toISOString().slice(0,10)
 
     });
 
 
-    coin.name =
-        newName;
-
-
-    coin.symbol =
-        newSymbol;
-
-
-    coin.image =
-        newImage;
-
-
-    coin.description =
-        newDescription;
-
-
-    coin.colors = {
-
-        primary:
-            document
-                .getElementById("customColor1")
-                .value,
-
-        secondary:
-            document
-                .getElementById("customColor2")
-                .value
-
-    };
-
-
-    /*
-    If the coin is currently listed, synchronize its marketplace
-    representation too.
-    */
-
-    const marketplaceCoin =
-        coins.find(
-            c => c.id === coin.coinId
-        );
-
-
-    if (marketplaceCoin) {
-
-        marketplaceCoin.name =
-            coin.name;
-
-        marketplaceCoin.symbol =
-            coin.symbol;
-
-        marketplaceCoin.image =
-            coin.image;
-
-        marketplaceCoin.description =
-            coin.description;
-
-        marketplaceCoin.colors =
-            coin.colors;
-
-        marketplaceCoin.designHistory =
-            coin.designHistory;
-
-    }
-
-
-    saveLocalData();
-
-
     closeModal("customizeModal");
 
+    renderAll();
 
-    renderPortfolio();
-
-    renderMarketplace();
-
-
-    showToast(
-        `${oldName} redesigned successfully.`,
+    toast(
+        "Your coin design has been updated.",
         "success"
     );
 
@@ -3010,99 +2200,122 @@ function saveCustomization() {
 
 
 /* =========================================================
-   OPEN LISTING
+   SELL
 ========================================================= */
 
-function openListing(ownedId) {
+function openSell(coinId){
 
-    const coin =
-        ownedCoins.find(
-            c => c.id === ownedId
+    const coin = getCoin(coinId);
+
+    if(!coin){
+        return;
+    }
+
+
+    if(coin.ownerId !== CURRENT_USER.id){
+
+        toast(
+            "You can only sell coins you own.",
+            "error"
         );
 
+        return;
 
-    if (!coin) return;
-
-
-    selectedOwnedCoinId =
-        ownedId;
+    }
 
 
-    document.getElementById("listingCoinInfo").innerHTML = `
+    const tier =
+        TIER_RULES[coin.tier];
 
-        <div
-            class="payment-summary"
-        >
+
+    const existingPrice =
+        coin.listing?.price || tier.min;
+
+
+    document.getElementById("customizeContent").innerHTML = `
+
+        <h2>
+            List ${escapeHTML(coin.name)}
+        </h2>
+
+        <p style="color:var(--muted);margin:8px 0 20px;">
+            ${escapeHTML(coin.symbol)}
+        </p>
+
+        <div class="notice">
+
+            Allowed ${escapeHTML(tier.name)} price:
 
             <strong>
-                ${escapeHTML(coin.name)}
+                ${money(tier.min)}
+                –
+                ${money(tier.max)} USDT
             </strong>
 
-            <div class="owner">
-                ${escapeHTML(coin.symbol)}
-            </div>
+            <br><br>
 
-
-            <div
-                style="
-                    margin-top:10px;
-                    color:var(--muted);
-                    font-size:13px;
-                "
-            >
-
-                Minimum allowed price:
-                <strong style="color:white;">
-                    ${formatUSDT(coin.minPrice)} USDT
-                </strong>
-
-            </div>
+            You cannot list this coin below the minimum
+            permitted tier price.
 
         </div>
+
+
+        <div class="form-group">
+
+            <label>Your Selling Price (USDT)</label>
+
+            <input
+                id="sellingPrice"
+                type="number"
+                min="${tier.min}"
+                max="${tier.max}"
+                step="0.01"
+                value="${existingPrice}"
+            >
+
+        </div>
+
+        <br>
+
+        <button class="primary-btn"
+                style="width:100%;"
+                onclick="createListing('${coin.id}')">
+
+            List Coin for Sale
+
+        </button>
 
     `;
 
 
-    document.getElementById("listingPrice").value =
-        coin.price || coin.minPrice;
-
-
-    document.getElementById("minimumPriceMessage").textContent =
-        `Minimum allowed selling price: ${formatUSDT(coin.minPrice)} USDT`;
-
-
-    openModal("listingModal");
+    document
+        .getElementById("customizeModal")
+        .classList.add("show");
 
 }
 
 
-/* =========================================================
-   CREATE USER LISTING
-========================================================= */
+function createListing(coinId){
 
-function createListing() {
+    const coin = getCoin(coinId);
 
-    const coin =
-        ownedCoins.find(
-            c => c.id === selectedOwnedCoinId
-        );
-
-
-    if (!coin) return;
+    if(!coin){
+        return;
+    }
 
 
     const price =
-        Number(
-            document
-                .getElementById("listingPrice")
-                .value
-        );
+        Number(document.getElementById("sellingPrice").value);
 
 
-    if (!price || price <= 0) {
+    const tier =
+        TIER_RULES[coin.tier];
 
-        showToast(
-            "Enter a valid price.",
+
+    if(!Number.isFinite(price)){
+
+        toast(
+            "Enter a valid selling price.",
             "error"
         );
 
@@ -3111,17 +2324,10 @@ function createListing() {
     }
 
 
-    const validation =
-        validateListingPrice(
-            coin,
-            price
-        );
+    if(price < tier.min){
 
-
-    if (!validation.valid) {
-
-        showToast(
-            validation.message,
+        toast(
+            `Price cannot be below ${money(tier.min)} USDT.`,
             "error"
         );
 
@@ -3130,151 +2336,35 @@ function createListing() {
     }
 
 
-    /*
-    Update user's coin.
-    */
+    if(price > tier.max){
 
-    coin.price =
-        price;
-
-    coin.listed =
-        true;
-
-
-    /*
-    Find corresponding marketplace asset.
-    */
-
-    let marketplaceCoin =
-        coins.find(
-            c => c.id === coin.coinId
+        toast(
+            `Price cannot exceed ${money(tier.max)} USDT.`,
+            "error"
         );
 
-
-    /*
-    If it doesn't exist, create marketplace representation.
-    */
-
-    if (!marketplaceCoin) {
-
-        marketplaceCoin = {
-
-            id:
-                coin.coinId,
-
-            name:
-                coin.name,
-
-            symbol:
-                coin.symbol,
-
-            description:
-                coin.description,
-
-            image:
-                coin.image,
-
-            price:
-                price,
-
-            ownerId:
-                currentUser.uid,
-
-            ownerName:
-                currentUser.name,
-
-            sellerType:
-                "user",
-
-            sellerId:
-                currentUser.uid,
-
-            tier:
-                coin.tier,
-
-            minPrice:
-                coin.minPrice,
-
-            maxPrice:
-                coin.maxPrice,
-
-            listed:
-                true,
-
-            originalIssuer:
-                coin.originalIssuer,
-
-            designHistory:
-                coin.designHistory,
-
-            colors:
-                coin.colors
-
-        };
-
-
-        coins.push(
-            marketplaceCoin
-        );
-
-    } else {
-
-        marketplaceCoin.price =
-            price;
-
-        marketplaceCoin.ownerId =
-            currentUser.uid;
-
-        marketplaceCoin.ownerName =
-            currentUser.name;
-
-        marketplaceCoin.sellerType =
-            "user";
-
-        marketplaceCoin.sellerId =
-            currentUser.uid;
-
-        marketplaceCoin.listed =
-            true;
-
-        marketplaceCoin.name =
-            coin.name;
-
-        marketplaceCoin.symbol =
-            coin.symbol;
-
-        marketplaceCoin.description =
-            coin.description;
-
-        marketplaceCoin.image =
-            coin.image;
-
-        marketplaceCoin.designHistory =
-            coin.designHistory;
-
-        marketplaceCoin.colors =
-            coin.colors;
+        return;
 
     }
 
 
-    saveLocalData();
+    coin.listing = {
+
+        sellerId:CURRENT_USER.id,
+
+        sellerName:CURRENT_USER.name,
+
+        price:price
+
+    };
 
 
-    closeModal("listingModal");
+    closeModal("customizeModal");
 
+    renderAll();
 
-    renderPortfolio();
-
-    renderMarketplace();
-
-    renderListings();
-
-    updateStats();
-
-
-    showToast(
-        `${coin.name} listed for ${formatUSDT(price)} USDT.`,
+    toast(
+        `${coin.name} listed for ${money(price)} USDT.`,
         "success"
     );
 
@@ -3285,32 +2375,31 @@ function createListing() {
    MY LISTINGS
 ========================================================= */
 
-function renderListings() {
+function renderMyListings(){
 
     const container =
-        document.getElementById(
-            "myListings"
-        );
+        document.getElementById("myListings");
 
 
-    const listings =
-        ownedCoins.filter(
-            c =>
-                c.ownerId === currentUser.uid &&
-                c.listed
-        );
+    const listings = coins.filter(
+        coin =>
+            coin.listing &&
+            coin.listing.sellerId === CURRENT_USER.id
+    );
 
 
-    if (!listings.length) {
+    if(!listings.length){
 
         container.innerHTML = `
-
             <div class="empty">
 
-                You have no active listings.
+                <h3>No active listings.</h3>
+
+                <p style="margin-top:8px;">
+                    Coins you list for sale will appear here.
+                </p>
 
             </div>
-
         `;
 
         return;
@@ -3318,167 +2407,118 @@ function renderListings() {
     }
 
 
-    container.innerHTML = listings
-        .map(coin => {
+    container.innerHTML = `
 
-            const fee =
-                calculateFee(coin.price);
+        <div class="table-wrap">
 
-            const buyerTotal =
-                calculateBuyerTotal(coin.price);
+            <table>
 
+                <thead>
 
-            return `
+                    <tr>
 
-                <div
-                    class="panel"
-                    style="margin-bottom:12px;"
-                >
+                        <th>Coin</th>
+                        <th>Symbol</th>
+                        <th>Tier</th>
+                        <th>Your Price</th>
+                        <th>Buyer Pays</th>
+                        <th>Action</th>
 
-                    <div
-                        class="list-item"
-                    >
+                    </tr>
 
-                        <div class="list-left">
+                </thead>
 
-                            <div class="mini-coin">
+                <tbody>
 
-                                ${
-                                    coin.image
-                                    ?
-                                    `<img src="${escapeHTML(coin.image)}">`
-                                    :
-                                    "🪙"
-                                }
+                    ${listings.map(coin => {
 
-                            </div>
+                        const price =
+                            Number(coin.listing.price);
 
-                            <div>
+                        return `
 
-                                <strong>
+                            <tr>
+
+                                <td>
+                                    ${escapeHTML(coin.emoji)}
                                     ${escapeHTML(coin.name)}
-                                </strong>
+                                </td>
 
-                                <div class="owner">
+                                <td>
                                     ${escapeHTML(coin.symbol)}
-                                </div>
+                                </td>
 
-                            </div>
+                                <td>
+                                    ${escapeHTML(
+                                        getTierName(coin.tier)
+                                    )}
+                                </td>
 
-                        </div>
+                                <td>
+                                    ${money(price)} USDT
+                                </td>
 
+                                <td>
+                                    ${money(
+                                        buyerTotal(price)
+                                    )} USDT
+                                </td>
 
-                        <div style="text-align:right;">
+                                <td>
 
-                            <strong>
-                                ${formatUSDT(coin.price)}
-                                USDT
-                            </strong>
+                                    <button
+                                        class="danger-btn"
+                                        onclick="cancelListing('${coin.id}')">
 
-                            <div class="owner">
-                                Buyer pays
-                                ${formatUSDT(buyerTotal)}
-                                USDT
-                            </div>
+                                        Cancel Listing
 
-                        </div>
+                                    </button>
 
-                    </div>
+                                </td>
 
+                            </tr>
 
-                    <div
-                        style="
-                            margin-top:15px;
-                            display:flex;
-                            justify-content:space-between;
-                            gap:10px;
-                            align-items:center;
-                            flex-wrap:wrap;
-                        "
-                    >
+                        `;
 
-                        <div class="owner">
+                    }).join("")}
 
-                            Platform fee:
-                            ${formatUSDT(fee)}
-                            USDT
+                </tbody>
 
-                            <br>
+            </table>
 
-                            Seller receives:
-                            <strong>
-                                ${formatUSDT(coin.price)}
-                                USDT
-                            </strong>
-
-                        </div>
-
-
-                        <button
-                            class="danger-btn"
-                            onclick="cancelListing('${coin.id}')"
-                        >
-                            Cancel Listing
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        })
-        .join("");
+        </div>
+    `;
 
 }
 
 
-/* =========================================================
-   CANCEL LISTING
-========================================================= */
+function cancelListing(coinId){
 
-function cancelListing(ownedId) {
+    const coin = getCoin(coinId);
 
-    const coin =
-        ownedCoins.find(
-            c => c.id === ownedId
+    if(!coin || !coin.listing){
+        return;
+    }
+
+
+    if(coin.listing.sellerId !== CURRENT_USER.id){
+
+        toast(
+            "You cannot cancel another user's listing.",
+            "error"
         );
 
-
-    if (!coin) return;
-
-
-    coin.listed =
-        false;
-
-
-    const marketplaceCoin =
-        coins.find(
-            c => c.id === coin.coinId
-        );
-
-
-    if (marketplaceCoin) {
-
-        marketplaceCoin.listed =
-            false;
+        return;
 
     }
 
 
-    saveLocalData();
+    coin.listing = null;
 
 
-    renderPortfolio();
+    renderAll();
 
-    renderMarketplace();
-
-    renderListings();
-
-    updateStats();
-
-
-    showToast(
+    toast(
         "Listing cancelled.",
         "success"
     );
@@ -3487,25 +2527,166 @@ function cancelListing(ownedId) {
 
 
 /* =========================================================
+   COIN DETAILS
+========================================================= */
+
+function showCoinDetails(coinId){
+
+    const coin = getCoin(coinId);
+
+    if(!coin){
+        return;
+    }
+
+
+    const tier =
+        TIER_RULES[coin.tier];
+
+
+    document.getElementById("detailsContent").innerHTML = `
+
+        <div class="design-preview"
+             style="background:
+             radial-gradient(circle,${escapeHTML(coin.color)}55,transparent 50%),
+             linear-gradient(135deg,#202a45,#241934);">
+
+            ${escapeHTML(coin.emoji)}
+
+        </div>
+
+
+        <h2>
+            ${escapeHTML(coin.name)}
+        </h2>
+
+        <p style="color:var(--muted);margin-top:5px;">
+            ${escapeHTML(coin.symbol)}
+        </p>
+
+
+        <div class="purchase-summary">
+
+            <div class="summary-row">
+                <span>Tier</span>
+                <strong>
+                    ${escapeHTML(tier.name)}
+                </strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Allowed minimum</span>
+                <strong>
+                    ${money(tier.min)}
+                </strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Allowed maximum</span>
+                <strong>
+                    ${money(tier.max)}
+                </strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Current owner</span>
+                <strong>
+                    ${escapeHTML(
+                        coin.ownerName || "MemeCoinSite"
+                    )}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <p style="color:#c0c7d6;line-height:1.6;">
+            ${escapeHTML(coin.description)}
+        </p>
+
+
+        <h3 style="margin:25px 0 15px;">
+            Design & Ownership History
+        </h3>
+
+
+        <div>
+
+            ${
+                coin.history.map(item => `
+
+                    <div class="history-item">
+
+                        <h4>
+                            ${escapeHTML(item.action)}
+                        </h4>
+
+                        <p>
+                            Owner:
+                            <strong>
+                                ${escapeHTML(item.owner)}
+                            </strong>
+                        </p>
+
+                        <p>
+                            Design:
+                            ${escapeHTML(item.design)}
+                        </p>
+
+                        <p>
+                            Date:
+                            ${escapeHTML(item.date)}
+                        </p>
+
+                        ${
+                            item.previousOwner
+                            ?
+                            `
+                            <p>
+                                Previous owner:
+                                ${escapeHTML(item.previousOwner)}
+                            </p>
+                            `
+                            :
+                            ""
+                        }
+
+                    </div>
+
+                `).join("")
+            }
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("detailsModal")
+        .classList.add("show");
+
+}
+
+
+/* =========================================================
    HISTORY
 ========================================================= */
 
-function renderHistory() {
+function renderHistory(){
 
     const container =
-        document.getElementById(
-            "historyList"
-        );
+        document.getElementById("historyContainer");
 
 
-    if (!transactions.length) {
+    const owned =
+        coins.filter(c => c.ownerId === CURRENT_USER.id);
+
+
+    if(!owned.length){
 
         container.innerHTML = `
-
             <div class="empty">
-                No transactions yet.
+                You don't currently own any coins.
             </div>
-
         `;
 
         return;
@@ -3514,193 +2695,254 @@ function renderHistory() {
 
 
     container.innerHTML =
-        transactions
-            .map(tx => `
+        owned.map(coin => `
 
-                <div class="list-item">
+            <div class="form-card">
+
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:15px;
+                    margin-bottom:20px;
+                ">
+
+                    <div style="font-size:45px;">
+                        ${escapeHTML(coin.emoji)}
+                    </div>
 
                     <div>
 
-                        <strong>
-                            ${escapeHTML(tx.coinName)}
-                        </strong>
+                        <h2>
+                            ${escapeHTML(coin.name)}
+                        </h2>
 
-                        <div class="owner">
-
-                            ${
-                                tx.type === "purchase"
-                                ? "Purchased"
-                                : "Sold"
-                            }
-
-                            ·
-
-                            ${formatDate(tx.date)}
-
-                        </div>
-
-                    </div>
-
-
-                    <div style="text-align:right;">
-
-                        <strong>
-                            ${formatUSDT(tx.total)}
-                            USDT
-                        </strong>
-
-                        <div class="owner">
-
-                            Coin:
-                            ${formatUSDT(tx.amount)}
-
-                            · Fee:
-                            ${formatUSDT(tx.fee)}
-
-                        </div>
+                        <p style="color:var(--muted);">
+                            ${escapeHTML(coin.symbol)}
+                        </p>
 
                     </div>
 
                 </div>
 
-            `)
-            .join("");
+
+                ${coin.history.map(item => `
+
+                    <div class="history-item">
+
+                        <h4>
+                            ${escapeHTML(item.action)}
+                        </h4>
+
+                        <p>
+                            Owner:
+                            ${escapeHTML(item.owner)}
+                        </p>
+
+                        <p>
+                            Design:
+                            ${escapeHTML(item.design)}
+                        </p>
+
+                        <p>
+                            Date:
+                            ${escapeHTML(item.date)}
+                        </p>
+
+                    </div>
+
+                `).join("")}
+
+            </div>
+
+        `).join("");
 
 }
 
 
 /* =========================================================
-   STATS
+   ADMIN CREATE COIN
 ========================================================= */
 
-function updateStats() {
+function adminCreateCoin(){
 
-    const listed =
+    const name =
+        document.getElementById("adminCoinName").value.trim();
+
+    const symbol =
+        document.getElementById("adminCoinSymbol").value.trim()
+            .toUpperCase();
+
+    const price =
+        Number(document.getElementById("adminCoinPrice").value);
+
+    const tier =
+        document.getElementById("adminCoinTier").value;
+
+    const description =
+        document.getElementById("adminCoinDescription").value.trim();
+
+    const emoji =
+        document.getElementById("adminCoinEmoji").value.trim() || "🪙";
+
+    const color =
+        document.getElementById("adminCoinColor").value;
+
+
+    if(!name || !symbol || !description){
+
+        toast(
+            "Please fill all required fields.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const tierRule =
+        TIER_RULES[tier];
+
+
+    if(price < tierRule.min || price > tierRule.max){
+
+        toast(
+            `Price must be between ${money(tierRule.min)} and ${money(tierRule.max)} USDT.`,
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const newCoin = {
+
+        id:"coin_" + Date.now(),
+
+        name,
+
+        symbol,
+
+        emoji,
+
+        color,
+
+        tier,
+
+        description,
+
+        adminCreated:true,
+
+        ownerId:null,
+
+        ownerName:null,
+
+        listing:null,
+
+        adminPrice:price,
+
+        history:[
+
+            {
+                owner:"MemeCoinSite Admin",
+
+                action:"Created coin",
+
+                design:`Original ${name} design`,
+
+                date:new Date().toISOString().slice(0,10)
+
+            }
+
+        ]
+
+    };
+
+
+    coins.push(newCoin);
+
+
+    document.getElementById("adminCoinName").value="";
+    document.getElementById("adminCoinSymbol").value="";
+    document.getElementById("adminCoinPrice").value="";
+    document.getElementById("adminCoinDescription").value="";
+    document.getElementById("adminCoinEmoji").value="🪙";
+
+
+    renderAll();
+
+
+    toast(
+        `${name} created successfully.`,
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   UI UPDATE
+========================================================= */
+
+function updateWalletUI(){
+
+    document.getElementById("walletBalance")
+        .textContent =
+        money(walletBalance);
+
+}
+
+
+function updateStats(){
+
+    document.getElementById("statCoins")
+        .textContent =
+        coins.length;
+
+
+    document.getElementById("statListings")
+        .textContent =
+        coins.filter(c => c.listing).length;
+
+
+    document.getElementById("statOwned")
+        .textContent =
         coins.filter(
-            c => c.listed
-        );
+            c => c.ownerId === CURRENT_USER.id
+        ).length;
+
+}
 
 
-    const myListed =
-        ownedCoins.filter(
-            c => c.listed
-        );
+function renderAll(){
 
+    renderFeatured();
+    renderMarketplace();
+    renderMyCoins();
+    renderMyListings();
+    renderHistory();
 
-    document.getElementById(
-        "availableCount"
-    ).textContent =
-        listed.length;
-
-
-    document.getElementById(
-        "listedCount"
-    ).textContent =
-        myListed.length;
-
-
-    document.getElementById(
-        "myCoinCount"
-    ).textContent =
-        ownedCoins.length;
+    updateWalletUI();
+    updateStats();
 
 }
 
 
 /* =========================================================
-   OWNERSHIP CHECK
+   MODAL
 ========================================================= */
 
-function isOwnedByCurrentUser(coin) {
+function closeModal(id){
 
-    if (!coin) return false;
+    const modal =
+        document.getElementById(id);
 
+    if(modal){
 
-    if (
-        coin.ownerId ===
-        currentUser.uid
-    ) {
-
-        return true;
+        modal.classList.remove("show");
 
     }
-
-
-    return ownedCoins.some(
-        c =>
-            c.coinId === coin.id &&
-            c.ownerId === currentUser.uid
-    );
-
-}
-
-
-/* =========================================================
-   FORMAT USDT
-========================================================= */
-
-function formatUSDT(value) {
-
-    return Number(value || 0)
-        .toFixed(3);
-
-}
-
-
-/* =========================================================
-   FORMAT DATE
-========================================================= */
-
-function formatDate(date) {
-
-    try {
-
-        return new Date(date)
-            .toLocaleString();
-
-    } catch (e) {
-
-        return date;
-
-    }
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(value) {
-
-    if (value === null ||
-        value === undefined) {
-
-        return "";
-
-    }
-
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* =========================================================
-   WAIT
-========================================================= */
-
-function wait(ms) {
-
-    return new Promise(
-        resolve =>
-            setTimeout(resolve, ms)
-    );
 
 }
 
@@ -3709,67 +2951,50 @@ function wait(ms) {
    TOAST
 ========================================================= */
 
-function showToast(message, type = "success") {
-
-    const container =
-        document.getElementById(
-            "toastContainer"
-        );
+let toastTimer;
 
 
-    const toast =
-        document.createElement("div");
+function toast(message,type="success"){
+
+    const element =
+        document.getElementById("toast");
 
 
-    toast.className =
-        "toast " +
-        (
-            type === "success"
-            ? "success-toast"
-            : "error-toast"
-        );
+    element.textContent = message;
+
+    element.className =
+        "toast show " + type;
 
 
-    toast.textContent =
-        message;
+    clearTimeout(toastTimer);
 
 
-    container.appendChild(toast);
+    toastTimer =
+        setTimeout(() => {
 
+            element.classList.remove("show");
 
-    setTimeout(() => {
-
-        toast.remove();
-
-    }, 3500);
+        },3500);
 
 }
 
 
 /* =========================================================
-   CLOSE MODALS WHEN CLICKING OUTSIDE
+   CLOSE MODAL ON BACKGROUND CLICK
 ========================================================= */
 
-document
-    .querySelectorAll(".modal-overlay")
-    .forEach(overlay => {
+document.querySelectorAll(".modal-overlay")
+    .forEach(modal => {
 
-        overlay.addEventListener(
-            "click",
-            function(event) {
+        modal.addEventListener("click",event => {
 
-                if (
-                    event.target === overlay
-                ) {
+            if(event.target === modal){
 
-                    overlay.classList.add(
-                        "hidden"
-                    );
-
-                }
+                modal.classList.remove("show");
 
             }
-        );
+
+        });
 
     });
 
@@ -3778,24 +3003,9 @@ document
    INITIALIZATION
 ========================================================= */
 
-loadLocalData();
+renderAll();
 
-renderMarketplace();
-
-renderPortfolio();
-
-renderListings();
-
-renderHistory();
-
-updateStats();
-
-
-/*
-============================================================
-END
-============================================================
-*/
+updateWalletUI();
 
 </script>
 
