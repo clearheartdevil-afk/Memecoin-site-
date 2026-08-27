@@ -21,11 +21,10 @@ body{
         radial-gradient(circle at top left,rgba(124,58,237,.45),transparent 35%),
         radial-gradient(circle at bottom right,rgba(59,130,246,.35),transparent 35%),
         linear-gradient(135deg,#080b14,#17112d,#35146b);
-    padding:20px 15px;
+    padding:20px;
 }
 
 .container{
-    width:100%;
     max-width:1100px;
     margin:auto;
 }
@@ -59,16 +58,15 @@ button{
     padding:12px 20px;
     font-weight:bold;
     cursor:pointer;
-    transition:.2s;
+    margin-top:12px;
 }
 
 button:hover{
-    transform:translateY(-2px);
-    opacity:.9;
+    opacity:.85;
+    transform:translateY(-1px);
 }
 
 .login{
-    margin-top:20px;
     background:white;
     color:#4c1d95;
 }
@@ -81,7 +79,7 @@ button:hover{
 #status{
     text-align:center;
     margin:15px;
-    min-height:22px;
+    min-height:25px;
 }
 
 #app{
@@ -119,7 +117,7 @@ button:hover{
 
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
     gap:18px;
 }
 
@@ -128,7 +126,6 @@ button:hover{
     border-radius:20px;
     background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.12);
-    backdrop-filter:blur(12px);
 }
 
 .card h2{
@@ -141,7 +138,6 @@ button:hover{
 }
 
 .card button{
-    margin-top:15px;
     background:#a78bfa;
     color:#1e103d;
 }
@@ -151,40 +147,47 @@ button:hover{
 }
 
 .section-title{
-    font-size:25px;
+    font-size:26px;
     margin-bottom:14px;
 }
 
 .coin-list{
     display:grid;
-    gap:14px;
+    gap:15px;
 }
 
 .coin{
-    padding:18px;
-    border-radius:16px;
-    background:rgba(0,0,0,.22);
+    padding:20px;
+    border-radius:17px;
+    background:rgba(0,0,0,.25);
     border:1px solid rgba(255,255,255,.1);
 }
 
 .coin-name{
-    font-size:20px;
+    font-size:21px;
     font-weight:bold;
 }
 
 .coin-symbol{
     color:#a78bfa;
-    margin:4px 0;
+    margin-top:4px;
 }
 
 .coin-description{
     color:#d1d5db;
-    margin:8px 0;
+    margin:10px 0;
 }
 
 .coin-meta{
     color:#c4b5fd;
     font-size:13px;
+    margin-top:6px;
+}
+
+.price{
+    margin-top:10px;
+    font-weight:bold;
+    font-size:18px;
 }
 
 .tier{
@@ -197,10 +200,18 @@ button:hover{
     font-weight:bold;
 }
 
-.price{
-    margin-top:10px;
-    font-size:18px;
-    font-weight:bold;
+.buy-button{
+    background:#22c55e;
+    color:white;
+}
+
+.sell-button{
+    background:#f59e0b;
+    color:white;
+}
+
+.form{
+    margin-top:15px;
 }
 
 input,textarea,select{
@@ -209,14 +220,13 @@ input,textarea,select{
     margin-top:7px;
     margin-bottom:14px;
     border-radius:10px;
-    border:1px solid rgba(255,255,255,.15);
+    border:1px solid #ddd;
     background:white;
     color:#111827;
 }
 
 textarea{
     min-height:90px;
-    resize:vertical;
 }
 
 label{
@@ -225,51 +235,36 @@ label{
     font-weight:bold;
 }
 
-.form{
-    display:none;
-    margin-top:15px;
+.hidden{
+    display:none!important;
+}
+
+.admin{
+    border:1px solid rgba(250,204,21,.4);
+}
+
+.notice{
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:12px;
+    background:rgba(250,204,21,.1);
+    color:#fde68a;
 }
 
 .leaderboard-row{
     display:grid;
-    grid-template-columns:55px 1fr 100px 100px;
+    grid-template-columns:60px 1fr 120px 120px;
     gap:10px;
-    align-items:center;
-    padding:14px;
+    padding:15px;
     margin-bottom:8px;
     border-radius:12px;
     background:rgba(255,255,255,.06);
-}
-
-.rank{
-    font-size:20px;
-    font-weight:bold;
-}
-
-.tier-list{
-    display:grid;
-    gap:12px;
-}
-
-.tier-box{
-    padding:18px;
-    border-radius:15px;
-    background:rgba(255,255,255,.06);
-}
-
-.admin{
-    border:1px solid rgba(250,204,21,.35);
-}
-
-.hidden{
-    display:none!important;
 }
 
 .footer{
     text-align:center;
     color:#9ca3af;
     margin:30px 0;
-    font-size:13px;
 }
 
 @media(max-width:600px){
@@ -278,13 +273,12 @@ label{
         font-size:32px;
     }
 
-    .leaderboard-row{
-        grid-template-columns:40px 1fr;
+    .profile{
+        flex-wrap:wrap;
     }
 
-    .leaderboard-row div:nth-child(3),
-    .leaderboard-row div:nth-child(4){
-        grid-column:2;
+    .leaderboard-row{
+        grid-template-columns:45px 1fr;
     }
 }
 </style>
@@ -305,7 +299,7 @@ Create • Collect • Customize • Trade • Compete
 </p>
 
 <button id="loginBtn" class="login">
-Sign in with Google
+🔐 Sign in with Google
 </button>
 
 </header>
@@ -333,7 +327,7 @@ Logout
 </div>
 
 
-<!-- MAIN DASHBOARD -->
+<!-- DASHBOARD -->
 
 <div class="grid">
 
@@ -342,7 +336,7 @@ Logout
 <h2>🪙 My Collection</h2>
 
 <p>
-View the MemeCoin assets you currently own.
+See all assets currently owned by you.
 </p>
 
 <button onclick="showSection('collection')">
@@ -357,7 +351,7 @@ Open Collection
 <h2>🏪 Marketplace</h2>
 
 <p>
-Buy customized MemeCoin assets from other users.
+Buy primary assets and later trade with other users.
 </p>
 
 <button onclick="showSection('marketplace')">
@@ -372,11 +366,11 @@ Open Marketplace
 <h2>🎨 Customize</h2>
 
 <p>
-Customize the assets you own with your creativity.
+Use your creativity to customize an asset you own.
 </p>
 
 <button onclick="showSection('customize')">
-Customize Asset
+Customize
 </button>
 
 </div>
@@ -387,11 +381,11 @@ Customize Asset
 <h2>🏆 Quarterly Program</h2>
 
 <p>
-View Luxury, Gold, Silver and Bronze selections.
+Admin selects Luxury, Gold, Silver and Bronze assets.
 </p>
 
 <button onclick="showSection('tiers')">
-View Tiers
+View Program
 </button>
 
 </div>
@@ -402,7 +396,7 @@ View Tiers
 <h2>📊 Leaderboard</h2>
 
 <p>
-See the top collectors on MemeCoinSite.
+See top collectors and high-tier collections.
 </p>
 
 <button onclick="showSection('leaderboard')">
@@ -417,7 +411,7 @@ View Leaderboard
 <h2>💬 Community</h2>
 
 <p>
-Connect and communicate with other collectors.
+Chat and communicate with other users.
 </p>
 
 <button onclick="showSection('community')">
@@ -438,11 +432,7 @@ Open Community
 </div>
 
 <div id="myCoins" class="coin-list">
-
-<div class="coin">
-Loading your collection...
-</div>
-
+Loading...
 </div>
 
 </div>
@@ -456,44 +446,70 @@ Loading your collection...
 🏪 Marketplace
 </div>
 
+<div class="notice">
+For now this is a TEST marketplace.
+No real BTC, ETH, SOL or USDT is transferred.
+</div>
+
 <div id="marketplaceList" class="coin-list">
-
-<div class="coin">
-No marketplace listings yet.
+Loading...
 </div>
 
 </div>
 
-</div>
 
-
-<!-- CUSTOMIZATION -->
+<!-- CUSTOMIZE -->
 
 <div id="customize" class="section hidden">
 
 <div class="section-title">
-🎨 Customize Your Asset
+🎨 Customize Your Coin
 </div>
 
 <div class="card">
 
-<p style="margin-bottom:15px">
-Customization will be connected to your owned asset in the next development stage.
+<p>
+Select an asset you own and customize its appearance.
 </p>
 
-<label>Asset Name</label>
-<input id="customName" placeholder="Your custom name">
+<br>
 
-<label>Description</label>
-<textarea id="customDescription"
-placeholder="Describe your design"></textarea>
+<label>Select Asset</label>
 
-<label>Image URL</label>
-<input id="customImage"
-placeholder="https://...">
+<select id="customAsset">
+<option value="">Loading...</option>
+</select>
+
+<label>Custom Name</label>
+
+<input
+id="customName"
+placeholder="Example: Black Moon"
+>
+
+<label>Custom Description</label>
+
+<textarea
+id="customDescription"
+placeholder="Describe your design"
+></textarea>
+
+<label>Image / Logo URL</label>
+
+<input
+id="customImage"
+placeholder="https://..."
+>
+
+<label>Custom Color</label>
+
+<input
+id="customColor"
+placeholder="Example: Purple"
+>
 
 <button id="saveCustomization">
-Save Customization
+💾 Save Design
 </button>
 
 </div>
@@ -509,30 +525,34 @@ Save Customization
 🏆 Quarterly Program
 </div>
 
-<div class="tier-list">
+<div class="coin-list">
 
-<div class="tier-box">
+<div class="coin">
 💎 <strong>LUXURY</strong>
-<br>
-Selected personally by MemeCoinSite Admin.
+<p>
+Personally selected by the MemeCoinSite Admin after the quarter.
+</p>
 </div>
 
-<div class="tier-box">
+<div class="coin">
 🥇 <strong>GOLD</strong>
-<br>
-Selected personally by MemeCoinSite Admin.
+<p>
+Personally selected by the MemeCoinSite Admin.
+</p>
 </div>
 
-<div class="tier-box">
+<div class="coin">
 🥈 <strong>SILVER</strong>
-<br>
-Selected personally by MemeCoinSite Admin.
+<p>
+Personally selected by the MemeCoinSite Admin.
+</p>
 </div>
 
-<div class="tier-box">
+<div class="coin">
 🥉 <strong>BRONZE</strong>
-<br>
-Selected personally by MemeCoinSite Admin.
+<p>
+Personally selected by the MemeCoinSite Admin.
+</p>
 </div>
 
 </div>
@@ -549,11 +569,7 @@ Selected personally by MemeCoinSite Admin.
 </div>
 
 <div id="leaderboardList">
-
-<div class="coin">
-Leaderboard will appear here.
-</div>
-
+Loading...
 </div>
 
 </div>
@@ -573,12 +589,9 @@ Leaderboard will appear here.
 
 <p>
 Community chat will be connected here.
-Users will be able to communicate and discuss their collections.
+Users will eventually be able to discuss coins,
+collections and trades.
 </p>
-
-<button>
-💬 Enter Community
-</button>
 
 </div>
 
@@ -595,29 +608,41 @@ Users will be able to communicate and discuss their collections.
 
 <div class="card admin">
 
-<h2>Publish New MemeCoin Asset</h2>
+<h2>Publish New Asset</h2>
 
 <p>
-Only the MemeCoinSite administrator can publish primary assets.
+Only the MemeCoinSite Admin can publish primary assets.
 </p>
 
 <br>
 
-<label>Coin Name</label>
-<input id="adminCoinName"
-placeholder="Example: Moon Dog">
+<label>Asset Name</label>
+
+<input
+id="adminCoinName"
+placeholder="Example: Moon Dog"
+>
 
 <label>Symbol</label>
-<input id="adminCoinSymbol"
-placeholder="MDOG">
+
+<input
+id="adminCoinSymbol"
+placeholder="MDOG"
+>
 
 <label>Description</label>
-<textarea id="adminCoinDescription"
-placeholder="Describe the asset"></textarea>
+
+<textarea
+id="adminCoinDescription"
+placeholder="Describe the asset"
+></textarea>
 
 <label>Initial Price</label>
-<input id="adminCoinPrice"
-placeholder="Primary sale price">
+
+<input
+id="adminCoinPrice"
+placeholder="Example: 10"
+>
 
 <label>Payment Currency</label>
 
@@ -638,12 +663,11 @@ placeholder="Primary sale price">
 
 </div>
 
+
 </div>
 
 <div class="footer">
-
 © 2026 MemeCoinSite
-
 </div>
 
 </div>
@@ -677,11 +701,13 @@ setDoc,
 collection,
 getDocs,
 query,
-orderBy
+where
 }
 from
 "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+
+/* FIREBASE */
 
 const firebaseConfig = {
 
@@ -719,6 +745,19 @@ const provider =
 new GoogleAuthProvider();
 
 
+/*
+ * YOUR ADMIN UID
+ */
+
+const ADMIN_UID =
+"yoOUbX1BlZZmjGqewGSe2sI8Dn62";
+
+
+let currentUser = null;
+
+
+/* ELEMENTS */
+
 const loginBtn =
 document.getElementById("loginBtn");
 
@@ -752,40 +791,24 @@ document.getElementById("leaderboardList");
 const adminPanel =
 document.getElementById("adminPanel");
 
-
-/*
-IMPORTANT:
-
-Replace this with YOUR Google/Firebase UID
-after login.
-
-For now this is only used to identify
-the administrator in the frontend.
-
-Real admin authorization will later
-be moved to secure backend rules.
-*/
-
-const ADMIN_UID =
-"yoOUbX1BlZZmjGqewGSe2sI8Dn62";
+const customAsset =
+document.getElementById("customAsset");
 
 
-let currentUser = null;
-
-
-/* SECTION NAVIGATION */
+/* NAVIGATION */
 
 window.showSection =
 function(section){
 
-const sections =
-[
+const sections = [
+
 "collection",
 "marketplace",
 "customize",
 "tiers",
 "leaderboard",
 "community"
+
 ];
 
 sections.forEach(id => {
@@ -814,17 +837,29 @@ selected.classList.remove("hidden");
 };
 
 
-/* GENERATE ID */
+/* ID GENERATOR */
 
-function generateAssetID(){
+function generateID(){
 
-const random =
+return "MC-" +
 Math.random()
 .toString(36)
 .substring(2,10)
 .toUpperCase();
 
-return "MC-" + random;
+}
+
+
+/* SAFE TEXT */
+
+function escapeHTML(value){
+
+return String(value || "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
@@ -866,7 +901,9 @@ await getDoc(userRef);
 
 if(!snapshot.exists()){
 
-const userData = {
+await setDoc(
+userRef,
+{
 
 uid:
 user.uid,
@@ -881,7 +918,7 @@ photoURL:
 user.photoURL || "",
 
 memeCoinID:
-generateAssetID(),
+generateID(),
 
 createdAt:
 new Date().toISOString(),
@@ -891,12 +928,7 @@ user.uid === ADMIN_UID
 ? "admin"
 : "user"
 
-};
-
-
-await setDoc(
-userRef,
-userData
+}
 );
 
 }
@@ -905,15 +937,13 @@ userData
 status.textContent =
 "✅ Login successful!";
 
-
 }
 catch(error){
 
 console.error(error);
 
 status.textContent =
-"❌ Login failed: "
-+
+"❌ Login failed: " +
 error.message;
 
 }
@@ -922,7 +952,7 @@ error.message;
 );
 
 
-/* AUTH STATE */
+/* AUTH */
 
 onAuthStateChanged(
 auth,
@@ -930,8 +960,7 @@ async user => {
 
 if(!user){
 
-currentUser =
-null;
+currentUser = null;
 
 appElement.style.display =
 "none";
@@ -959,7 +988,7 @@ const snapshot =
 await getDoc(userRef);
 
 
-let data =
+const data =
 snapshot.exists()
 ? snapshot.data()
 : {};
@@ -973,12 +1002,12 @@ loginBtn.style.display =
 
 
 profileName.textContent =
-user.displayName || "User";
+user.displayName ||
+"User";
 
 
 profileId.textContent =
-"MemeCoinSite ID: "
-+
+"MemeCoinSite ID: " +
 (data.memeCoinID || user.uid);
 
 
@@ -1003,10 +1032,12 @@ await loadMarketplace();
 
 await loadLeaderboard();
 
+await loadCustomizeAssets();
+
 });
 
 
-/* LOAD USER COLLECTION */
+/* LOAD MY COINS */
 
 async function loadMyCoins(){
 
@@ -1014,8 +1045,7 @@ if(!currentUser)
 return;
 
 
-myCoins.innerHTML =
-"";
+myCoins.innerHTML = "";
 
 
 const coinsRef =
@@ -1033,9 +1063,7 @@ await getDocs(coinsRef);
 
 if(snapshot.empty){
 
-myCoins.innerHTML =
-
-`
+myCoins.innerHTML = `
 <div class="coin">
 You don't own any assets yet.
 </div>
@@ -1059,31 +1087,96 @@ div.className =
 "coin";
 
 
-div.innerHTML =
+div.innerHTML = `
 
-`
 <div class="coin-name">
-🪙 ${escapeHTML(coin.name || "Unnamed")}
+🪙 ${escapeHTML(
+coin.name || "Unnamed"
+)}
 </div>
 
 <div class="coin-symbol">
-${escapeHTML(coin.symbol || "")}
+${escapeHTML(
+coin.symbol || ""
+)}
 </div>
 
 <div class="coin-description">
-${escapeHTML(coin.description || "")}
+${escapeHTML(
+coin.description || ""
+)}
 </div>
 
 <div class="coin-meta">
-Asset ID: ${escapeHTML(coin.coinID || docSnap.id)}
+Asset ID:
+${escapeHTML(
+coin.coinID || docSnap.id
+)}
 </div>
 
 <div class="tier">
-${escapeHTML(coin.tier || "Not Yet Ranked")}
+${escapeHTML(
+coin.tier || "Not Yet Ranked"
+)}
 </div>
+
 `;
 
 myCoins.appendChild(div);
+
+});
+
+}
+
+
+/* LOAD CUSTOMIZATION DROPDOWN */
+
+async function loadCustomizeAssets(){
+
+if(!currentUser)
+return;
+
+
+customAsset.innerHTML =
+'<option value="">Select an asset</option>';
+
+
+const coinsRef =
+collection(
+db,
+"users",
+currentUser.uid,
+"memeCoins"
+);
+
+
+const snapshot =
+await getDocs(coinsRef);
+
+
+snapshot.forEach(docSnap => {
+
+const coin =
+docSnap.data();
+
+
+const option =
+document.createElement("option");
+
+
+option.value =
+docSnap.id;
+
+
+option.textContent =
+(coin.name || "Asset")
++
+" — "
++
+(coin.symbol || "");
+
+
+customAsset.appendChild(option);
 
 });
 
@@ -1094,28 +1187,25 @@ myCoins.appendChild(div);
 
 async function loadMarketplace(){
 
-marketplaceList.innerHTML =
-"";
+marketplaceList.innerHTML = "";
 
 
-const listingsRef =
+const assetsRef =
 collection(
 db,
-"marketplace"
+"assets"
 );
 
 
 const snapshot =
-await getDocs(listingsRef);
+await getDocs(assetsRef);
 
 
 if(snapshot.empty){
 
-marketplaceList.innerHTML =
-
-`
+marketplaceList.innerHTML = `
 <div class="coin">
-No assets are listed for sale yet.
+No assets are available yet.
 </div>
 `;
 
@@ -1124,10 +1214,25 @@ return;
 }
 
 
+let found =
+false;
+
+
 snapshot.forEach(docSnap => {
 
 const item =
 docSnap.data();
+
+
+if(item.status !== "primary-sale"){
+
+return;
+
+}
+
+
+found =
+true;
 
 
 const div =
@@ -1137,143 +1242,455 @@ div.className =
 "coin";
 
 
-div.innerHTML =
+div.innerHTML = `
 
-`
 <div class="coin-name">
-🪙 ${escapeHTML(item.name || "Asset")}
+🪙 ${escapeHTML(
+item.name || "Asset"
+)}
 </div>
 
 <div class="coin-symbol">
-${escapeHTML(item.symbol || "")}
+${escapeHTML(
+item.symbol || ""
+)}
 </div>
 
 <div class="coin-description">
-${escapeHTML(item.description || "")}
+${escapeHTML(
+item.description || ""
+)}
 </div>
 
 <div class="price">
-Price:
-${escapeHTML(item.price || "Not set")}
-${escapeHTML(item.currency || "")}
+Primary Price:
+${escapeHTML(
+item.primaryPrice || ""
+)}
+${escapeHTML(
+item.primaryCurrency || ""
+)}
 </div>
 
 <div class="tier">
-${escapeHTML(item.tier || "Not Yet Ranked")}
+${escapeHTML(
+item.tier || "Not Yet Ranked"
+)}
 </div>
 
-<button>
-Buy
+<button
+class="buy-button"
+data-id="${escapeHTML(
+docSnap.id
+)}">
+
+🛒 Buy 1
+
 </button>
+
 `;
 
 marketplaceList.appendChild(div);
 
 });
 
-}
 
+if(!found){
 
-/* LEADERBOARD */
-
-async function loadLeaderboard(){
-
-leaderboardList.innerHTML =
-"";
-
-
-const usersRef =
-collection(
-db,
-"users"
-);
-
-
-const snapshot =
-await getDocs(usersRef);
-
-
-const users = [];
-
-
-snapshot.forEach(docSnap => {
-
-const data =
-docSnap.data();
-
-
-users.push({
-
-name:
-data.name || "User",
-
-coins:
-data.coinCount || 0,
-
-luxury:
-data.luxuryCount || 0,
-
-gold:
-data.goldCount || 0
-
-});
-
-});
-
-
-users.sort(
-(a,b) =>
-b.coins - a.coins
-);
-
-
-if(users.length === 0){
-
-leaderboardList.innerHTML =
-"Nothing yet.";
+marketplaceList.innerHTML = `
+<div class="coin">
+No assets are available for primary purchase.
+</div>
+`;
 
 return;
 
 }
 
 
-users.forEach(
-(user,index) => {
+document
+.querySelectorAll(".buy-button")
+.forEach(button => {
 
-const row =
-document.createElement("div");
+button.addEventListener(
+"click",
+async () => {
 
-row.className =
-"leaderboard-row";
+await testPrimaryPurchase(
+button.dataset.id
+);
 
-
-row.innerHTML =
-
-`
-<div class="rank">
-#${index + 1}
-</div>
-
-<div>
-<strong>
-${escapeHTML(user.name)}
-</strong>
-</div>
-
-<div>
-🪙 ${user.coins}
-</div>
-
-<div>
-💎 ${user.luxury}
-</div>
-`;
-
-leaderboardList.appendChild(row);
+}
+);
 
 });
 
 }
+
+
+/* PRIMARY TEST PURCHASE */
+
+async function testPrimaryPurchase(assetID){
+
+if(!currentUser){
+
+status.textContent =
+"❌ Please sign in.";
+
+return;
+
+}
+
+
+try{
+
+status.textContent =
+"Processing test purchase...";
+
+
+const assetRef =
+doc(
+db,
+"assets",
+assetID
+);
+
+
+const assetSnapshot =
+await getDoc(assetRef);
+
+
+if(!assetSnapshot.exists()){
+
+status.textContent =
+"❌ Asset not found.";
+
+return;
+
+}
+
+
+const asset =
+assetSnapshot.data();
+
+
+if(asset.status !== "primary-sale"){
+
+status.textContent =
+"❌ Asset is not available.";
+
+return;
+
+}
+
+
+/*
+ * One unit per user
+ */
+
+const ownershipRef =
+doc(
+db,
+"users",
+currentUser.uid,
+"memeCoins",
+assetID
+);
+
+
+const existing =
+await getDoc(
+ownershipRef
+);
+
+
+if(existing.exists()){
+
+status.textContent =
+"❌ You already own this asset.";
+
+return;
+
+}
+
+
+/*
+ * Save ownership
+ */
+
+await setDoc(
+ownershipRef,
+{
+
+coinID:
+assetID,
+
+name:
+asset.name,
+
+symbol:
+asset.symbol,
+
+description:
+asset.description || "",
+
+imageURL:
+asset.imageURL || "",
+
+tier:
+asset.tier ||
+"Not Yet Ranked",
+
+ownerUID:
+currentUser.uid,
+
+ownerName:
+currentUser.displayName || "",
+
+acquiredFrom:
+"MemeCoinSite",
+
+acquisitionType:
+"primary-test-purchase",
+
+purchasePrice:
+asset.primaryPrice,
+
+purchaseCurrency:
+asset.primaryCurrency,
+
+acquiredAt:
+new Date().toISOString()
+
+}
+);
+
+
+/*
+ * Save user transaction
+ */
+
+const transactionID =
+"TEST-" + Date.now();
+
+
+const transactionRef =
+doc(
+db,
+"users",
+currentUser.uid,
+"transactions",
+transactionID
+);
+
+
+await setDoc(
+transactionRef,
+{
+
+transactionID:
+
+transactionID,
+
+assetID:
+
+assetID,
+
+buyerUID:
+
+currentUser.uid,
+
+sellerUID:
+
+"ADMIN",
+
+type:
+
+"primary-test-purchase",
+
+amount:
+
+asset.primaryPrice,
+
+currency:
+
+asset.primaryCurrency,
+
+fee:
+
+"0",
+
+status:
+
+"completed",
+
+createdAt:
+
+new Date().toISOString()
+
+}
+);
+
+
+status.textContent =
+"✅ Test purchase successful! You now own 1 unit.";
+
+
+await loadMyCoins();
+
+await loadCustomizeAssets();
+
+showSection("collection");
+
+
+}
+catch(error){
+
+console.error(error);
+
+status.textContent =
+"❌ Purchase failed: " +
+error.message;
+
+}
+
+}
+
+
+/* SAVE CUSTOMIZATION */
+
+document
+.getElementById("saveCustomization")
+.addEventListener(
+"click",
+async () => {
+
+if(!currentUser){
+
+status.textContent =
+"❌ Please sign in.";
+
+return;
+
+}
+
+
+const assetID =
+customAsset.value;
+
+
+if(!assetID){
+
+status.textContent =
+"❌ Select an asset.";
+
+return;
+
+}
+
+
+const name =
+document
+.getElementById("customName")
+.value
+.trim();
+
+
+const description =
+document
+.getElementById("customDescription")
+.value
+.trim();
+
+
+const imageURL =
+document
+.getElementById("customImage")
+.value
+.trim();
+
+
+const color =
+document
+.getElementById("customColor")
+.value
+.trim();
+
+
+try{
+
+const ownershipRef =
+doc(
+db,
+"users",
+currentUser.uid,
+"memeCoins",
+assetID
+);
+
+
+const ownershipSnapshot =
+await getDoc(
+ownershipRef
+);
+
+
+if(!ownershipSnapshot.exists()){
+
+status.textContent =
+"❌ You don't own this asset.";
+
+return;
+
+}
+
+
+await setDoc(
+ownershipRef,
+{
+
+customName:
+name,
+
+customDescription:
+description,
+
+customImageURL:
+imageURL,
+
+customColor:
+color,
+
+customizedAt:
+new Date().toISOString()
+
+},
+{
+merge:true
+}
+);
+
+
+status.textContent =
+"✅ Your design was saved!";
+
+
+await loadMyCoins();
+
+
+}
+catch(error){
+
+console.error(error);
+
+status.textContent =
+"❌ Could not save design: " +
+error.message;
+
+}
+
+}
+);
 
 
 /* ADMIN PUBLISH */
@@ -1307,7 +1724,8 @@ return;
 const name =
 document
 .getElementById("adminCoinName")
-.value.trim();
+.value
+.trim();
 
 
 const symbol =
@@ -1321,13 +1739,15 @@ document
 const description =
 document
 .getElementById("adminCoinDescription")
-.value.trim();
+.value
+.trim();
 
 
 const price =
 document
 .getElementById("adminCoinPrice")
-.value.trim();
+.value
+.trim();
 
 
 const currency =
@@ -1336,7 +1756,10 @@ document
 .value;
 
 
-if(!name || !symbol || !description || !price){
+if(!name ||
+!symbol ||
+!description ||
+!price){
 
 status.textContent =
 "❌ Complete all fields.";
@@ -1349,7 +1772,7 @@ return;
 try{
 
 const coinID =
-generateAssetID();
+generateID();
 
 
 const coinRef =
@@ -1360,7 +1783,9 @@ coinID
 );
 
 
-const coinData = {
+await setDoc(
+coinRef,
+{
 
 coinID:
 
@@ -1406,22 +1831,14 @@ createdBy:
 
 currentUser.uid
 
-};
-
-
-await setDoc(
-coinRef,
-coinData
+}
 );
 
 
 status.textContent =
-"✅ Asset published: "
-+
+"✅ Asset published: " +
 coinID;
 
-
-/* CLEAR FORM */
 
 document
 .getElementById("adminCoinName")
@@ -1440,20 +1857,121 @@ document
 .value = "";
 
 
+await loadMarketplace();
+
+
 }
 catch(error){
 
 console.error(error);
 
 status.textContent =
-"❌ Publish failed: "
-+
+"❌ Publishing failed: " +
 error.message;
 
 }
 
 }
 );
+
+
+/* LEADERBOARD */
+
+async function loadLeaderboard(){
+
+leaderboardList.innerHTML = "";
+
+
+const usersRef =
+collection(
+db,
+"users"
+);
+
+
+const snapshot =
+await getDocs(usersRef);
+
+
+if(snapshot.empty){
+
+leaderboardList.innerHTML =
+"No users yet.";
+
+return;
+
+}
+
+
+const users = [];
+
+
+snapshot.forEach(docSnap => {
+
+const data =
+docSnap.data();
+
+
+users.push({
+
+name:
+data.name || "User",
+
+coins:
+data.coinCount || 0,
+
+luxury:
+data.luxuryCount || 0
+
+});
+
+});
+
+
+users.sort(
+(a,b) =>
+b.coins - a.coins
+);
+
+
+users.forEach(
+(user,index) => {
+
+const row =
+document.createElement("div");
+
+row.className =
+"leaderboard-row";
+
+
+row.innerHTML = `
+
+<div>
+<strong>
+#${index + 1}
+</strong>
+</div>
+
+<div>
+${escapeHTML(user.name)}
+</div>
+
+<div>
+🪙 ${user.coins}
+</div>
+
+<div>
+💎 ${user.luxury}
+</div>
+
+`;
+
+
+leaderboardList.appendChild(row);
+
+});
+
+}
 
 
 /* LOGOUT */
@@ -1469,20 +1987,6 @@ status.textContent =
 
 }
 );
-
-
-/* HTML SAFETY */
-
-function escapeHTML(value){
-
-return String(value)
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
 
 </script>
 
