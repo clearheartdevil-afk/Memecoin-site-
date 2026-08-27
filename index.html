@@ -7,6 +7,7 @@
 <title>MemeCoinSite</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -14,32 +15,56 @@
 }
 
 :root{
-    --bg:#090b12;
-    --card:#111521;
-    --card2:#171c2a;
-    --border:#272e40;
+    --bg:#070910;
+    --card:#101521;
+    --card2:#171d2b;
+    --card3:#1d2435;
+    --border:#293247;
     --text:#f5f7fb;
-    --muted:#8e98aa;
+    --muted:#929caf;
+
     --green:#35e38b;
     --red:#ff5c72;
     --yellow:#ffc857;
     --blue:#5b8cff;
-    --purple:#9b6cff;
+    --purple:#a66cff;
+
+    --bronze:#cd7f32;
+    --silver:#c8d0dc;
+    --gold:#ffd45a;
+    --luxury:#d6a7ff;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
     min-height:100vh;
     background:
-        radial-gradient(circle at 10% 10%,rgba(91,140,255,.12),transparent 30%),
-        radial-gradient(circle at 90% 20%,rgba(155,108,255,.12),transparent 30%),
+        radial-gradient(
+            circle at 10% 5%,
+            rgba(91,140,255,.13),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(166,108,255,.13),
+            transparent 30%
+        ),
         var(--bg);
+
     color:var(--text);
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
 button,
 input,
-select{
+select,
+textarea{
     font:inherit;
 }
 
@@ -51,25 +76,33 @@ button{
     display:none!important;
 }
 
-/* HEADER */
+/* =====================================================
+   HEADER
+===================================================== */
 
 header{
     position:sticky;
     top:0;
     z-index:100;
-    background:rgba(9,11,18,.94);
-    backdrop-filter:blur(15px);
+
+    background:rgba(7,9,16,.94);
+    backdrop-filter:blur(18px);
+
     border-bottom:1px solid var(--border);
 }
 
 .navbar{
-    max-width:1400px;
-    margin:auto;
+    max-width:1450px;
     min-height:72px;
+
+    margin:auto;
+
+    padding:0 22px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 22px;
+
     gap:20px;
 }
 
@@ -77,41 +110,58 @@ header{
     display:flex;
     align-items:center;
     gap:10px;
-    font-size:22px;
-    font-weight:800;
+
+    font-size:21px;
+    font-weight:900;
+
     white-space:nowrap;
 }
 
 .logo-icon{
-    width:42px;
-    height:42px;
-    border-radius:12px;
+    width:43px;
+    height:43px;
+
+    border-radius:13px;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg,#5b8cff,#9b6cff);
-    box-shadow:0 8px 25px rgba(91,140,255,.25);
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #a66cff
+        );
+
+    box-shadow:
+        0 8px 30px
+        rgba(91,140,255,.28);
 }
 
 .nav-links{
     display:flex;
-    gap:5px;
+    gap:4px;
     flex-wrap:wrap;
 }
 
 .nav-btn{
     border:0;
     background:transparent;
+
     color:var(--muted);
-    padding:10px 13px;
+
+    padding:10px 12px;
+
     border-radius:10px;
+
     transition:.2s;
 }
 
 .nav-btn:hover,
 .nav-btn.active{
-    color:white;
     background:var(--card2);
+    color:white;
 }
 
 .wallet{
@@ -123,29 +173,49 @@ header{
 .wallet-balance{
     background:var(--card);
     border:1px solid var(--border);
+
     padding:9px 13px;
+
     border-radius:10px;
+
     font-size:13px;
 }
 
 .user-avatar{
-    width:38px;
-    height:38px;
+    width:39px;
+    height:39px;
+
     border-radius:50%;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg,#35e38b,#5b8cff);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green),
+            var(--blue)
+        );
+
     color:#06110b;
-    font-weight:800;
+
+    font-weight:900;
 }
 
-/* MAIN */
+/* =====================================================
+   MAIN
+===================================================== */
 
 main{
-    max-width:1400px;
+    max-width:1450px;
+
     margin:auto;
-    padding:30px 22px 70px;
+
+    padding:
+        25px
+        22px
+        70px;
 }
 
 .page{
@@ -156,54 +226,86 @@ main{
     display:block;
 }
 
-/* HERO */
+/* =====================================================
+   HERO
+===================================================== */
 
 .hero{
-    padding:50px 0 35px;
+    padding:55px 0 40px;
+
     display:grid;
-    grid-template-columns:1.4fr .6fr;
-    gap:25px;
+
+    grid-template-columns:
+        minmax(0,1.4fr)
+        minmax(300px,.6fr);
+
+    gap:30px;
+
     align-items:center;
 }
 
 .hero h1{
-    font-size:clamp(38px,5vw,68px);
+    font-size:
+        clamp(
+            40px,
+            5vw,
+            72px
+        );
+
     line-height:1;
-    margin-bottom:20px;
+
+    margin-bottom:22px;
 }
 
 .gradient-text{
-    background:linear-gradient(90deg,#5b8cff,#9b6cff,#35e38b);
+    background:
+        linear-gradient(
+            90deg,
+            #5b8cff,
+            #a66cff,
+            #35e38b
+        );
+
     -webkit-background-clip:text;
     background-clip:text;
+
     color:transparent;
 }
 
 .hero p{
     color:var(--muted);
+
+    max-width:720px;
+
     font-size:17px;
+
     line-height:1.7;
-    max-width:700px;
 }
 
 .hero-buttons{
+    margin-top:27px;
+
     display:flex;
     gap:12px;
-    margin-top:25px;
+
     flex-wrap:wrap;
 }
 
 .primary-btn,
 .secondary-btn,
 .danger-btn{
-    border:0;
     border-radius:11px;
+
     padding:12px 18px;
-    font-weight:700;
+
+    font-weight:800;
+
     transition:.2s;
 }
 
 .primary-btn{
+    border:0;
+
     background:var(--green);
     color:#06110b;
 }
@@ -215,39 +317,60 @@ main{
 
 .secondary-btn{
     background:var(--card2);
-    border:1px solid var(--border);
+
     color:white;
+
+    border:1px solid var(--border);
 }
 
 .secondary-btn:hover{
-    border-color:#4b5875;
+    border-color:#53617d;
 }
 
 .danger-btn{
-    background:rgba(255,92,114,.12);
-    color:#ff8293;
-    border:1px solid rgba(255,92,114,.25);
+    background:
+        rgba(255,92,114,.1);
+
+    color:#ff8395;
+
+    border:1px solid
+        rgba(255,92,114,.25);
 }
 
 .stats-box{
-    background:linear-gradient(145deg,#121725,#0d111b);
+    background:
+        linear-gradient(
+            145deg,
+            #141a28,
+            #0c1019
+        );
+
     border:1px solid var(--border);
+
     border-radius:20px;
+
     padding:25px;
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.25);
 }
 
 .stat{
     display:flex;
     justify-content:space-between;
-    padding:15px 0;
-    border-bottom:1px solid var(--border);
+
+    padding:16px 0;
+
+    border-bottom:
+        1px solid var(--border);
 }
 
 .stat:last-child{
     border-bottom:0;
 }
 
-.stat span:first-child{
+.stat span{
     color:var(--muted);
 }
 
@@ -255,25 +378,38 @@ main{
     font-size:18px;
 }
 
-/* SECTION */
+/* =====================================================
+   SECTION
+===================================================== */
 
 .section-header{
     display:flex;
+
     justify-content:space-between;
     align-items:center;
+
     gap:15px;
-    margin:30px 0 18px;
+
+    margin:
+        32px 0
+        18px;
+
     flex-wrap:wrap;
 }
 
 .section-header h2{
-    font-size:25px;
+    font-size:26px;
 }
 
 .section-header p{
     color:var(--muted);
+
     margin-top:5px;
 }
+
+/* =====================================================
+   FILTERS
+===================================================== */
 
 .filters{
     display:flex;
@@ -284,10 +420,15 @@ main{
 .search-box,
 .select-box{
     background:var(--card);
+
     border:1px solid var(--border);
+
     color:white;
+
     border-radius:10px;
+
     padding:11px 13px;
+
     outline:none;
 }
 
@@ -300,132 +441,181 @@ main{
     border-color:var(--blue);
 }
 
-/* COIN GRID */
+/* =====================================================
+   COIN GRID
+===================================================== */
 
 .coin-grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     gap:18px;
 }
 
 .coin-card{
-    background:linear-gradient(145deg,var(--card),#0e121d);
+    background:
+        linear-gradient(
+            145deg,
+            var(--card),
+            #0c1019
+        );
+
     border:1px solid var(--border);
+
     border-radius:18px;
+
     padding:18px;
-    transition:.25s;
+
     position:relative;
+
     overflow:hidden;
+
+    transition:.25s;
 }
 
 .coin-card:hover{
     transform:translateY(-4px);
-    border-color:#3b4660;
+
+    border-color:#47536d;
+
+    box-shadow:
+        0 18px 50px
+        rgba(0,0,0,.25);
 }
 
 .coin-image{
-    height:170px;
-    border-radius:14px;
+    height:175px;
+
+    border-radius:15px;
+
     margin-bottom:15px;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:65px;
-    background:
-        radial-gradient(circle,#ffffff22,transparent 45%),
-        linear-gradient(135deg,#1d2740,#171323);
-    border:1px solid #30384d;
+
+    font-size:68px;
+
+    border:1px solid #30394f;
+
     position:relative;
 }
 
 .coin-image .small-symbol{
     position:absolute;
+
     bottom:10px;
     right:12px;
+
     font-size:12px;
-    background:#0008;
+
+    background:#0009;
+
     padding:5px 8px;
+
     border-radius:6px;
 }
 
 .coin-title-row{
     display:flex;
+
     justify-content:space-between;
+
     gap:10px;
+
     margin-bottom:5px;
 }
 
 .coin-title{
     font-size:19px;
-    font-weight:800;
+    font-weight:900;
 }
 
 .coin-symbol{
     color:var(--muted);
+
     font-size:13px;
+
     margin-bottom:12px;
 }
 
 .badge{
     display:inline-flex;
+
     align-items:center;
+
     padding:5px 8px;
+
     border-radius:7px;
-    font-size:11px;
-    font-weight:700;
+
+    font-size:10px;
+
+    font-weight:900;
+
     white-space:nowrap;
 }
 
-.badge.green{
-    color:#65efa8;
-    background:rgba(53,227,139,.1);
-}
-
-.badge.yellow{
-    color:#ffd66f;
+.badge-new{
+    color:#ffd978;
     background:rgba(255,200,87,.1);
 }
 
-.badge.blue{
-    color:#80a4ff;
-    background:rgba(91,140,255,.1);
+.badge-bronze{
+    color:#e5a06b;
+    background:rgba(205,127,50,.12);
 }
 
-.badge.purple{
-    color:#ba9aff;
-    background:rgba(155,108,255,.1);
+.badge-silver{
+    color:#e2e8f0;
+    background:rgba(200,208,220,.1);
 }
 
-.badge.red{
-    color:#ff8798;
-    background:rgba(255,92,114,.1);
+.badge-gold{
+    color:#ffe17c;
+    background:rgba(255,212,90,.1);
+}
+
+.badge-luxury{
+    color:#dcbcff;
+    background:rgba(166,108,255,.13);
 }
 
 .coin-info{
     display:grid;
     gap:8px;
+
     margin:15px 0;
 }
 
 .info-row{
     display:flex;
+
     justify-content:space-between;
+
+    gap:10px;
+
     font-size:13px;
 }
 
-.info-row span:first-child{
+.info-row span{
     color:var(--muted);
 }
 
 .coin-price{
     font-size:23px;
-    font-weight:800;
-    margin:12px 0;
+
+    font-weight:900;
+
+    margin:13px 0;
 }
 
 .coin-price small{
     color:var(--muted);
+
     font-size:12px;
+
     font-weight:normal;
 }
 
@@ -438,31 +628,116 @@ main{
     flex:1;
 }
 
-/* TABLE */
+/* =====================================================
+   TIER CARDS
+===================================================== */
+
+.tier-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:18px;
+
+    margin-top:20px;
+}
+
+.tier-card{
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:22px;
+
+    text-align:center;
+}
+
+.tier-icon{
+    font-size:45px;
+
+    margin-bottom:10px;
+}
+
+.tier-card h3{
+    margin-bottom:8px;
+}
+
+.tier-card p{
+    color:var(--muted);
+
+    font-size:13px;
+
+    line-height:1.5;
+}
+
+.tier-price{
+    margin-top:15px;
+
+    font-weight:900;
+
+    font-size:16px;
+}
+
+.tier-new{
+    border-top:3px solid var(--yellow);
+}
+
+.tier-bronze{
+    border-top:3px solid var(--bronze);
+}
+
+.tier-silver{
+    border-top:3px solid var(--silver);
+}
+
+.tier-gold{
+    border-top:3px solid var(--gold);
+}
+
+.tier-luxury{
+    border-top:3px solid var(--luxury);
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
 
 .table-wrap{
     overflow-x:auto;
+
     background:var(--card);
+
     border:1px solid var(--border);
+
     border-radius:16px;
 }
 
 table{
     width:100%;
+
     border-collapse:collapse;
+
     min-width:800px;
 }
 
 th,
 td{
     text-align:left;
+
     padding:15px;
-    border-bottom:1px solid var(--border);
+
+    border-bottom:
+        1px solid var(--border);
 }
 
 th{
     color:var(--muted);
-    font-size:12px;
+
+    font-size:11px;
+
     text-transform:uppercase;
 }
 
@@ -474,26 +749,38 @@ tr:last-child td{
     border-bottom:0;
 }
 
-/* FORMS */
+/* =====================================================
+   FORMS
+===================================================== */
 
 .form-card{
-    max-width:850px;
+    max-width:900px;
+
     margin:30px auto;
+
     background:var(--card);
+
     border:1px solid var(--border);
+
     border-radius:20px;
+
     padding:25px;
 }
 
 .form-grid{
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:16px;
 }
 
 .form-group{
     display:flex;
+
     flex-direction:column;
+
     gap:7px;
 }
 
@@ -502,23 +789,30 @@ tr:last-child td{
 }
 
 .form-group label{
-    color:#c6ccda;
+    color:#c7cedb;
+
     font-size:13px;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea{
-    background:#0b0f18;
+    background:#0a0e16;
+
     border:1px solid var(--border);
+
     border-radius:10px;
+
     padding:12px;
+
     color:white;
+
     outline:none;
 }
 
 .form-group textarea{
-    min-height:100px;
+    min-height:105px;
+
     resize:vertical;
 }
 
@@ -530,28 +824,66 @@ tr:last-child td{
 
 .help-text{
     color:var(--muted);
+
     font-size:12px;
+
     line-height:1.5;
 }
 
 .preview{
     margin-top:20px;
+
     padding:18px;
+
     border:1px dashed #3a445b;
+
     border-radius:14px;
 }
 
-/* MODAL */
+/* =====================================================
+   NOTICE
+===================================================== */
+
+.notice{
+    padding:15px;
+
+    background:
+        rgba(91,140,255,.08);
+
+    border:
+        1px solid rgba(91,140,255,.2);
+
+    border-radius:12px;
+
+    color:#aac1ff;
+
+    font-size:13px;
+
+    line-height:1.6;
+
+    margin:15px 0;
+}
+
+/* =====================================================
+   MODAL
+===================================================== */
 
 .modal-overlay{
     position:fixed;
+
     inset:0;
-    background:rgba(0,0,0,.75);
+
+    background:rgba(0,0,0,.78);
+
     backdrop-filter:blur(8px);
+
     z-index:1000;
+
     display:none;
+
     align-items:center;
     justify-content:center;
+
     padding:20px;
 }
 
@@ -560,45 +892,72 @@ tr:last-child td{
 }
 
 .modal{
-    width:min(700px,100%);
+    width:min(720px,100%);
+
     max-height:90vh;
+
     overflow:auto;
-    background:#111621;
+
+    background:#111722;
+
     border:1px solid var(--border);
+
     border-radius:20px;
+
     padding:25px;
-    box-shadow:0 30px 100px #000;
+
+    box-shadow:
+        0 30px 100px #000;
 }
 
 .modal-header{
     display:flex;
+
     justify-content:space-between;
+
     gap:15px;
+
     margin-bottom:20px;
 }
 
 .close-btn{
     width:35px;
     height:35px;
+
     border-radius:9px;
+
     border:1px solid var(--border);
+
     background:var(--card2);
+
     color:white;
 }
 
+/* =====================================================
+   PURCHASE
+===================================================== */
+
 .purchase-summary{
-    background:#0b0f18;
+    background:#0a0e16;
+
     border:1px solid var(--border);
+
     border-radius:14px;
+
     padding:18px;
+
     margin:15px 0;
 }
 
 .summary-row{
     display:flex;
+
     justify-content:space-between;
+
     padding:10px 0;
-    border-bottom:1px solid var(--border);
+
+    border-bottom:
+        1px solid var(--border);
 }
 
 .summary-row:last-child{
@@ -607,62 +966,81 @@ tr:last-child td{
 
 .summary-total{
     font-size:21px;
-    font-weight:800;
+
+    font-weight:900;
 }
 
 .fee-note{
     margin-top:12px;
+
     padding:12px;
+
     border-radius:10px;
-    background:rgba(255,200,87,.08);
-    border:1px solid rgba(255,200,87,.2);
+
+    background:
+        rgba(255,200,87,.08);
+
+    border:
+        1px solid rgba(255,200,87,.2);
+
     color:#ffd978;
+
     font-size:13px;
+
     line-height:1.5;
 }
 
-/* DESIGN */
+/* =====================================================
+   DESIGN PREVIEW
+===================================================== */
 
 .design-preview{
     height:220px;
+
     border-radius:16px;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
+
     font-size:80px;
+
     margin-bottom:20px;
+
     border:1px solid var(--border);
-    background:linear-gradient(135deg,#202a45,#241934);
 }
 
-.color-row{
-    display:flex;
-    gap:10px;
-    align-items:center;
-}
-
-.color-row input{
-    width:60px;
-    height:42px;
-    padding:3px;
-}
-
-/* HISTORY */
+/* =====================================================
+   HISTORY
+===================================================== */
 
 .history-item{
     position:relative;
-    padding:18px 18px 18px 35px;
-    border-left:2px solid #33405b;
+
+    padding:
+        18px
+        18px
+        18px
+        35px;
+
+    border-left:
+        2px solid #33405b;
 }
 
 .history-item::before{
     content:"";
+
     position:absolute;
+
     left:-7px;
     top:21px;
+
     width:12px;
     height:12px;
+
     border-radius:50%;
+
     background:var(--blue);
 }
 
@@ -672,108 +1050,241 @@ tr:last-child td{
 
 .history-item p{
     color:var(--muted);
+
     font-size:13px;
+
     line-height:1.5;
 }
 
-/* NOTICE */
+/* =====================================================
+   LEADERBOARD
+===================================================== */
 
-.notice{
-    padding:15px;
-    background:rgba(91,140,255,.08);
-    border:1px solid rgba(91,140,255,.2);
-    border-radius:12px;
-    color:#a9c0ff;
-    font-size:13px;
-    line-height:1.6;
-    margin:15px 0;
+.leaderboard{
+    display:grid;
+
+    gap:12px;
 }
 
-/* EMPTY */
+.leader-row{
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:15px;
+
+    padding:17px;
+
+    display:grid;
+
+    grid-template-columns:
+        60px
+        1fr
+        150px
+        150px;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.rank{
+    font-size:22px;
+
+    font-weight:900;
+
+    text-align:center;
+}
+
+.player{
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+}
+
+.player-avatar{
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #a66cff
+        );
+
+    font-weight:900;
+}
+
+.player-name{
+    font-weight:900;
+}
+
+.player-sub{
+    color:var(--muted);
+
+    font-size:12px;
+
+    margin-top:3px;
+}
+
+.leader-value{
+    font-weight:900;
+}
+
+.leader-tier{
+    text-align:right;
+}
+
+/* =====================================================
+   EMPTY
+===================================================== */
 
 .empty{
     text-align:center;
+
     padding:60px 20px;
+
     background:var(--card);
+
     border:1px dashed var(--border);
+
     border-radius:16px;
+
     color:var(--muted);
 }
 
-/* TOAST */
+/* =====================================================
+   TOAST
+===================================================== */
 
 .toast{
     position:fixed;
+
     right:20px;
     bottom:20px;
+
     z-index:2000;
+
     background:#171d2a;
+
     border:1px solid #34405a;
+
     border-radius:12px;
+
     padding:15px 18px;
+
     min-width:270px;
+
     transform:translateY(120px);
+
     opacity:0;
+
     transition:.3s;
-    box-shadow:0 15px 40px #0008;
+
+    box-shadow:
+        0 15px 40px #0008;
 }
 
 .toast.show{
     transform:translateY(0);
+
     opacity:1;
 }
 
 .toast.success{
-    border-color:rgba(53,227,139,.4);
+    border-color:
+        rgba(53,227,139,.4);
 }
 
 .toast.error{
-    border-color:rgba(255,92,114,.4);
+    border-color:
+        rgba(255,92,114,.4);
 }
 
-/* FOOTER */
+/* =====================================================
+   FOOTER
+===================================================== */
 
 footer{
     border-top:1px solid var(--border);
+
     padding:25px;
+
     text-align:center;
+
     color:var(--muted);
+
     font-size:13px;
 }
 
-/* MOBILE */
+/* =====================================================
+   MOBILE
+===================================================== */
 
-@media(max-width:1100px){
+@media(max-width:1150px){
+
     .coin-grid{
-        grid-template-columns:repeat(3,1fr);
+        grid-template-columns:
+            repeat(3,1fr);
     }
+
+    .tier-grid{
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
 }
 
-@media(max-width:850px){
+@media(max-width:900px){
+
     .hero{
         grid-template-columns:1fr;
     }
 
     .coin-grid{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .tier-grid{
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
     .nav-links{
         display:none;
     }
 
-    .form-grid{
-        grid-template-columns:1fr;
+    .leader-row{
+        grid-template-columns:
+            50px
+            1fr
+            120px;
     }
 
-    .form-group.full{
-        grid-column:auto;
+    .leader-tier{
+        display:none;
     }
+
 }
 
-@media(max-width:600px){
+@media(max-width:650px){
+
     main{
-        padding:20px 14px 50px;
+        padding:
+            18px
+            14px
+            50px;
     }
 
     .navbar{
@@ -788,319 +1299,798 @@ footer{
         grid-template-columns:1fr;
     }
 
+    .tier-grid{
+        grid-template-columns:1fr;
+    }
+
     .hero{
         padding-top:25px;
     }
 
     .hero h1{
-        font-size:42px;
+        font-size:43px;
     }
 
-    .section-header{
-        align-items:flex-start;
-        flex-direction:column;
+    .form-grid{
+        grid-template-columns:1fr;
     }
 
-    .filters{
-        width:100%;
+    .form-group.full{
+        grid-column:auto;
     }
 
-    .search-box{
-        width:100%;
+    .leader-row{
+        grid-template-columns:
+            45px
+            1fr
+            100px;
     }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<header>
-    <div class="navbar">
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-        <div class="logo">
-            <div class="logo-icon">🪙</div>
-            <span>MemeCoinSite</span>
+<header>
+
+<div class="navbar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            🪙
         </div>
 
-        <nav class="nav-links">
-            <button class="nav-btn active" onclick="showPage('home',this)">Home</button>
-            <button class="nav-btn" onclick="showPage('marketplace',this)">Marketplace</button>
-            <button class="nav-btn" onclick="showPage('mycoins',this)">My Coins</button>
-            <button class="nav-btn" onclick="showPage('listings',this)">My Listings</button>
-            <button class="nav-btn" onclick="showPage('history',this)">History</button>
-        </nav>
+        <span>
+            MemeCoinSite
+        </span>
 
-        <div class="wallet">
-            <div class="wallet-balance">
-                USDT Balance:
-                <strong id="walletBalance">$100.00</strong>
-            </div>
+    </div>
 
-            <div class="user-avatar">U</div>
+
+    <nav class="nav-links">
+
+        <button
+            class="nav-btn active"
+            onclick="showPage('home',this)">
+            Home
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="showPage('marketplace',this)">
+            Marketplace
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="showPage('mycoins',this)">
+            My Coins
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="showPage('leaderboard',this)">
+            Leaderboard
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="showPage('listings',this)">
+            My Listings
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="showPage('history',this)">
+            History
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="showPage('admin',this)">
+            Admin
+        </button>
+
+    </nav>
+
+
+    <div class="wallet">
+
+        <div class="wallet-balance">
+
+            USDT Balance:
+
+            <strong id="walletBalance">
+                $100.00
+            </strong>
+
+        </div>
+
+        <div class="user-avatar">
+            U
         </div>
 
     </div>
+
+</div>
+
 </header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <main>
 
-<!-- HOME -->
 
-<section id="home" class="page active">
+<!-- =====================================================
+     HOME
+===================================================== -->
 
-    <div class="hero">
+<section
+    id="home"
+    class="page active">
 
-        <div>
-            <h1>
-                Buy. Own.
-                <span class="gradient-text">Redesign.</span>
-            </h1>
+<div class="hero">
 
-            <p>
-                MemeCoinSite is a marketplace where users can buy
-                unique meme coins, own them, customize their designs,
-                and resell them within the permitted pricing tiers.
-            </p>
+    <div>
 
-            <div class="hero-buttons">
-                <button class="primary-btn"
-                        onclick="showPage('marketplace')">
-                    Explore Marketplace
-                </button>
+        <h1>
 
-                <button class="secondary-btn"
-                        onclick="showPage('mycoins')">
-                    My Coins
-                </button>
-            </div>
-        </div>
+            Buy.
+            Own.
+            <span class="gradient-text">
+                Redesign.
+            </span>
 
-        <div class="stats-box">
+        </h1>
 
-            <div class="stat">
-                <span>Total Coins</span>
-                <strong id="statCoins">0</strong>
-            </div>
+        <p>
 
-            <div class="stat">
-                <span>Marketplace Listings</span>
-                <strong id="statListings">0</strong>
-            </div>
+            MemeCoinSite is a digital collectible marketplace
+            where users can purchase meme coins, customize
+            the designs they own, trade them with other users,
+            and compete for higher coin tiers.
 
-            <div class="stat">
-                <span>Your Coins</span>
-                <strong id="statOwned">0</strong>
-            </div>
+        </p>
 
-            <div class="stat">
-                <span>Platform Fee</span>
-                <strong>1%</strong>
-            </div>
+
+        <div class="hero-buttons">
+
+            <button
+                class="primary-btn"
+                onclick="showPage('marketplace')">
+
+                Explore Marketplace
+
+            </button>
+
+
+            <button
+                class="secondary-btn"
+                onclick="showPage('leaderboard')">
+
+                🏆 Leaderboard
+
+            </button>
 
         </div>
 
     </div>
 
-    <div class="section-header">
-        <div>
-            <h2>Featured MemeCoins</h2>
-            <p>Coins currently available in the marketplace.</p>
+
+    <div class="stats-box">
+
+        <div class="stat">
+
+            <span>
+                Total Coins
+            </span>
+
+            <strong id="statCoins">
+                0
+            </strong>
+
         </div>
+
+
+        <div class="stat">
+
+            <span>
+                Marketplace Listings
+            </span>
+
+            <strong id="statListings">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span>
+                Your Coins
+            </span>
+
+            <strong id="statOwned">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span>
+                Platform Fee
+            </span>
+
+            <strong>
+                1%
+            </strong>
+
+        </div>
+
     </div>
 
-    <div id="featuredCoins" class="coin-grid"></div>
+</div>
+
+
+<div class="section-header">
+
+    <div>
+
+        <h2>
+            How MemeCoinSite Works
+        </h2>
+
+        <p>
+            Create your identity through coin ownership and design.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="tier-grid">
+
+    <div class="tier-card tier-bronze">
+
+        <div class="tier-icon">
+            🥉
+        </div>
+
+        <h3>
+            Bronze
+        </h3>
+
+        <p>
+            Entry-level approved designs.
+        </p>
+
+        <div class="tier-price">
+            $5 – $25
+        </div>
+
+    </div>
+
+
+    <div class="tier-card tier-silver">
+
+        <div class="tier-icon">
+            🥈
+        </div>
+
+        <h3>
+            Silver
+        </h3>
+
+        <p>
+            Better designs selected by the platform.
+        </p>
+
+        <div class="tier-price">
+            $25 – $100
+        </div>
+
+    </div>
+
+
+    <div class="tier-card tier-gold">
+
+        <div class="tier-icon">
+            🥇
+        </div>
+
+        <h3>
+            Gold
+        </h3>
+
+        <p>
+            Premium designs with higher trading value.
+        </p>
+
+        <div class="tier-price">
+            $100 – $500
+        </div>
+
+    </div>
+
+
+    <div class="tier-card tier-luxury">
+
+        <div class="tier-icon">
+            💎
+        </div>
+
+        <h3>
+            Luxury
+        </h3>
+
+        <p>
+            Elite quarterly designs with the highest
+            permitted trading range.
+        </p>
+
+        <div class="tier-price">
+            $500 – $5,000
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section-header">
+
+    <div>
+
+        <h2>
+            Featured Coins
+        </h2>
+
+        <p>
+            Coins currently available.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div
+    id="featuredCoins"
+    class="coin-grid">
+</div>
 
 </section>
 
 
-<!-- MARKETPLACE -->
+<!-- =====================================================
+     MARKETPLACE
+===================================================== -->
 
-<section id="marketplace" class="page">
+<section
+    id="marketplace"
+    class="page">
 
-    <div class="section-header">
+<div class="section-header">
 
-        <div>
-            <h2>Marketplace</h2>
-            <p>Buy coins from MemeCoinSite or other users.</p>
-        </div>
+    <div>
 
-        <div class="filters">
-            <input
-                id="marketSearch"
-                class="search-box"
-                placeholder="Search coin..."
-                oninput="renderMarketplace()"
-            >
+        <h2>
+            Marketplace
+        </h2>
 
-            <select
-                id="tierFilter"
-                class="select-box"
-                onchange="renderMarketplace()"
-            >
-                <option value="all">All Tiers</option>
-                <option value="new">New / Unreviewed</option>
-                <option value="bronze">Bronze</option>
-                <option value="silver">Silver</option>
-                <option value="gold">Gold</option>
-                <option value="diamond">Diamond</option>
-            </select>
-        </div>
+        <p>
+            Buy coins from the platform or other users.
+        </p>
 
     </div>
 
-    <div id="marketplaceGrid" class="coin-grid"></div>
+
+    <div class="filters">
+
+        <input
+            id="marketSearch"
+            class="search-box"
+            placeholder="Search coin..."
+            oninput="renderMarketplace()"
+        >
+
+
+        <select
+            id="tierFilter"
+            class="select-box"
+            onchange="renderMarketplace()">
+
+            <option value="all">
+                All Tiers
+            </option>
+
+            <option value="new">
+                New
+            </option>
+
+            <option value="bronze">
+                Bronze
+            </option>
+
+            <option value="silver">
+                Silver
+            </option>
+
+            <option value="gold">
+                Gold
+            </option>
+
+            <option value="luxury">
+                Luxury
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+
+<div
+    id="marketplaceGrid"
+    class="coin-grid">
+</div>
 
 </section>
 
 
-<!-- MY COINS -->
+<!-- =====================================================
+     MY COINS
+===================================================== -->
 
-<section id="mycoins" class="page">
+<section
+    id="mycoins"
+    class="page">
 
-    <div class="section-header">
+<div class="section-header">
 
-        <div>
-            <h2>My Coins</h2>
-            <p>Coins you currently own.</p>
-        </div>
+    <div>
+
+        <h2>
+            My Coins
+        </h2>
+
+        <p>
+            Coins currently owned by you.
+        </p>
 
     </div>
 
-    <div id="myCoinsGrid" class="coin-grid"></div>
+</div>
+
+
+<div
+    id="myCoinsGrid"
+    class="coin-grid">
+</div>
 
 </section>
 
 
-<!-- MY LISTINGS -->
+<!-- =====================================================
+     LEADERBOARD
+===================================================== -->
 
-<section id="listings" class="page">
+<section
+    id="leaderboard"
+    class="page">
 
-    <div class="section-header">
+<div class="section-header">
 
-        <div>
-            <h2>My Listings</h2>
-            <p>Coins you have listed for other users.</p>
-        </div>
+    <div>
+
+        <h2>
+            🏆 Coin Holder Leaderboard
+        </h2>
+
+        <p>
+            Users ranked by the value and tier of their coin collection.
+        </p>
 
     </div>
 
-    <div id="myListings"></div>
+</div>
+
+
+<div
+    id="leaderboardContainer"
+    class="leaderboard">
+</div>
 
 </section>
 
 
-<!-- HISTORY -->
+<!-- =====================================================
+     LISTINGS
+===================================================== -->
 
-<section id="history" class="page">
+<section
+    id="listings"
+    class="page">
 
-    <div class="section-header">
+<div class="section-header">
 
-        <div>
-            <h2>Ownership & Design History</h2>
-            <p>
-                See how a coin was designed and who previously owned it.
-            </p>
-        </div>
+    <div>
+
+        <h2>
+            My Listings
+        </h2>
+
+        <p>
+            Coins you have listed for sale.
+        </p>
 
     </div>
 
-    <div id="historyContainer"></div>
+</div>
+
+
+<div id="myListings">
+</div>
 
 </section>
 
 
-<!-- ADMIN -->
+<!-- =====================================================
+     HISTORY
+===================================================== -->
 
-<section id="admin" class="page">
+<section
+    id="history"
+    class="page">
 
-    <div class="section-header">
-        <div>
-            <h2>Admin Coin Creation</h2>
-            <p>Create coins that users can later buy.</p>
-        </div>
-    </div>
+<div class="section-header">
 
-    <div class="form-card">
+    <div>
 
-        <div class="notice">
-            Admin-created coins can be purchased by users.
-            Users cannot create completely new coins. They can only
-            customize coins that they already own.
-        </div>
+        <h2>
+            Ownership & Design History
+        </h2>
 
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label>Coin Name</label>
-                <input id="adminCoinName"
-                       placeholder="Example: Golden Cat">
-            </div>
-
-            <div class="form-group">
-                <label>Symbol</label>
-                <input id="adminCoinSymbol"
-                       placeholder="Example: GCAT">
-            </div>
-
-            <div class="form-group">
-                <label>Initial Price (USDT)</label>
-                <input id="adminCoinPrice"
-                       type="number"
-                       min="1"
-                       step="0.01"
-                       placeholder="5">
-            </div>
-
-            <div class="form-group">
-                <label>Tier</label>
-
-                <select id="adminCoinTier">
-                    <option value="new">New / Unreviewed</option>
-                    <option value="bronze">Bronze</option>
-                    <option value="silver">Silver</option>
-                    <option value="gold">Gold</option>
-                    <option value="diamond">Diamond</option>
-                </select>
-
-            </div>
-
-            <div class="form-group full">
-                <label>Description</label>
-
-                <textarea
-                    id="adminCoinDescription"
-                    placeholder="Describe the coin..."
-                ></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Coin Emoji / Design</label>
-                <input id="adminCoinEmoji"
-                       value="🪙"
-                       placeholder="🐱">
-            </div>
-
-            <div class="form-group">
-                <label>Design Color</label>
-
-                <div class="color-row">
-                    <input id="adminCoinColor"
-                           type="color"
-                           value="#5b8cff">
-                </div>
-
-            </div>
-
-        </div>
-
-        <br>
-
-        <button class="primary-btn"
-                onclick="adminCreateCoin()">
-            + Create Coin
-        </button>
+        <p>
+            Follow the journey of your coins.
+        </p>
 
     </div>
+
+</div>
+
+
+<div id="historyContainer">
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ADMIN
+===================================================== -->
+
+<section
+    id="admin"
+    class="page">
+
+<div class="section-header">
+
+    <div>
+
+        <h2>
+            👑 Admin Control Center
+        </h2>
+
+        <p>
+            Create coins and award quarterly tiers.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="form-card">
+
+<div class="notice">
+
+    <strong>
+        Important:
+    </strong>
+
+    Users cannot create completely new coins.
+
+    The platform creates the original asset.
+
+    Users can purchase an existing coin and redesign
+    the asset they own.
+
+    At the end of each quarter, the admin can review
+    designs and award Bronze, Silver, Gold or Luxury status.
+
+</div>
+
+
+<div class="form-grid">
+
+    <div class="form-group">
+
+        <label>
+            Coin Name
+        </label>
+
+        <input
+            id="adminCoinName"
+            placeholder="Example: Golden Cat"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Symbol
+        </label>
+
+        <input
+            id="adminCoinSymbol"
+            placeholder="GCAT"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Initial Price (USDT)
+        </label>
+
+        <input
+            id="adminCoinPrice"
+            type="number"
+            min="1"
+            step="0.01"
+            placeholder="10"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Starting Tier
+        </label>
+
+        <select id="adminCoinTier">
+
+            <option value="new">
+                New / Unreviewed
+            </option>
+
+            <option value="bronze">
+                Bronze
+            </option>
+
+            <option value="silver">
+                Silver
+            </option>
+
+            <option value="gold">
+                Gold
+            </option>
+
+            <option value="luxury">
+                Luxury
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Coin Emoji
+        </label>
+
+        <input
+            id="adminCoinEmoji"
+            value="🪙"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Design Color
+        </label>
+
+        <input
+            id="adminCoinColor"
+            type="color"
+            value="#5b8cff"
+        >
+
+    </div>
+
+
+    <div class="form-group full">
+
+        <label>
+            Description
+        </label>
+
+        <textarea
+            id="adminCoinDescription"
+            placeholder="Describe this coin..."
+        ></textarea>
+
+    </div>
+
+</div>
+
+
+<br>
+
+
+<button
+    class="primary-btn"
+    onclick="adminCreateCoin()">
+
+    + Create Coin
+
+</button>
+
+</div>
+
+
+<!-- ADMIN TIER REVIEW -->
+
+<div class="form-card">
+
+<h2>
+    🏆 Quarterly Tier Review
+</h2>
+
+<p
+    style="
+        color:var(--muted);
+        margin:8px 0 20px;
+    ">
+
+    Review user designs and decide whether they deserve
+    a higher tier.
+
+</p>
+
+
+<div
+    id="adminReviewCoins">
+</div>
+
+</div>
 
 </section>
 
@@ -1108,301 +2098,593 @@ footer{
 
 
 <footer>
-    © 2026 MemeCoinSite — Demo marketplace frontend
+
+© 2026 MemeCoinSite —
+Digital collectible marketplace demo
+
 </footer>
 
 
-<!-- PURCHASE MODAL -->
+<!-- =====================================================
+     PURCHASE MODAL
+===================================================== -->
 
-<div id="purchaseModal" class="modal-overlay">
+<div
+    id="purchaseModal"
+    class="modal-overlay">
 
-    <div class="modal">
+<div class="modal">
 
-        <div class="modal-header">
-            <div>
-                <h2>Buy MemeCoin</h2>
-                <p style="color:var(--muted);margin-top:5px;">
-                    Review your payment before confirming.
-                </p>
-            </div>
+<div class="modal-header">
 
-            <button class="close-btn"
-                    onclick="closeModal('purchaseModal')">
-                ✕
-            </button>
-        </div>
+<div>
 
-        <div id="purchaseContent"></div>
+<h2>
+    Buy MemeCoin
+</h2>
 
-    </div>
+<p
+    style="
+        color:var(--muted);
+        margin-top:5px;
+    ">
 
-</div>
+    Review your payment before confirming.
 
-
-<!-- CUSTOMIZE MODAL -->
-
-<div id="customizeModal" class="modal-overlay">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <div>
-                <h2>Customize Your Coin</h2>
-
-                <p style="color:var(--muted);margin-top:5px;">
-                    You can redesign a coin you already own.
-                </p>
-            </div>
-
-            <button class="close-btn"
-                    onclick="closeModal('customizeModal')">
-                ✕
-            </button>
-
-        </div>
-
-        <div id="customizeContent"></div>
-
-    </div>
+</p>
 
 </div>
 
 
-<!-- DETAILS MODAL -->
+<button
+    class="close-btn"
+    onclick="closeModal('purchaseModal')">
 
-<div id="detailsModal" class="modal-overlay">
+    ✕
 
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <div>
-                <h2>Coin Details</h2>
-            </div>
-
-            <button class="close-btn"
-                    onclick="closeModal('detailsModal')">
-                ✕
-            </button>
-
-        </div>
-
-        <div id="detailsContent"></div>
-
-    </div>
+</button>
 
 </div>
 
 
-<div id="toast" class="toast"></div>
+<div id="purchaseContent">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     CUSTOMIZE MODAL
+===================================================== -->
+
+<div
+    id="customizeModal"
+    class="modal-overlay">
+
+<div class="modal">
+
+<div class="modal-header">
+
+<div>
+
+<h2>
+    Customize Your Coin
+</h2>
+
+<p
+    style="
+        color:var(--muted);
+        margin-top:5px;
+    ">
+
+    Redesign an asset you already own.
+
+</p>
+
+</div>
+
+
+<button
+    class="close-btn"
+    onclick="closeModal('customizeModal')">
+
+    ✕
+
+</button>
+
+</div>
+
+
+<div id="customizeContent">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     DETAILS MODAL
+===================================================== -->
+
+<div
+    id="detailsModal"
+    class="modal-overlay">
+
+<div class="modal">
+
+<div class="modal-header">
+
+<div>
+
+<h2>
+    Coin Details
+</h2>
+
+</div>
+
+
+<button
+    class="close-btn"
+    onclick="closeModal('detailsModal')">
+
+    ✕
+
+</button>
+
+</div>
+
+
+<div id="detailsContent">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    id="toast"
+    class="toast">
+</div>
 
 
 <script>
 
-/* =========================================================
-   CONFIGURATION
-========================================================= */
+/* =====================================================
+   CONFIG
+===================================================== */
 
 const PLATFORM_FEE_PERCENT = 1;
 
 const CURRENT_USER = {
-    id: "user_001",
-    name: "Black Devil"
+
+    id:"user_001",
+
+    name:"Black Devil"
+
 };
 
 
-/* =========================================================
+/* =====================================================
+   QUARTER
+===================================================== */
+
+function getCurrentQuarter(){
+
+    const month =
+        new Date().getMonth();
+
+    return Math.floor(month / 3) + 1;
+
+}
+
+
+/* =====================================================
    TIER RULES
-========================================================= */
+===================================================== */
 
 const TIER_RULES = {
 
     new:{
         name:"New / Unreviewed",
         min:1,
-        max:5
+        max:5,
+        rank:0,
+        icon:"🪙"
     },
 
     bronze:{
         name:"Bronze",
         min:5,
-        max:25
+        max:25,
+        rank:1,
+        icon:"🥉"
     },
 
     silver:{
         name:"Silver",
         min:25,
-        max:100
+        max:100,
+        rank:2,
+        icon:"🥈"
     },
 
     gold:{
         name:"Gold",
         min:100,
-        max:500
+        max:500,
+        rank:3,
+        icon:"🥇"
     },
 
-    diamond:{
-        name:"Diamond",
+    luxury:{
+        name:"Luxury",
         min:500,
-        max:5000
+        max:5000,
+        rank:4,
+        icon:"💎"
     }
 
 };
 
 
-/* =========================================================
+/* =====================================================
    DEMO DATABASE
-========================================================= */
+===================================================== */
 
 let coins = [
 
-    {
-        id:"coin_001",
-        name:"Golden Cat",
-        symbol:"GCAT",
-        emoji:"🐱",
-        color:"#ffc857",
-        tier:"new",
-        description:"My first custom MemeCoin design.",
-        adminCreated:true,
-        ownerId:null,
-        ownerName:null,
-        listing:null,
+{
 
-        history:[
-            {
-                owner:"MemeCoinSite Admin",
-                action:"Created coin",
-                design:"Original Golden Cat design",
-                date:"2026-08-20"
-            }
-        ]
-    },
+id:"coin_001",
 
-    {
-        id:"coin_002",
-        name:"Black Devil",
-        symbol:"BDEV",
-        emoji:"😈",
-        color:"#9b6cff",
-        tier:"new",
-        description:"A dark meme coin created by MemeCoinSite.",
-        adminCreated:true,
-        ownerId:"user_001",
-        ownerName:"Black Devil",
-        listing:null,
+name:"Golden Cat",
 
-        history:[
-            {
-                owner:"MemeCoinSite Admin",
-                action:"Created coin",
-                design:"Original Devil design",
-                date:"2026-08-19"
-            },
-            {
-                owner:"Black Devil",
-                action:"Purchased coin",
-                design:"Original Devil design",
-                date:"2026-08-21"
-            }
-        ]
-    },
+symbol:"GCAT",
 
-    {
-        id:"coin_003",
-        name:"Rocket Dog",
-        symbol:"RDOG",
-        emoji:"🚀",
-        color:"#5b8cff",
-        tier:"bronze",
-        description:"To the moon with Rocket Dog.",
-        adminCreated:true,
-        ownerId:null,
-        ownerName:null,
-        listing:{
-            sellerId:"user_002",
-            sellerName:"MoonWalker",
-            price:12
-        },
+emoji:"🐱",
 
-        history:[
-            {
-                owner:"MemeCoinSite Admin",
-                action:"Created coin",
-                design:"Original Rocket Dog design",
-                date:"2026-08-10"
-            },
-            {
-                owner:"MoonWalker",
-                action:"Purchased coin",
-                design:"Rocket Dog design",
-                date:"2026-08-15"
-            }
-        ]
-    },
+color:"#ffc857",
 
-    {
-        id:"coin_004",
-        name:"Pepe King",
-        symbol:"PPEK",
-        emoji:"🐸",
-        color:"#35e38b",
-        tier:"silver",
-        description:"A legendary meme design.",
-        adminCreated:true,
-        ownerId:null,
-        ownerName:null,
-        listing:null,
+tier:"new",
 
-        history:[
-            {
-                owner:"MemeCoinSite Admin",
-                action:"Created coin",
-                design:"Original Pepe King",
-                date:"2026-08-01"
-            }
-        ]
-    }
+description:
+"An original Golden Cat meme collectible.",
+
+adminCreated:true,
+
+ownerId:null,
+
+ownerName:null,
+
+listing:null,
+
+adminPrice:3,
+
+history:[
+
+{
+
+owner:"MemeCoinSite Admin",
+
+action:"Created coin",
+
+design:"Original Golden Cat design",
+
+date:"2026-08-20"
+
+}
+
+]
+
+},
+
+
+{
+
+id:"coin_002",
+
+name:"Black Devil",
+
+symbol:"BDEV",
+
+emoji:"😈",
+
+color:"#9b6cff",
+
+tier:"new",
+
+description:
+"A dark meme collectible created by MemeCoinSite.",
+
+adminCreated:true,
+
+ownerId:"user_001",
+
+ownerName:"Black Devil",
+
+listing:null,
+
+adminPrice:3,
+
+history:[
+
+{
+
+owner:"MemeCoinSite Admin",
+
+action:"Created coin",
+
+design:"Original Devil design",
+
+date:"2026-08-19"
+
+},
+
+{
+
+owner:"Black Devil",
+
+action:"Purchased coin",
+
+design:"Original Devil design",
+
+date:"2026-08-21"
+
+}
+
+]
+
+},
+
+
+{
+
+id:"coin_003",
+
+name:"Rocket Dog",
+
+symbol:"RDOG",
+
+emoji:"🚀",
+
+color:"#5b8cff",
+
+tier:"bronze",
+
+description:
+"Rocket Dog — a community favorite.",
+
+adminCreated:true,
+
+ownerId:"user_002",
+
+ownerName:"MoonWalker",
+
+listing:{
+
+sellerId:"user_002",
+
+sellerName:"MoonWalker",
+
+price:12
+
+},
+
+adminPrice:8,
+
+history:[
+
+{
+
+owner:"MemeCoinSite Admin",
+
+action:"Created coin",
+
+design:"Original Rocket Dog design",
+
+date:"2026-08-10"
+
+},
+
+{
+
+owner:"MoonWalker",
+
+action:"Purchased coin",
+
+design:"Rocket Dog design",
+
+date:"2026-08-15"
+
+}
+
+]
+
+},
+
+
+{
+
+id:"coin_004",
+
+name:"Pepe King",
+
+symbol:"PPEK",
+
+emoji:"🐸",
+
+color:"#35e38b",
+
+tier:"silver",
+
+description:
+"A legendary meme design.",
+
+adminCreated:true,
+
+ownerId:null,
+
+ownerName:null,
+
+listing:null,
+
+adminPrice:50,
+
+history:[
+
+{
+
+owner:"MemeCoinSite Admin",
+
+action:"Created coin",
+
+design:"Original Pepe King",
+
+date:"2026-08-01"
+
+}
+
+]
+
+},
+
+
+{
+
+id:"coin_005",
+
+name:"Diamond Ape",
+
+symbol:"DAPE",
+
+emoji:"🦍",
+
+color:"#d6a7ff",
+
+tier:"luxury",
+
+description:
+"Elite collectible design.",
+
+adminCreated:true,
+
+ownerId:"user_003",
+
+ownerName:"CryptoKing",
+
+listing:{
+
+sellerId:"user_003",
+
+sellerName:"CryptoKing",
+
+price:1500
+
+},
+
+adminPrice:800,
+
+history:[
+
+{
+
+owner:"MemeCoinSite Admin",
+
+action:"Created coin",
+
+design:"Original Diamond Ape",
+
+date:"2026-07-01"
+
+},
+
+{
+
+owner:"CryptoKing",
+
+action:"Purchased coin",
+
+design:"Diamond Ape",
+
+date:"2026-07-05"
+
+},
+
+{
+
+owner:"MemeCoinSite Admin",
+
+action:"Quarterly tier upgrade",
+
+design:"Approved elite design",
+
+date:"2026-08-01"
+
+}
+
+]
+
+}
 
 ];
 
 
-/* =========================================================
+/* =====================================================
    WALLET
-========================================================= */
+===================================================== */
 
 let walletBalance = 100;
 
 
-/* =========================================================
+/* =====================================================
    STATE
-========================================================= */
+===================================================== */
 
 let selectedCoinId = null;
 
 
-/* =========================================================
+/* =====================================================
    HELPERS
-========================================================= */
+===================================================== */
 
 function money(value){
 
-    return "$" + Number(value).toFixed(2);
+    return "$" +
+        Number(value).toFixed(2);
 
 }
 
 
 function feeFor(price){
 
-    return Number(price) * PLATFORM_FEE_PERCENT / 100;
+    return Number(price)
+        * PLATFORM_FEE_PERCENT
+        / 100;
 
 }
 
 
 function buyerTotal(price){
 
-    return Number(price) + feeFor(price);
+    return Number(price)
+        + feeFor(price);
+
+}
+
+
+function getCoin(id){
+
+    return coins.find(
+        coin => coin.id === id
+    );
 
 }
 
@@ -1414,51 +2696,111 @@ function getTierName(tier){
 }
 
 
-function getCoin(id){
-
-    return coins.find(c => c.id === id);
-
-}
-
-
 function escapeHTML(value){
 
     return String(value ?? "")
+
         .replace(/&/g,"&amp;")
+
         .replace(/</g,"&lt;")
+
         .replace(/>/g,"&gt;")
+
         .replace(/"/g,"&quot;")
+
         .replace(/'/g,"&#039;");
 
 }
 
 
-/* =========================================================
+function getTierBadgeClass(tier){
+
+    return {
+
+        new:"badge-new",
+
+        bronze:"badge-bronze",
+
+        silver:"badge-silver",
+
+        gold:"badge-gold",
+
+        luxury:"badge-luxury"
+
+    }[tier] || "badge-new";
+
+}
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+function getMarketPrice(coin){
+
+    if(coin.listing){
+
+        return Number(
+            coin.listing.price
+        );
+
+    }
+
+    return Number(
+        coin.adminPrice ||
+        TIER_RULES[coin.tier].min
+    );
+
+}
+
+
+/* =====================================================
    NAVIGATION
-========================================================= */
+===================================================== */
 
 function showPage(pageId,button){
 
-    document.querySelectorAll(".page")
-        .forEach(page => page.classList.remove("active"));
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
 
-    const page = document.getElementById(pageId);
+            page.classList.remove("active");
+
+        });
+
+
+    const page =
+        document.getElementById(pageId);
+
 
     if(page){
+
         page.classList.add("active");
+
     }
 
-    document.querySelectorAll(".nav-btn")
-        .forEach(btn => btn.classList.remove("active"));
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
 
     if(button){
+
         button.classList.add("active");
+
     }
+
 
     window.scrollTo({
         top:0,
         behavior:"smooth"
     });
+
 
     if(pageId === "marketplace"){
         renderMarketplace();
@@ -1466,6 +2808,10 @@ function showPage(pageId,button){
 
     if(pageId === "mycoins"){
         renderMyCoins();
+    }
+
+    if(pageId === "leaderboard"){
+        renderLeaderboard();
     }
 
     if(pageId === "listings"){
@@ -1476,79 +2822,107 @@ function showPage(pageId,button){
         renderHistory();
     }
 
+    if(pageId === "admin"){
+        renderAdminReview();
+    }
+
 }
 
 
-/* =========================================================
+/* =====================================================
    COIN CARD
-========================================================= */
+===================================================== */
 
-function coinCard(coin,mode="market"){
+function coinCard(
+    coin,
+    mode="market"
+){
 
-    const tier = TIER_RULES[coin.tier];
+    const tier =
+        TIER_RULES[coin.tier];
 
-    let price = null;
 
-    if(mode === "market"){
+    const price =
+        getMarketPrice(coin);
 
-        if(coin.listing){
-            price = coin.listing.price;
-        }
-        else{
-            /*
-                Demo admin price.
-                In the real Firebase version this will come
-                from the database.
-            */
-            price = tier.min;
-        }
 
-    }
-
-    let sellerText = coin.listing
+    let sellerText =
+        coin.listing
         ? coin.listing.sellerName
         : "MemeCoinSite Admin";
 
 
     let actionHTML = "";
 
+
     if(mode === "market"){
 
-        if(coin.ownerId === CURRENT_USER.id){
+        if(
+            coin.ownerId ===
+            CURRENT_USER.id
+        ){
 
             actionHTML = `
-                <button class="secondary-btn"
-                        onclick="customizeCoin('${coin.id}')">
-                    Customize
+
+                <button
+                    class="secondary-btn"
+                    onclick="
+                        customizeCoin('${coin.id}')
+                    ">
+
+                    🎨 Customize
+
                 </button>
+
             `;
 
         }
         else{
 
             actionHTML = `
-                <button class="primary-btn"
-                        onclick="openPurchase('${coin.id}')">
+
+                <button
+                    class="primary-btn"
+                    onclick="
+                        openPurchase('${coin.id}')
+                    ">
+
                     Buy
+
                 </button>
+
             `;
 
         }
 
     }
 
+
     if(mode === "owned"){
 
         actionHTML = `
-            <button class="secondary-btn"
-                    onclick="customizeCoin('${coin.id}')">
-                🎨 Customize
+
+            <button
+                class="secondary-btn"
+                onclick="
+                    customizeCoin('${coin.id}')
+                ">
+
+                🎨 Design
+
             </button>
 
-            <button class="primary-btn"
-                    onclick="openSell('${coin.id}')">
+
+            <button
+                class="primary-btn"
+                onclick="
+                    openSell('${coin.id}')
+                ">
+
                 Sell
+
             </button>
+
         `;
 
     }
@@ -1556,354 +2930,589 @@ function coinCard(coin,mode="market"){
 
     return `
 
-        <div class="coin-card">
+<div class="coin-card">
 
-            <div class="coin-image"
-                 style="background:
-                 radial-gradient(circle,${escapeHTML(coin.color)}44,transparent 45%),
-                 linear-gradient(135deg,#1d2740,#171323);">
+<div
+    class="coin-image"
 
-                <span>${escapeHTML(coin.emoji)}</span>
+    style="
+        background:
+        radial-gradient(
+            circle,
+            ${escapeHTML(coin.color)}55,
+            transparent 45%
+        ),
+        linear-gradient(
+            135deg,
+            #1d2740,
+            #171323
+        );
+    "
+>
 
-                <span class="small-symbol">
-                    ${escapeHTML(coin.symbol)}
-                </span>
+<span>
+    ${escapeHTML(coin.emoji)}
+</span>
 
-            </div>
+<span class="small-symbol">
+    ${escapeHTML(coin.symbol)}
+</span>
 
-            <div class="coin-title-row">
+</div>
 
-                <div class="coin-title">
-                    ${escapeHTML(coin.name)}
-                </div>
 
-                <span class="badge ${coin.tier === "diamond" ? "purple" :
-                    coin.tier === "gold" ? "yellow" :
-                    coin.tier === "silver" ? "blue" :
-                    coin.tier === "bronze" ? "green" : "yellow"}">
+<div class="coin-title-row">
 
-                    ${escapeHTML(tier.name)}
+<div class="coin-title">
 
-                </span>
+    ${escapeHTML(coin.name)}
 
-            </div>
+</div>
 
-            <div class="coin-symbol">
-                ${escapeHTML(coin.symbol)}
-            </div>
 
-            <div class="coin-info">
+<span
+    class="
+        badge
+        ${getTierBadgeClass(coin.tier)}
+    ">
 
-                <div class="info-row">
-                    <span>Seller</span>
-                    <strong>${escapeHTML(sellerText)}</strong>
-                </div>
+    ${escapeHTML(tier.icon)}
+    ${escapeHTML(tier.name)}
 
-                <div class="info-row">
-                    <span>Allowed range</span>
-                    <strong>
-                        ${money(tier.min)} – ${money(tier.max)}
-                    </strong>
-                </div>
+</span>
 
-                ${
-                    coin.ownerName
-                    ?
-                    `
-                    <div class="info-row">
-                        <span>Current owner</span>
-                        <strong>${escapeHTML(coin.ownerName)}</strong>
-                    </div>
-                    `
-                    :
-                    ""
-                }
+</div>
 
-            </div>
 
-            ${
-                price !== null
-                ?
-                `
-                <div class="coin-price">
-                    ${money(price)}
-                    <small>USDT</small>
-                </div>
-                `
-                :
-                ""
-            }
+<div class="coin-symbol">
 
-            <div class="card-actions">
+    ${escapeHTML(coin.symbol)}
 
-                ${actionHTML}
+</div>
 
-                <button class="secondary-btn"
-                        onclick="showCoinDetails('${coin.id}')">
-                    Details
-                </button>
 
-            </div>
+<div class="coin-info">
 
-        </div>
-    `;
+<div class="info-row">
+
+<span>
+    Seller
+</span>
+
+<strong>
+    ${escapeHTML(sellerText)}
+</strong>
+
+</div>
+
+
+<div class="info-row">
+
+<span>
+    Tier
+</span>
+
+<strong>
+    ${escapeHTML(tier.name)}
+</strong>
+
+</div>
+
+
+<div class="info-row">
+
+<span>
+    Allowed range
+</span>
+
+<strong>
+
+    ${money(tier.min)}
+    –
+    ${money(tier.max)}
+
+</strong>
+
+</div>
+
+
+${
+    coin.ownerName
+    ?
+`
+
+<div class="info-row">
+
+<span>
+    Owner
+</span>
+
+<strong>
+    ${escapeHTML(coin.ownerName)}
+</strong>
+
+</div>
+
+`
+    :
+    ""
+}
+
+</div>
+
+
+<div class="coin-price">
+
+    ${money(price)}
+
+    <small>
+        USDT
+    </small>
+
+</div>
+
+
+<div class="card-actions">
+
+    ${actionHTML}
+
+    <button
+        class="secondary-btn"
+        onclick="
+            showCoinDetails('${coin.id}')
+        ">
+
+        Details
+
+    </button>
+
+</div>
+
+</div>
+
+`;
 
 }
 
 
-/* =========================================================
+/* =====================================================
    FEATURED
-========================================================= */
+===================================================== */
 
 function renderFeatured(){
 
     const container =
-        document.getElementById("featuredCoins");
+        document.getElementById(
+            "featuredCoins"
+        );
 
-    const available = coins
-        .filter(c => c.ownerId !== CURRENT_USER.id)
+
+    const available =
+        coins
+        .filter(
+            c =>
+                c.ownerId !==
+                CURRENT_USER.id
+        )
         .slice(0,4);
+
 
     container.innerHTML =
         available.length
+
         ?
-        available.map(c => coinCard(c,"market")).join("")
+
+        available
+        .map(
+            c => coinCard(c,"market")
+        )
+        .join("")
+
         :
-        `<div class="empty">No featured coins available.</div>`;
+
+        `
+        <div class="empty">
+            No featured coins.
+        </div>
+        `;
 
 }
 
 
-/* =========================================================
+/* =====================================================
    MARKETPLACE
-========================================================= */
+===================================================== */
 
 function renderMarketplace(){
 
     const container =
-        document.getElementById("marketplaceGrid");
+        document.getElementById(
+            "marketplaceGrid"
+        );
+
 
     const search =
-        (document.getElementById("marketSearch")?.value || "")
-        .toLowerCase();
+        (
+            document.getElementById(
+                "marketSearch"
+            )?.value || ""
+        ).toLowerCase();
+
 
     const tier =
-        document.getElementById("tierFilter")?.value || "all";
+        document.getElementById(
+            "tierFilter"
+        )?.value || "all";
 
 
-    const filtered = coins.filter(coin => {
+    const filtered =
+        coins.filter(coin => {
 
-        if(coin.ownerId === CURRENT_USER.id){
-            return false;
-        }
+            if(
+                coin.ownerId ===
+                CURRENT_USER.id
+            ){
 
-        const matchesSearch =
-            coin.name.toLowerCase().includes(search) ||
-            coin.symbol.toLowerCase().includes(search);
+                return false;
 
-        const matchesTier =
-            tier === "all" || coin.tier === tier;
+            }
 
-        return matchesSearch && matchesTier;
 
-    });
+            const matchesSearch =
+
+                coin.name
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                coin.symbol
+                    .toLowerCase()
+                    .includes(search);
+
+
+            const matchesTier =
+
+                tier === "all"
+
+                ||
+
+                coin.tier === tier;
+
+
+            return (
+                matchesSearch &&
+                matchesTier
+            );
+
+        });
 
 
     if(!filtered.length){
 
-        container.innerHTML =
-            `<div class="empty">
+        container.innerHTML = `
+
+            <div class="empty">
+
                 No coins match your search.
-            </div>`;
+
+            </div>
+
+        `;
 
         return;
+
     }
 
 
     container.innerHTML =
-        filtered.map(c => coinCard(c,"market")).join("");
+        filtered
+        .map(
+            coin =>
+                coinCard(
+                    coin,
+                    "market"
+                )
+        )
+        .join("");
 
 }
 
 
-/* =========================================================
+/* =====================================================
    MY COINS
-========================================================= */
+===================================================== */
 
 function renderMyCoins(){
 
     const container =
-        document.getElementById("myCoinsGrid");
+        document.getElementById(
+            "myCoinsGrid"
+        );
+
 
     const owned =
-        coins.filter(c => c.ownerId === CURRENT_USER.id);
+        coins.filter(
+            c =>
+                c.ownerId ===
+                CURRENT_USER.id
+        );
+
 
     if(!owned.length){
 
-        container.innerHTML =
-            `<div class="empty">
-                <h3>You don't own any coins yet.</h3>
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <h3>
+                    You don't own any coins yet.
+                </h3>
+
                 <br>
-                <button class="primary-btn"
-                        onclick="showPage('marketplace')">
+
+                <button
+                    class="primary-btn"
+                    onclick="
+                        showPage('marketplace')
+                    ">
+
                     Explore Marketplace
+
                 </button>
-            </div>`;
+
+            </div>
+
+        `;
 
         return;
+
     }
 
+
     container.innerHTML =
-        owned.map(c => coinCard(c,"owned")).join("");
+        owned
+        .map(
+            c => coinCard(c,"owned")
+        )
+        .join("");
 
 }
 
 
-/* =========================================================
+/* =====================================================
    PURCHASE
-========================================================= */
+===================================================== */
 
 function openPurchase(coinId){
 
-    const coin = getCoin(coinId);
+    const coin =
+        getCoin(coinId);
+
 
     if(!coin){
         return;
     }
 
-    if(coin.ownerId === CURRENT_USER.id){
 
-        toast("You already own this asset.","error");
+    if(
+        coin.ownerId ===
+        CURRENT_USER.id
+    ){
+
+        toast(
+            "You already own this coin.",
+            "error"
+        );
+
         return;
 
     }
 
 
-    let price;
-
-    if(coin.listing){
-
-        price = Number(coin.listing.price);
-
-    }
-    else{
-
-        /*
-            For admin-created coins, the current demo uses
-            the minimum price of the tier.
-
-            Later this will be replaced by the actual
-            admin listing price stored in Firebase.
-        */
-
-        price = Number(TIER_RULES[coin.tier].min);
-
-    }
+    const price =
+        getMarketPrice(coin);
 
 
-    const fee = feeFor(price);
-
-    const total = buyerTotal(price);
-
-    selectedCoinId = coinId;
+    const tier =
+        TIER_RULES[coin.tier];
 
 
-    document.getElementById("purchaseContent").innerHTML = `
+    const fee =
+        feeFor(price);
 
-        <div class="design-preview"
-             style="background:
-             radial-gradient(circle,${escapeHTML(coin.color)}55,transparent 50%),
-             linear-gradient(135deg,#202a45,#241934);">
 
-            ${escapeHTML(coin.emoji)}
+    const total =
+        buyerTotal(price);
 
-        </div>
 
-        <h2>
-            ${escapeHTML(coin.name)}
-        </h2>
+    selectedCoinId =
+        coinId;
 
-        <p style="color:var(--muted);margin-top:5px;">
-            ${escapeHTML(coin.symbol)}
-        </p>
 
-        <div class="purchase-summary">
+    document.getElementById(
+        "purchaseContent"
+    ).innerHTML = `
 
-            <div class="summary-row">
-                <span>Coin price</span>
-                <strong>${money(price)} USDT</strong>
-            </div>
+<div
+    class="design-preview"
 
-            <div class="summary-row">
-                <span>Platform fee (${PLATFORM_FEE_PERCENT}%)</span>
-                <strong>${money(fee)} USDT</strong>
-            </div>
+    style="
+        background:
+        radial-gradient(
+            circle,
+            ${escapeHTML(coin.color)}55,
+            transparent 50%
+        ),
+        linear-gradient(
+            135deg,
+            #202a45,
+            #241934
+        );
+    "
+>
 
-            <div class="summary-row summary-total">
-                <span>Total buyer payment</span>
-                <strong>${money(total)} USDT</strong>
-            </div>
+    ${escapeHTML(coin.emoji)}
 
-        </div>
+</div>
 
-        <div class="fee-note">
 
-            The ${PLATFORM_FEE_PERCENT}% platform fee is added
-            <strong>on top of the coin price</strong> and is paid
-            by the buyer.
+<h2>
+    ${escapeHTML(coin.name)}
+</h2>
 
-            <br><br>
 
-            Seller price remains
-            <strong>${money(price)} USDT</strong>.
+<p
+    style="
+        color:var(--muted);
+        margin-top:5px;
+    "
+>
 
-        </div>
+    ${escapeHTML(coin.symbol)}
+    •
+    ${escapeHTML(tier.name)}
 
-        <div class="notice">
+</p>
 
-            🔐 In the final version, ownership will transfer only
-            after the USDT transaction has been independently
-            verified on the blockchain.
 
-        </div>
+<div class="purchase-summary">
 
-        <button class="primary-btn"
-                style="width:100%;margin-top:10px;"
-                onclick="simulateUSDTPayment()">
+<div class="summary-row">
 
-            Pay ${money(total)} USDT
+<span>
+    Coin price
+</span>
 
-        </button>
+<strong>
+    ${money(price)} USDT
+</strong>
 
-    `;
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Platform fee (${PLATFORM_FEE_PERCENT}%)
+</span>
+
+<strong>
+    ${money(fee)} USDT
+</strong>
+
+</div>
+
+
+<div class="summary-row summary-total">
+
+<span>
+    Total
+</span>
+
+<strong>
+    ${money(total)} USDT
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="fee-note">
+
+    The platform fee is added on top
+    of the seller's price.
+
+    <br><br>
+
+    Seller receives:
+    <strong>
+        ${money(price)} USDT
+    </strong>
+
+</div>
+
+
+<div class="notice">
+
+    🔐 Demo purchase only.
+
+    In the production version,
+    blockchain payment verification
+    must happen before ownership
+    changes.
+
+</div>
+
+
+<button
+    class="primary-btn"
+    style="
+        width:100%;
+        margin-top:10px;
+    "
+    onclick="
+        simulatePurchase()
+    ">
+
+    Pay ${money(total)} USDT
+
+</button>
+
+`;
 
 
     document
-        .getElementById("purchaseModal")
+        .getElementById(
+            "purchaseModal"
+        )
         .classList.add("show");
 
 }
 
 
-/* =========================================================
-   SIMULATED PAYMENT
-========================================================= */
+/* =====================================================
+   SIMULATED PURCHASE
+===================================================== */
 
-function simulateUSDTPayment(){
+function simulatePurchase(){
 
-    const coin = getCoin(selectedCoinId);
+    const coin =
+        getCoin(selectedCoinId);
+
 
     if(!coin){
         return;
     }
 
 
-    let price = coin.listing
-        ? Number(coin.listing.price)
-        : Number(TIER_RULES[coin.tier].min);
+    const price =
+        getMarketPrice(coin);
 
 
-    const total = buyerTotal(price);
+    const total =
+        buyerTotal(price);
 
 
     if(walletBalance < total){
@@ -1918,105 +3527,89 @@ function simulateUSDTPayment(){
     }
 
 
-    /*
-        DEMO ONLY
-
-        Real version:
-
-        1. Create payment request
-        2. Buyer sends USDT
-        3. Backend verifies blockchain transaction
-        4. Backend confirms payment
-        5. Ownership changes
-        6. Seller receives sale amount
-        7. Platform keeps 1% fee
-    */
+    const previousOwner =
+        coin.ownerName ||
+        (
+            coin.listing
+            ?
+            coin.listing.sellerName
+            :
+            "MemeCoinSite Admin"
+        );
 
 
     walletBalance -= total;
 
 
-    const previousOwner =
-        coin.ownerName ||
-        (coin.listing ? coin.listing.sellerName : "MemeCoinSite Admin");
+    coin.ownerId =
+        CURRENT_USER.id;
 
 
-    const sellerId =
-        coin.listing
-        ? coin.listing.sellerId
-        : "admin";
+    coin.ownerName =
+        CURRENT_USER.name;
 
 
-    const sellerName =
-        coin.listing
-        ? coin.listing.sellerName
-        : "MemeCoinSite Admin";
+    coin.listing =
+        null;
 
-
-    /*
-        Ownership transfer
-    */
-
-    coin.ownerId = CURRENT_USER.id;
-    coin.ownerName = CURRENT_USER.name;
-
-
-    /*
-        Remove listing after successful purchase
-    */
-
-    coin.listing = null;
-
-
-    /*
-        Add history
-    */
 
     coin.history.push({
 
-        owner:CURRENT_USER.name,
+        owner:
+            CURRENT_USER.name,
 
-        action:"Purchased coin",
+        action:
+            "Purchased coin",
 
-        design:"Inherited previous owner's design",
+        design:
+            "Inherited previous owner's design",
 
-        previousOwner:previousOwner,
+        previousOwner:
+            previousOwner,
 
-        date:new Date().toISOString().slice(0,10)
+        date:
+            new Date()
+            .toISOString()
+            .slice(0,10)
 
     });
 
 
-    closeModal("purchaseModal");
+    closeModal(
+        "purchaseModal"
+    );
 
-
-    updateWalletUI();
 
     renderAll();
 
 
     toast(
-        `Payment successful. ${coin.name} is now yours.`,
+        `${coin.name} is now yours.`,
         "success"
     );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    CUSTOMIZATION
-========================================================= */
+===================================================== */
 
 function customizeCoin(coinId){
 
-    const coin = getCoin(coinId);
+    const coin =
+        getCoin(coinId);
+
 
     if(!coin){
         return;
     }
 
 
-    if(coin.ownerId !== CURRENT_USER.id){
+    if(
+        coin.ownerId !==
+        CURRENT_USER.id
+    ){
 
         toast(
             "You can only customize coins you own.",
@@ -2024,135 +3617,199 @@ function customizeCoin(coinId){
         );
 
         return;
+
     }
 
 
-    selectedCoinId = coinId;
+    selectedCoinId =
+        coinId;
 
 
-    document.getElementById("customizeContent").innerHTML = `
+    document.getElementById(
+        "customizeContent"
+    ).innerHTML = `
 
-        <div id="designPreview"
-             class="design-preview"
-             style="background:
-             radial-gradient(circle,${escapeHTML(coin.color)}55,transparent 50%),
-             linear-gradient(135deg,#202a45,#241934);">
+<div
+    id="designPreview"
+    class="design-preview"
 
-            ${escapeHTML(coin.emoji)}
+    style="
+        background:
+        radial-gradient(
+            circle,
+            ${escapeHTML(coin.color)}55,
+            transparent 50%
+        ),
+        linear-gradient(
+            135deg,
+            #202a45,
+            #241934
+        );
+    "
+>
 
-        </div>
+    ${escapeHTML(coin.emoji)}
 
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>Coin Display Emoji</label>
-
-                <input
-                    id="customEmoji"
-                    value="${escapeHTML(coin.emoji)}"
-                    maxlength="4"
-                    oninput="updateDesignPreview()"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>Design Color</label>
-
-                <div class="color-row">
-
-                    <input
-                        id="customColor"
-                        type="color"
-                        value="${escapeHTML(coin.color)}"
-                        oninput="updateDesignPreview()"
-                    >
-
-                    <span class="help-text">
-                        Choose the new design color.
-                    </span>
-
-                </div>
-
-            </div>
+</div>
 
 
-            <div class="form-group full">
+<div class="form-grid">
 
-                <label>Design Description</label>
+<div class="form-group">
 
-                <textarea id="customDescription">${escapeHTML(
-                    coin.description
-                )}</textarea>
+<label>
+    Coin Design
+</label>
 
-            </div>
+<input
+    id="customEmoji"
+    value="${escapeHTML(coin.emoji)}"
+    maxlength="4"
+    oninput="
+        updateDesignPreview()
+    "
+>
 
-        </div>
-
-
-        <div class="notice">
-
-            You are redesigning an asset you already own.
-
-            <br><br>
-
-            The coin itself remains the same asset.
-            Your new design will become part of its ownership
-            history.
-
-        </div>
+</div>
 
 
-        <button class="primary-btn"
-                style="width:100%;"
-                onclick="saveCustomization()">
+<div class="form-group">
 
-            Save New Design
+<label>
+    Design Color
+</label>
 
-        </button>
+<input
+    id="customColor"
+    type="color"
+    value="${escapeHTML(coin.color)}"
+    oninput="
+        updateDesignPreview()
+    "
+>
 
-    `;
+</div>
+
+
+<div class="form-group full">
+
+<label>
+    Design Description
+</label>
+
+<textarea
+    id="customDescription"
+>${escapeHTML(coin.description)}</textarea>
+
+</div>
+
+</div>
+
+
+<div class="notice">
+
+🎨 Your design becomes part of this
+coin's permanent ownership history.
+
+At the end of the quarter, the admin
+may review your design and upgrade
+its tier.
+
+<br><br>
+
+<strong>
+Important:
+</strong>
+
+Customizing the design does not
+automatically upgrade the tier.
+
+Only the platform/admin can award
+a new tier.
+
+</div>
+
+
+<button
+    class="primary-btn"
+    style="width:100%;"
+    onclick="
+        saveCustomization()
+    ">
+
+    Save New Design
+
+</button>
+
+`;
 
 
     document
-        .getElementById("customizeModal")
+        .getElementById(
+            "customizeModal"
+        )
         .classList.add("show");
 
 }
 
 
+/* =====================================================
+   PREVIEW
+===================================================== */
+
 function updateDesignPreview(){
 
     const emoji =
-        document.getElementById("customEmoji")?.value || "🪙";
+        document.getElementById(
+            "customEmoji"
+        )?.value || "🪙";
+
 
     const color =
-        document.getElementById("customColor")?.value || "#5b8cff";
+        document.getElementById(
+            "customColor"
+        )?.value || "#5b8cff";
+
 
     const preview =
-        document.getElementById("designPreview");
+        document.getElementById(
+            "designPreview"
+        );
 
 
     if(preview){
 
-        preview.innerHTML = emoji;
+        preview.innerHTML =
+            escapeHTML(emoji);
+
 
         preview.style.background =
-            `radial-gradient(circle,${color}55,transparent 50%),
-             linear-gradient(135deg,#202a45,#241934)`;
+
+            `radial-gradient(
+                circle,
+                ${color}55,
+                transparent 50%
+            ),
+            linear-gradient(
+                135deg,
+                #202a45,
+                #241934
+            )`;
 
     }
 
 }
 
 
+/* =====================================================
+   SAVE CUSTOMIZATION
+===================================================== */
+
 function saveCustomization(){
 
-    const coin = getCoin(selectedCoinId);
+    const coin =
+        getCoin(selectedCoinId);
+
 
     if(!coin){
         return;
@@ -2160,59 +3817,98 @@ function saveCustomization(){
 
 
     const emoji =
-        document.getElementById("customEmoji").value.trim() || "🪙";
+        document
+        .getElementById(
+            "customEmoji"
+        )
+        .value
+        .trim()
+        || "🪙";
+
 
     const color =
-        document.getElementById("customColor").value;
+        document
+        .getElementById(
+            "customColor"
+        )
+        .value;
+
 
     const description =
-        document.getElementById("customDescription").value.trim();
+        document
+        .getElementById(
+            "customDescription"
+        )
+        .value
+        .trim();
 
 
-    coin.emoji = emoji;
-    coin.color = color;
-    coin.description = description;
+    coin.emoji =
+        emoji;
+
+
+    coin.color =
+        color;
+
+
+    coin.description =
+        description;
 
 
     coin.history.push({
 
-        owner:CURRENT_USER.name,
+        owner:
+            CURRENT_USER.name,
 
-        action:"Redesigned coin",
+        action:
+            "Redesigned coin",
 
-        design:`${emoji} custom design`,
+        design:
+            `${emoji} custom design`,
 
-        date:new Date().toISOString().slice(0,10)
+        date:
+            new Date()
+            .toISOString()
+            .slice(0,10)
 
     });
 
 
-    closeModal("customizeModal");
+    closeModal(
+        "customizeModal"
+    );
+
 
     renderAll();
 
+
     toast(
-        "Your coin design has been updated.",
+        "Your new design has been saved.",
         "success"
     );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    SELL
-========================================================= */
+===================================================== */
 
 function openSell(coinId){
 
-    const coin = getCoin(coinId);
+    const coin =
+        getCoin(coinId);
+
 
     if(!coin){
         return;
     }
 
 
-    if(coin.ownerId !== CURRENT_USER.id){
+    if(
+        coin.ownerId !==
+        CURRENT_USER.id
+    ){
 
         toast(
             "You can only sell coins you own.",
@@ -2229,75 +3925,114 @@ function openSell(coinId){
 
 
     const existingPrice =
-        coin.listing?.price || tier.min;
+        coin.listing?.price ||
+        Math.max(
+            tier.min,
+            coin.adminPrice || tier.min
+        );
 
 
-    document.getElementById("customizeContent").innerHTML = `
+    document.getElementById(
+        "customizeContent"
+    ).innerHTML = `
 
-        <h2>
-            List ${escapeHTML(coin.name)}
-        </h2>
-
-        <p style="color:var(--muted);margin:8px 0 20px;">
-            ${escapeHTML(coin.symbol)}
-        </p>
-
-        <div class="notice">
-
-            Allowed ${escapeHTML(tier.name)} price:
-
-            <strong>
-                ${money(tier.min)}
-                –
-                ${money(tier.max)} USDT
-            </strong>
-
-            <br><br>
-
-            You cannot list this coin below the minimum
-            permitted tier price.
-
-        </div>
+<h2>
+    List ${escapeHTML(coin.name)}
+</h2>
 
 
-        <div class="form-group">
+<p
+    style="
+        color:var(--muted);
+        margin:8px 0 20px;
+    "
+>
 
-            <label>Your Selling Price (USDT)</label>
+    ${escapeHTML(coin.symbol)}
 
-            <input
-                id="sellingPrice"
-                type="number"
-                min="${tier.min}"
-                max="${tier.max}"
-                step="0.01"
-                value="${existingPrice}"
-            >
+</p>
 
-        </div>
 
-        <br>
+<div class="notice">
 
-        <button class="primary-btn"
-                style="width:100%;"
-                onclick="createListing('${coin.id}')">
+    ${escapeHTML(tier.icon)}
 
-            List Coin for Sale
+    <strong>
+        ${escapeHTML(tier.name)}
+    </strong>
 
-        </button>
+    allowed trading range:
 
-    `;
+    <strong>
+        ${money(tier.min)}
+        –
+        ${money(tier.max)}
+    </strong>
+
+    USDT.
+
+    <br><br>
+
+    You cannot sell below the
+    minimum or above the maximum
+    allowed price for this tier.
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    Selling Price (USDT)
+</label>
+
+<input
+    id="sellingPrice"
+    type="number"
+    min="${tier.min}"
+    max="${tier.max}"
+    step="0.01"
+    value="${existingPrice}"
+>
+
+</div>
+
+
+<br>
+
+
+<button
+    class="primary-btn"
+    style="width:100%;"
+    onclick="
+        createListing('${coin.id}')
+    ">
+
+    List Coin for Sale
+
+</button>
+
+`;
 
 
     document
-        .getElementById("customizeModal")
+        .getElementById(
+            "customizeModal"
+        )
         .classList.add("show");
 
 }
 
 
+/* =====================================================
+   CREATE LISTING
+===================================================== */
+
 function createListing(coinId){
 
-    const coin = getCoin(coinId);
+    const coin =
+        getCoin(coinId);
+
 
     if(!coin){
         return;
@@ -2305,7 +4040,13 @@ function createListing(coinId){
 
 
     const price =
-        Number(document.getElementById("sellingPrice").value);
+        Number(
+            document
+            .getElementById(
+                "sellingPrice"
+            )
+            .value
+        );
 
 
     const tier =
@@ -2315,7 +4056,7 @@ function createListing(coinId){
     if(!Number.isFinite(price)){
 
         toast(
-            "Enter a valid selling price.",
+            "Enter a valid price.",
             "error"
         );
 
@@ -2327,7 +4068,7 @@ function createListing(coinId){
     if(price < tier.min){
 
         toast(
-            `Price cannot be below ${money(tier.min)} USDT.`,
+            `Minimum price is ${money(tier.min)} USDT.`,
             "error"
         );
 
@@ -2339,7 +4080,7 @@ function createListing(coinId){
     if(price > tier.max){
 
         toast(
-            `Price cannot exceed ${money(tier.max)} USDT.`,
+            `Maximum price is ${money(tier.max)} USDT.`,
             "error"
         );
 
@@ -2350,18 +4091,25 @@ function createListing(coinId){
 
     coin.listing = {
 
-        sellerId:CURRENT_USER.id,
+        sellerId:
+            CURRENT_USER.id,
 
-        sellerName:CURRENT_USER.name,
+        sellerName:
+            CURRENT_USER.name,
 
-        price:price
+        price:
+            price
 
     };
 
 
-    closeModal("customizeModal");
+    closeModal(
+        "customizeModal"
+    );
+
 
     renderAll();
+
 
     toast(
         `${coin.name} listed for ${money(price)} USDT.`,
@@ -2371,36 +4119,51 @@ function createListing(coinId){
 }
 
 
-/* =========================================================
+/* =====================================================
    MY LISTINGS
-========================================================= */
+===================================================== */
 
 function renderMyListings(){
 
     const container =
-        document.getElementById("myListings");
+        document.getElementById(
+            "myListings"
+        );
 
 
-    const listings = coins.filter(
-        coin =>
-            coin.listing &&
-            coin.listing.sellerId === CURRENT_USER.id
-    );
+    const listings =
+        coins.filter(
+            coin =>
+                coin.listing &&
+                coin.listing.sellerId ===
+                CURRENT_USER.id
+        );
 
 
     if(!listings.length){
 
         container.innerHTML = `
-            <div class="empty">
 
-                <h3>No active listings.</h3>
+<div class="empty">
 
-                <p style="margin-top:8px;">
-                    Coins you list for sale will appear here.
-                </p>
+<h3>
+    No active listings.
+</h3>
 
-            </div>
-        `;
+<p
+    style="
+        margin-top:8px;
+    "
+>
+
+    Coins you list for sale
+    will appear here.
+
+</p>
+
+</div>
+
+`;
 
         return;
 
@@ -2409,99 +4172,147 @@ function renderMyListings(){
 
     container.innerHTML = `
 
-        <div class="table-wrap">
+<div class="table-wrap">
 
-            <table>
+<table>
 
-                <thead>
+<thead>
 
-                    <tr>
+<tr>
 
-                        <th>Coin</th>
-                        <th>Symbol</th>
-                        <th>Tier</th>
-                        <th>Your Price</th>
-                        <th>Buyer Pays</th>
-                        <th>Action</th>
+<th>
+    Coin
+</th>
 
-                    </tr>
+<th>
+    Tier
+</th>
 
-                </thead>
+<th>
+    Your Price
+</th>
 
-                <tbody>
+<th>
+    Buyer Pays
+</th>
 
-                    ${listings.map(coin => {
+<th>
+    Action
+</th>
 
-                        const price =
-                            Number(coin.listing.price);
+</tr>
 
-                        return `
+</thead>
 
-                            <tr>
 
-                                <td>
-                                    ${escapeHTML(coin.emoji)}
-                                    ${escapeHTML(coin.name)}
-                                </td>
+<tbody>
 
-                                <td>
-                                    ${escapeHTML(coin.symbol)}
-                                </td>
+${
 
-                                <td>
-                                    ${escapeHTML(
-                                        getTierName(coin.tier)
-                                    )}
-                                </td>
+listings.map(
+    coin => {
 
-                                <td>
-                                    ${money(price)} USDT
-                                </td>
+        const price =
+            Number(
+                coin.listing.price
+            );
 
-                                <td>
-                                    ${money(
-                                        buyerTotal(price)
-                                    )} USDT
-                                </td>
 
-                                <td>
+        return `
 
-                                    <button
-                                        class="danger-btn"
-                                        onclick="cancelListing('${coin.id}')">
+<tr>
 
-                                        Cancel Listing
+<td>
 
-                                    </button>
+    ${escapeHTML(coin.emoji)}
+    ${escapeHTML(coin.name)}
 
-                                </td>
+</td>
 
-                            </tr>
 
-                        `;
+<td>
 
-                    }).join("")}
+    ${escapeHTML(
+        getTierName(coin.tier)
+    )}
 
-                </tbody>
+</td>
 
-            </table>
 
-        </div>
-    `;
+<td>
+
+    ${money(price)} USDT
+
+</td>
+
+
+<td>
+
+    ${money(
+        buyerTotal(price)
+    )} USDT
+
+</td>
+
+
+<td>
+
+<button
+    class="danger-btn"
+    onclick="
+        cancelListing('${coin.id}')
+    ">
+
+    Cancel
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+    }
+).join("")
+
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
 
 }
 
 
+/* =====================================================
+   CANCEL LISTING
+===================================================== */
+
 function cancelListing(coinId){
 
-    const coin = getCoin(coinId);
+    const coin =
+        getCoin(coinId);
 
-    if(!coin || !coin.listing){
+
+    if(
+        !coin ||
+        !coin.listing
+    ){
+
         return;
+
     }
 
 
-    if(coin.listing.sellerId !== CURRENT_USER.id){
+    if(
+        coin.listing.sellerId !==
+        CURRENT_USER.id
+    ){
 
         toast(
             "You cannot cancel another user's listing.",
@@ -2513,10 +4324,12 @@ function cancelListing(coinId){
     }
 
 
-    coin.listing = null;
+    coin.listing =
+        null;
 
 
     renderAll();
+
 
     toast(
         "Listing cancelled.",
@@ -2526,13 +4339,15 @@ function cancelListing(coinId){
 }
 
 
-/* =========================================================
-   COIN DETAILS
-========================================================= */
+/* =====================================================
+   DETAILS
+===================================================== */
 
 function showCoinDetails(coinId){
 
-    const coin = getCoin(coinId);
+    const coin =
+        getCoin(coinId);
+
 
     if(!coin){
         return;
@@ -2543,151 +4358,260 @@ function showCoinDetails(coinId){
         TIER_RULES[coin.tier];
 
 
-    document.getElementById("detailsContent").innerHTML = `
-
-        <div class="design-preview"
-             style="background:
-             radial-gradient(circle,${escapeHTML(coin.color)}55,transparent 50%),
-             linear-gradient(135deg,#202a45,#241934);">
-
-            ${escapeHTML(coin.emoji)}
-
-        </div>
+    const price =
+        getMarketPrice(coin);
 
 
-        <h2>
-            ${escapeHTML(coin.name)}
-        </h2>
+    document.getElementById(
+        "detailsContent"
+    ).innerHTML = `
 
-        <p style="color:var(--muted);margin-top:5px;">
-            ${escapeHTML(coin.symbol)}
-        </p>
+<div
+    class="design-preview"
 
+    style="
+        background:
+        radial-gradient(
+            circle,
+            ${escapeHTML(coin.color)}55,
+            transparent 50%
+        ),
+        linear-gradient(
+            135deg,
+            #202a45,
+            #241934
+        );
+    "
+>
 
-        <div class="purchase-summary">
+    ${escapeHTML(coin.emoji)}
 
-            <div class="summary-row">
-                <span>Tier</span>
-                <strong>
-                    ${escapeHTML(tier.name)}
-                </strong>
-            </div>
-
-            <div class="summary-row">
-                <span>Allowed minimum</span>
-                <strong>
-                    ${money(tier.min)}
-                </strong>
-            </div>
-
-            <div class="summary-row">
-                <span>Allowed maximum</span>
-                <strong>
-                    ${money(tier.max)}
-                </strong>
-            </div>
-
-            <div class="summary-row">
-                <span>Current owner</span>
-                <strong>
-                    ${escapeHTML(
-                        coin.ownerName || "MemeCoinSite"
-                    )}
-                </strong>
-            </div>
-
-        </div>
+</div>
 
 
-        <p style="color:#c0c7d6;line-height:1.6;">
-            ${escapeHTML(coin.description)}
-        </p>
+<h2>
+    ${escapeHTML(coin.name)}
+</h2>
 
 
-        <h3 style="margin:25px 0 15px;">
-            Design & Ownership History
-        </h3>
+<p
+    style="
+        color:var(--muted);
+        margin-top:5px;
+    "
+>
+
+    ${escapeHTML(coin.symbol)}
+
+</p>
 
 
-        <div>
+<div class="purchase-summary">
 
-            ${
-                coin.history.map(item => `
+<div class="summary-row">
 
-                    <div class="history-item">
+<span>
+    Tier
+</span>
 
-                        <h4>
-                            ${escapeHTML(item.action)}
-                        </h4>
+<strong>
 
-                        <p>
-                            Owner:
-                            <strong>
-                                ${escapeHTML(item.owner)}
-                            </strong>
-                        </p>
+    ${escapeHTML(tier.icon)}
+    ${escapeHTML(tier.name)}
 
-                        <p>
-                            Design:
-                            ${escapeHTML(item.design)}
-                        </p>
+</strong>
 
-                        <p>
-                            Date:
-                            ${escapeHTML(item.date)}
-                        </p>
+</div>
 
-                        ${
-                            item.previousOwner
-                            ?
-                            `
-                            <p>
-                                Previous owner:
-                                ${escapeHTML(item.previousOwner)}
-                            </p>
-                            `
-                            :
-                            ""
-                        }
 
-                    </div>
+<div class="summary-row">
 
-                `).join("")
-            }
+<span>
+    Current price
+</span>
 
-        </div>
+<strong>
+    ${money(price)} USDT
+</strong>
 
-    `;
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Allowed range
+</span>
+
+<strong>
+
+    ${money(tier.min)}
+    –
+    ${money(tier.max)}
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Current owner
+</span>
+
+<strong>
+
+    ${escapeHTML(
+        coin.ownerName ||
+        "MemeCoinSite"
+    )}
+
+</strong>
+
+</div>
+
+</div>
+
+
+<p
+    style="
+        color:#c0c7d6;
+        line-height:1.6;
+    "
+>
+
+    ${escapeHTML(
+        coin.description
+    )}
+
+</p>
+
+
+<h3
+    style="
+        margin:25px 0 15px;
+    "
+>
+
+    Design & Ownership History
+
+</h3>
+
+
+<div>
+
+${
+
+coin.history
+.map(
+    item => `
+
+<div class="history-item">
+
+<h4>
+    ${escapeHTML(item.action)}
+</h4>
+
+
+<p>
+
+    Owner:
+    <strong>
+        ${escapeHTML(item.owner)}
+    </strong>
+
+</p>
+
+
+<p>
+
+    Design:
+    ${escapeHTML(item.design)}
+
+</p>
+
+
+<p>
+
+    Date:
+    ${escapeHTML(item.date)}
+
+</p>
+
+
+${
+    item.previousOwner
+    ?
+`
+
+<p>
+
+    Previous owner:
+    ${escapeHTML(
+        item.previousOwner
+    )}
+
+</p>
+
+`
+    :
+    ""
+}
+
+</div>
+
+`
+)
+.join("")
+
+}
+
+</div>
+
+`;
 
 
     document
-        .getElementById("detailsModal")
+        .getElementById(
+            "detailsModal"
+        )
         .classList.add("show");
 
 }
 
 
-/* =========================================================
+/* =====================================================
    HISTORY
-========================================================= */
+===================================================== */
 
 function renderHistory(){
 
     const container =
-        document.getElementById("historyContainer");
+        document.getElementById(
+            "historyContainer"
+        );
 
 
     const owned =
-        coins.filter(c => c.ownerId === CURRENT_USER.id);
+        coins.filter(
+            c =>
+                c.ownerId ===
+                CURRENT_USER.id
+        );
 
 
     if(!owned.length){
 
         container.innerHTML = `
-            <div class="empty">
-                You don't currently own any coins.
-            </div>
-        `;
+
+<div class="empty">
+
+    You don't currently own any coins.
+
+</div>
+
+`;
 
         return;
 
@@ -2695,100 +4619,441 @@ function renderHistory(){
 
 
     container.innerHTML =
-        owned.map(coin => `
 
-            <div class="form-card">
+owned
+.map(
+    coin => `
 
-                <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:15px;
-                    margin-bottom:20px;
-                ">
+<div class="form-card">
 
-                    <div style="font-size:45px;">
-                        ${escapeHTML(coin.emoji)}
-                    </div>
+<div
+    style="
+        display:flex;
+        align-items:center;
+        gap:15px;
+        margin-bottom:20px;
+    "
+>
 
-                    <div>
+<div style="font-size:45px;">
 
-                        <h2>
-                            ${escapeHTML(coin.name)}
-                        </h2>
+    ${escapeHTML(
+        coin.emoji
+    )}
 
-                        <p style="color:var(--muted);">
-                            ${escapeHTML(coin.symbol)}
-                        </p>
-
-                    </div>
-
-                </div>
+</div>
 
 
-                ${coin.history.map(item => `
+<div>
 
-                    <div class="history-item">
+<h2>
 
-                        <h4>
-                            ${escapeHTML(item.action)}
-                        </h4>
+    ${escapeHTML(
+        coin.name
+    )}
 
-                        <p>
-                            Owner:
-                            ${escapeHTML(item.owner)}
-                        </p>
+</h2>
 
-                        <p>
-                            Design:
-                            ${escapeHTML(item.design)}
-                        </p>
 
-                        <p>
-                            Date:
-                            ${escapeHTML(item.date)}
-                        </p>
+<p
+    style="
+        color:var(--muted);
+    "
+>
 
-                    </div>
+    ${escapeHTML(
+        coin.symbol
+    )}
 
-                `).join("")}
+</p>
 
-            </div>
+</div>
 
-        `).join("");
+</div>
+
+
+${
+
+coin.history
+.map(
+    item => `
+
+<div class="history-item">
+
+<h4>
+
+    ${escapeHTML(
+        item.action
+    )}
+
+</h4>
+
+
+<p>
+
+    Owner:
+    ${escapeHTML(
+        item.owner
+    )}
+
+</p>
+
+
+<p>
+
+    Design:
+    ${escapeHTML(
+        item.design
+    )}
+
+</p>
+
+
+<p>
+
+    Date:
+    ${escapeHTML(
+        item.date
+    )}
+
+</p>
+
+</div>
+
+`
+)
+.join("")
+
+}
+
+</div>
+
+`
+)
+.join("");
 
 }
 
 
-/* =========================================================
-   ADMIN CREATE COIN
-========================================================= */
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+function calculateUserStats(){
+
+    const users = {};
+
+
+    coins.forEach(coin => {
+
+        if(!coin.ownerId){
+            return;
+        }
+
+
+        if(!users[coin.ownerId]){
+
+            users[coin.ownerId] = {
+
+                id:
+                    coin.ownerId,
+
+                name:
+                    coin.ownerName,
+
+                coins:[],
+
+                totalValue:0,
+
+                highestTier:"new",
+
+                highestRank:0
+
+            };
+
+        }
+
+
+        const price =
+            getMarketPrice(coin);
+
+
+        users[coin.ownerId]
+            .coins
+            .push(coin);
+
+
+        users[coin.ownerId]
+            .totalValue += price;
+
+
+        const tier =
+            TIER_RULES[coin.tier];
+
+
+        if(
+            tier.rank >
+            users[coin.ownerId].highestRank
+        ){
+
+            users[coin.ownerId]
+                .highestTier =
+                    coin.tier;
+
+            users[coin.ownerId]
+                .highestRank =
+                    tier.rank;
+
+        }
+
+    });
+
+
+    return Object.values(users)
+        .sort(
+            (a,b) => {
+
+                if(
+                    b.highestRank !==
+                    a.highestRank
+                ){
+
+                    return (
+                        b.highestRank -
+                        a.highestRank
+                    );
+
+                }
+
+
+                return (
+                    b.totalValue -
+                    a.totalValue
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   RENDER LEADERBOARD
+===================================================== */
+
+function renderLeaderboard(){
+
+    const container =
+        document.getElementById(
+            "leaderboardContainer"
+        );
+
+
+    const users =
+        calculateUserStats();
+
+
+    if(!users.length){
+
+        container.innerHTML = `
+
+<div class="empty">
+
+    No coin holders yet.
+
+</div>
+
+`;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+
+users
+.map(
+    (user,index) => {
+
+        const tier =
+            TIER_RULES[
+                user.highestTier
+            ];
+
+
+        const rank =
+            index + 1;
+
+
+        return `
+
+<div class="leader-row">
+
+<div class="rank">
+
+    ${
+        rank === 1
+        ? "🥇"
+        : rank === 2
+        ? "🥈"
+        : rank === 3
+        ? "🥉"
+        : "#" + rank
+    }
+
+</div>
+
+
+<div class="player">
+
+<div class="player-avatar">
+
+    ${escapeHTML(
+        user.name
+        .charAt(0)
+        .toUpperCase()
+    )}
+
+</div>
+
+
+<div>
+
+<div class="player-name">
+
+    ${escapeHTML(
+        user.name
+    )}
+
+</div>
+
+
+<div class="player-sub">
+
+    ${user.coins.length}
+    coin(s) owned
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="leader-value">
+
+    ${money(
+        user.totalValue
+    )}
+
+</div>
+
+
+<div class="leader-tier">
+
+<span
+    class="
+        badge
+        ${getTierBadgeClass(
+            user.highestTier
+        )}
+    ">
+
+    ${tier.icon}
+    ${tier.name}
+
+</span>
+
+</div>
+
+</div>
+
+`;
+
+    }
+)
+.join("");
+
+}
+
+
+/* =====================================================
+   ADMIN CREATE
+===================================================== */
 
 function adminCreateCoin(){
 
     const name =
-        document.getElementById("adminCoinName").value.trim();
+        document
+        .getElementById(
+            "adminCoinName"
+        )
+        .value
+        .trim();
+
 
     const symbol =
-        document.getElementById("adminCoinSymbol").value.trim()
-            .toUpperCase();
+        document
+        .getElementById(
+            "adminCoinSymbol"
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
 
     const price =
-        Number(document.getElementById("adminCoinPrice").value);
+        Number(
+            document
+            .getElementById(
+                "adminCoinPrice"
+            )
+            .value
+        );
+
 
     const tier =
-        document.getElementById("adminCoinTier").value;
+        document
+        .getElementById(
+            "adminCoinTier"
+        )
+        .value;
+
 
     const description =
-        document.getElementById("adminCoinDescription").value.trim();
+        document
+        .getElementById(
+            "adminCoinDescription"
+        )
+        .value
+        .trim();
+
 
     const emoji =
-        document.getElementById("adminCoinEmoji").value.trim() || "🪙";
+        document
+        .getElementById(
+            "adminCoinEmoji"
+        )
+        .value
+        .trim()
+        ||
+        "🪙";
+
 
     const color =
-        document.getElementById("adminCoinColor").value;
+        document
+        .getElementById(
+            "adminCoinColor"
+        )
+        .value;
 
 
-    if(!name || !symbol || !description){
+    if(
+        !name ||
+        !symbol ||
+        !description
+    ){
 
         toast(
             "Please fill all required fields.",
@@ -2804,11 +5069,22 @@ function adminCreateCoin(){
         TIER_RULES[tier];
 
 
-    if(price < tierRule.min || price > tierRule.max){
+    if(
+        !Number.isFinite(price) ||
+        price < tierRule.min ||
+        price > tierRule.max
+    ){
 
         toast(
-            `Price must be between ${money(tierRule.min)} and ${money(tierRule.max)} USDT.`,
+
+            `Price must be between ${money(
+                tierRule.min
+            )} and ${money(
+                tierRule.max
+            )}.`,
+
             "error"
+
         );
 
         return;
@@ -2818,7 +5094,9 @@ function adminCreateCoin(){
 
     const newCoin = {
 
-        id:"coin_" + Date.now(),
+        id:
+            "coin_" +
+            Date.now(),
 
         name,
 
@@ -2844,30 +5122,57 @@ function adminCreateCoin(){
 
         history:[
 
-            {
-                owner:"MemeCoinSite Admin",
+        {
 
-                action:"Created coin",
+            owner:
+                "MemeCoinSite Admin",
 
-                design:`Original ${name} design`,
+            action:
+                "Created coin",
 
-                date:new Date().toISOString().slice(0,10)
+            design:
+                `Original ${name} design`,
 
-            }
+            date:
+                new Date()
+                .toISOString()
+                .slice(0,10)
+
+        }
 
         ]
 
     };
 
 
-    coins.push(newCoin);
+    coins.push(
+        newCoin
+    );
 
 
-    document.getElementById("adminCoinName").value="";
-    document.getElementById("adminCoinSymbol").value="";
-    document.getElementById("adminCoinPrice").value="";
-    document.getElementById("adminCoinDescription").value="";
-    document.getElementById("adminCoinEmoji").value="🪙";
+    document.getElementById(
+        "adminCoinName"
+    ).value = "";
+
+
+    document.getElementById(
+        "adminCoinSymbol"
+    ).value = "";
+
+
+    document.getElementById(
+        "adminCoinPrice"
+    ).value = "";
+
+
+    document.getElementById(
+        "adminCoinDescription"
+    ).value = "";
+
+
+    document.getElementById(
+        "adminCoinEmoji"
+    ).value = "🪙";
 
 
     renderAll();
@@ -2881,14 +5186,307 @@ function adminCreateCoin(){
 }
 
 
-/* =========================================================
-   UI UPDATE
-========================================================= */
+/* =====================================================
+   ADMIN TIER REVIEW
+===================================================== */
+
+function renderAdminReview(){
+
+    const container =
+        document.getElementById(
+            "adminReviewCoins"
+        );
+
+
+    const userCoins =
+        coins.filter(
+            coin =>
+                coin.ownerId &&
+                coin.ownerId !== "admin"
+        );
+
+
+    if(!userCoins.length){
+
+        container.innerHTML = `
+
+<div class="empty">
+
+    No user-owned coins to review.
+
+</div>
+
+`;
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+    Coin
+</th>
+
+<th>
+    Owner
+</th>
+
+<th>
+    Current Tier
+</th>
+
+<th>
+    New Tier
+</th>
+
+<th>
+    Action
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${
+
+userCoins
+.map(
+    coin => `
+
+<tr>
+
+<td>
+
+    ${escapeHTML(
+        coin.emoji
+    )}
+
+    ${escapeHTML(
+        coin.name
+    )}
+
+</td>
+
+
+<td>
+
+    ${escapeHTML(
+        coin.ownerName
+    )}
+
+</td>
+
+
+<td>
+
+    <span
+        class="
+            badge
+            ${getTierBadgeClass(
+                coin.tier
+            )}
+        ">
+
+        ${TIER_RULES[
+            coin.tier
+        ].icon}
+
+        ${escapeHTML(
+            getTierName(
+                coin.tier
+            )
+        )}
+
+    </span>
+
+</td>
+
+
+<td>
+
+<select
+    id="
+        review_${coin.id}
+    "
+    class="select-box"
+>
+
+<option value="new">
+    New
+</option>
+
+<option value="bronze">
+    Bronze
+</option>
+
+<option value="silver">
+    Silver
+</option>
+
+<option value="gold">
+    Gold
+</option>
+
+<option value="luxury">
+    Luxury
+</option>
+
+</select>
+
+</td>
+
+
+<td>
+
+<button
+    class="primary-btn"
+    onclick="
+        approveTier('${coin.id}')
+    ">
+
+    Award Tier
+
+</button>
+
+</td>
+
+</tr>
+
+`
+)
+.join("")
+
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+
+    userCoins.forEach(
+        coin => {
+
+            const select =
+                document.getElementById(
+                    `review_${coin.id}`
+                );
+
+
+            if(select){
+
+                select.value =
+                    coin.tier;
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   APPROVE TIER
+===================================================== */
+
+function approveTier(coinId){
+
+    const coin =
+        getCoin(coinId);
+
+
+    if(!coin){
+        return;
+    }
+
+
+    const select =
+        document.getElementById(
+            `review_${coinId}`
+        );
+
+
+    if(!select){
+        return;
+    }
+
+
+    const newTier =
+        select.value;
+
+
+    const oldTier =
+        coin.tier;
+
+
+    coin.tier =
+        newTier;
+
+
+    coin.history.push({
+
+        owner:
+            coin.ownerName ||
+            "MemeCoinSite Admin",
+
+        action:
+            "Quarterly tier review",
+
+        design:
+            `Tier changed from ${
+                getTierName(oldTier)
+            } to ${
+                getTierName(newTier)
+            }`,
+
+        date:
+            new Date()
+            .toISOString()
+            .slice(0,10)
+
+    });
+
+
+    renderAll();
+
+
+    toast(
+
+        `${coin.name} is now ${getTierName(newTier)}.`,
+
+        "success"
+
+    );
+
+}
+
+
+/* =====================================================
+   UI
+===================================================== */
 
 function updateWalletUI(){
 
-    document.getElementById("walletBalance")
-        .textContent =
+    document.getElementById(
+        "walletBalance"
+    ).textContent =
         money(walletBalance);
 
 }
@@ -2896,112 +5494,162 @@ function updateWalletUI(){
 
 function updateStats(){
 
-    document.getElementById("statCoins")
-        .textContent =
+    document.getElementById(
+        "statCoins"
+    ).textContent =
         coins.length;
 
 
-    document.getElementById("statListings")
-        .textContent =
-        coins.filter(c => c.listing).length;
+    document.getElementById(
+        "statListings"
+    ).textContent =
 
-
-    document.getElementById("statOwned")
-        .textContent =
         coins.filter(
-            c => c.ownerId === CURRENT_USER.id
+            c => c.listing
+        ).length;
+
+
+    document.getElementById(
+        "statOwned"
+    ).textContent =
+
+        coins.filter(
+            c =>
+                c.ownerId ===
+                CURRENT_USER.id
         ).length;
 
 }
 
 
+/* =====================================================
+   RENDER EVERYTHING
+===================================================== */
+
 function renderAll(){
 
     renderFeatured();
+
     renderMarketplace();
+
     renderMyCoins();
+
     renderMyListings();
+
     renderHistory();
 
+    renderLeaderboard();
+
+    renderAdminReview();
+
     updateWalletUI();
+
     updateStats();
 
 }
 
 
-/* =========================================================
-   MODAL
-========================================================= */
+/* =====================================================
+   MODALS
+===================================================== */
 
 function closeModal(id){
 
     const modal =
         document.getElementById(id);
 
+
     if(modal){
 
-        modal.classList.remove("show");
+        modal.classList.remove(
+            "show"
+        );
 
     }
 
 }
 
 
-/* =========================================================
+/* =====================================================
    TOAST
-========================================================= */
+===================================================== */
 
 let toastTimer;
 
 
-function toast(message,type="success"){
+function toast(
+    message,
+    type="success"
+){
 
     const element =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
 
 
-    element.textContent = message;
+    element.textContent =
+        message;
+
 
     element.className =
-        "toast show " + type;
+        "toast show " +
+        type;
 
 
-    clearTimeout(toastTimer);
+    clearTimeout(
+        toastTimer
+    );
 
 
     toastTimer =
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            element.classList.remove("show");
+                element.classList.remove(
+                    "show"
+                );
 
-        },3500);
+            },
+
+            3500
+        );
 
 }
 
 
-/* =========================================================
-   CLOSE MODAL ON BACKGROUND CLICK
-========================================================= */
+/* =====================================================
+   BACKGROUND MODAL CLOSE
+===================================================== */
 
-document.querySelectorAll(".modal-overlay")
-    .forEach(modal => {
+document
+.querySelectorAll(".modal-overlay")
+.forEach(modal => {
 
-        modal.addEventListener("click",event => {
+    modal.addEventListener(
+        "click",
+        event => {
 
-            if(event.target === modal){
+            if(
+                event.target ===
+                modal
+            ){
 
-                modal.classList.remove("show");
+                modal.classList.remove(
+                    "show"
+                );
 
             }
 
-        });
+        }
+    );
 
-    });
+});
 
 
-/* =========================================================
-   INITIALIZATION
-========================================================= */
+/* =====================================================
+   INITIALIZE
+===================================================== */
 
 renderAll();
 
