@@ -15,75 +15,63 @@
 
         body {
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-family: Arial, sans-serif;
             color: white;
-            text-align: center;
-            background: linear-gradient(135deg, #111827, #4c1d95, #7c3aed);
+            background:
+                radial-gradient(circle at top left, rgba(124, 58, 237, 0.45), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.35), transparent 35%),
+                linear-gradient(135deg, #080b14, #17112d, #35146b);
+            padding: 30px 15px;
         }
 
         .container {
-            width: 90%;
-            max-width: 600px;
-            padding: 50px 30px;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.10);
-            border: 1px solid rgba(255, 255, 255, 0.20);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 25px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(15px);
+            text-align: center;
         }
 
         .logo {
             font-size: 65px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         h1 {
             font-size: 42px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .subtitle {
-            color: #e5e7eb;
-            font-size: 18px;
+            color: #d1d5db;
+            font-size: 17px;
             line-height: 1.6;
             margin-bottom: 30px;
         }
 
         button {
-            padding: 14px 25px;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 12px;
+            padding: 13px 22px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            background: white;
-            color: #4c1d95;
+            transition: 0.2s ease;
         }
 
         button:hover {
-            opacity: 0.9;
+            transform: translateY(-2px);
+            opacity: 0.92;
         }
 
-        #profile {
-            display: none;
-            margin-top: 25px;
-        }
-
-        #profile img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-        }
-
-        .user-id {
-            margin: 15px 0;
-            padding: 12px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.25);
-            font-weight: bold;
+        .login-button {
+            background: white;
+            color: #4c1d95;
         }
 
         #status {
@@ -93,10 +81,142 @@
             font-size: 15px;
         }
 
+        #profile {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .profile-card {
+            padding: 28px 20px;
+            border-radius: 22px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        #profilePhoto {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+        }
+
+        #welcome {
+            font-size: 27px;
+            margin-bottom: 25px;
+        }
+
+        .profile-info {
+            display: grid;
+            gap: 12px;
+            text-align: left;
+            margin-bottom: 22px;
+        }
+
+        .info-box {
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .info-label {
+            display: block;
+            color: #a5b4fc;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            color: white;
+            font-size: 16px;
+            word-break: break-word;
+        }
+
+        .id-box {
+            margin: 18px 0;
+            padding: 18px;
+            border-radius: 14px;
+            background: rgba(124, 58, 237, 0.25);
+            border: 1px solid rgba(167, 139, 250, 0.35);
+        }
+
+        .id-title {
+            color: #c4b5fd;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        #userId {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .copy-button {
+            background: #a78bfa;
+            color: #1e103d;
+            padding: 9px 16px;
+            font-size: 13px;
+        }
+
+        .logout-button {
+            margin-top: 8px;
+            background: #ef4444;
+            color: white;
+        }
+
+        .dashboard-title {
+            margin-top: 28px;
+            margin-bottom: 15px;
+            font-size: 21px;
+        }
+
+        .coming-soon {
+            display: grid;
+            gap: 10px;
+        }
+
+        .feature {
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #d1d5db;
+        }
+
         .footer {
             margin-top: 35px;
-            color: #d1d5db;
+            color: #9ca3af;
             font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 18px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .logo {
+                font-size: 55px;
+            }
+
+            #welcome {
+                font-size: 23px;
+            }
+
+            #userId {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -113,7 +233,7 @@
         Create your own unique digital meme collectible.
     </p>
 
-    <button id="loginBtn">
+    <button id="loginBtn" class="login-button">
         Sign in with Google
     </button>
 
@@ -121,18 +241,74 @@
 
     <div id="profile">
 
-        <img id="profilePhoto" src="" alt="Profile">
+        <div class="profile-card">
 
-        <h2 id="welcome"></h2>
+            <img id="profilePhoto" src="" alt="Profile">
 
-        <div class="user-id">
-            MemeCoinSite ID:<br>
-            <span id="userId"></span>
+            <h2 id="welcome"></h2>
+
+            <div class="profile-info">
+
+                <div class="info-box">
+                    <span class="info-label">Name</span>
+                    <span id="profileName" class="info-value"></span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Email</span>
+                    <span id="profileEmail" class="info-value"></span>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">Account Created</span>
+                    <span id="profileCreated" class="info-value"></span>
+                </div>
+
+            </div>
+
+            <div class="id-box">
+
+                <div class="id-title">
+                    YOUR MEMECOINSITE ID
+                </div>
+
+                <span id="userId"></span>
+
+                <button id="copyIdBtn" class="copy-button">
+                    📋 Copy ID
+                </button>
+
+            </div>
+
+            <h3 class="dashboard-title">
+                🚀 Dashboard
+            </h3>
+
+            <div class="coming-soon">
+
+                <div class="feature">
+                    🪙 Create MemeCoin — Coming Soon
+                </div>
+
+                <div class="feature">
+                    💰 Wallet — Coming Soon
+                </div>
+
+                <div class="feature">
+                    📊 My MemeCoins — Coming Soon
+                </div>
+
+                <div class="feature">
+                    💳 Transactions — Coming Soon
+                </div>
+
+            </div>
+
+            <button id="logoutBtn" class="logout-button">
+                Logout
+            </button>
+
         </div>
-
-        <button id="logoutBtn">
-            Logout
-        </button>
 
     </div>
 
@@ -141,6 +317,7 @@
     </div>
 
 </div>
+
 
 <script type="module">
 
@@ -168,42 +345,79 @@
     // Firebase configuration
 
     const firebaseConfig = {
+
         apiKey: "AIzaSyCPYUNojoO27RBLCuvWetdMiQjRJW1_Xew",
-        authDomain: "memecoinsite-52a7f.firebaseapp.com",
-        projectId: "memecoinsite-52a7f",
-        storageBucket: "memecoinsite-52a7f.firebasestorage.app",
-        messagingSenderId: "427751968898",
-        appId: "1:427751968898:web:5ce1f4209e5beb4f3ce49b"
+
+        authDomain:
+            "memecoinsite-52a7f.firebaseapp.com",
+
+        projectId:
+            "memecoinsite-52a7f",
+
+        storageBucket:
+            "memecoinsite-52a7f.firebasestorage.app",
+
+        messagingSenderId:
+            "427751968898",
+
+        appId:
+            "1:427751968898:web:5ce1f4209e5beb4f3ce49b"
+
     };
 
 
     // Initialize Firebase
 
-    const app = initializeApp(firebaseConfig);
+    const app =
+        initializeApp(firebaseConfig);
 
-    const auth = getAuth(app);
+    const auth =
+        getAuth(app);
 
-    const db = getFirestore(app);
+    const db =
+        getFirestore(app);
 
-    const provider = new GoogleAuthProvider();
-
-
-    const loginBtn = document.getElementById("loginBtn");
-
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    const profile = document.getElementById("profile");
-
-    const status = document.getElementById("status");
-
-    const welcome = document.getElementById("welcome");
-
-    const userIdElement = document.getElementById("userId");
-
-    const profilePhoto = document.getElementById("profilePhoto");
+    const provider =
+        new GoogleAuthProvider();
 
 
-    // Generate a unique MemeCoinSite ID
+    // HTML elements
+
+    const loginBtn =
+        document.getElementById("loginBtn");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+    const copyIdBtn =
+        document.getElementById("copyIdBtn");
+
+    const profile =
+        document.getElementById("profile");
+
+    const status =
+        document.getElementById("status");
+
+    const welcome =
+        document.getElementById("welcome");
+
+    const userIdElement =
+        document.getElementById("userId");
+
+    const profilePhoto =
+        document.getElementById("profilePhoto");
+
+    const profileName =
+        document.getElementById("profileName");
+
+    const profileEmail =
+        document.getElementById("profileEmail");
+
+    const profileCreated =
+        document.getElementById("profileCreated");
+
+
+    // Generate unique MemeCoinSite ID
 
     function generateMemeCoinID() {
 
@@ -217,163 +431,275 @@
     }
 
 
-    // Google login
+    // Display user profile
 
-    loginBtn.addEventListener("click", async () => {
+    function displayProfile(user, data) {
 
-        try {
+        welcome.textContent =
+            "Welcome, " +
+            (user.displayName || "User");
 
-            status.textContent = "Signing in...";
+        profileName.textContent =
+            data.name ||
+            user.displayName ||
+            "User";
 
-            const result =
-                await signInWithPopup(auth, provider);
+        profileEmail.textContent =
+            data.email ||
+            user.email ||
+            "Not available";
 
-            const user = result.user;
+        userIdElement.textContent =
+            data.memeCoinID ||
+            "Not available";
 
-            const userRef =
-                doc(db, "users", user.uid);
+        if (data.createdAt) {
 
-            const userSnapshot =
-                await getDoc(userRef);
+            const createdDate =
+                new Date(data.createdAt);
 
+            profileCreated.textContent =
+                createdDate.toLocaleString();
 
-            let memeCoinID;
+        } else {
 
-
-            if (userSnapshot.exists()) {
-
-                memeCoinID =
-                    userSnapshot.data().memeCoinID;
-
-            } else {
-
-                memeCoinID =
-                    generateMemeCoinID();
-
-
-                await setDoc(userRef, {
-
-                    memeCoinID: memeCoinID,
-
-                    uid: user.uid,
-
-                    name: user.displayName || "",
-
-                    email: user.email || "",
-
-                    photoURL: user.photoURL || "",
-
-                    createdAt: new Date().toISOString()
-
-                });
-
-            }
-
-
-            status.textContent =
-                "✅ Login successful!";
-
-            welcome.textContent =
-                "Welcome, " + (user.displayName || "User");
-
-
-            userIdElement.textContent =
-                memeCoinID;
-
-
-            if (user.photoURL) {
-
-                profilePhoto.src =
-                    user.photoURL;
-
-            }
-
-            loginBtn.style.display = "none";
-
-            profile.style.display = "block";
-
-        } catch (error) {
-
-            console.error(error);
-
-            status.textContent =
-                "❌ Login failed: " + error.message;
+            profileCreated.textContent =
+                "Not available";
 
         }
 
-    });
+        if (data.photoURL || user.photoURL) {
+
+            profilePhoto.src =
+                data.photoURL ||
+                user.photoURL;
+
+        }
+
+        loginBtn.style.display =
+            "none";
+
+        profile.style.display =
+            "block";
+    }
+
+
+    // Google Login
+
+    loginBtn.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                status.textContent =
+                    "Signing in...";
+
+                const result =
+                    await signInWithPopup(
+                        auth,
+                        provider
+                    );
+
+                const user =
+                    result.user;
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
+
+                const userSnapshot =
+                    await getDoc(userRef);
+
+                let userData;
+
+
+                if (userSnapshot.exists()) {
+
+                    userData =
+                        userSnapshot.data();
+
+                } else {
+
+                    const memeCoinID =
+                        generateMemeCoinID();
+
+                    userData = {
+
+                        memeCoinID:
+                            memeCoinID,
+
+                        uid:
+                            user.uid,
+
+                        name:
+                            user.displayName || "",
+
+                        email:
+                            user.email || "",
+
+                        photoURL:
+                            user.photoURL || "",
+
+                        createdAt:
+                            new Date().toISOString()
+
+                    };
+
+                    await setDoc(
+                        userRef,
+                        userData
+                    );
+                }
+
+
+                status.textContent =
+                    "✅ Login successful!";
+
+                displayProfile(
+                    user,
+                    userData
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                status.textContent =
+                    "❌ Login failed: " +
+                    error.message;
+
+            }
+
+        }
+    );
+
+
+    // Copy MemeCoinSite ID
+
+    copyIdBtn.addEventListener(
+        "click",
+        async () => {
+
+            const id =
+                userIdElement.textContent;
+
+            try {
+
+                await navigator.clipboard.writeText(id);
+
+                copyIdBtn.textContent =
+                    "✅ Copied!";
+
+                setTimeout(() => {
+
+                    copyIdBtn.textContent =
+                        "📋 Copy ID";
+
+                }, 2000);
+
+            } catch (error) {
+
+                console.error(error);
+
+                status.textContent =
+                    "Unable to copy ID.";
+
+            }
+
+        }
+    );
 
 
     // Logout
 
-    logoutBtn.addEventListener("click", async () => {
+    logoutBtn.addEventListener(
+        "click",
+        async () => {
 
-        try {
+            try {
 
-            await signOut(auth);
-
-            profile.style.display = "none";
-
-            loginBtn.style.display = "inline-block";
-
-            status.textContent =
-                "You have been logged out.";
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
-    });
-
-
-    // Check login state
-
-    onAuthStateChanged(auth, async (user) => {
-
-        if (user) {
-
-            const userRef =
-                doc(db, "users", user.uid);
-
-            const userSnapshot =
-                await getDoc(userRef);
-
-
-            if (userSnapshot.exists()) {
-
-                const data =
-                    userSnapshot.data();
-
-
-                welcome.textContent =
-                    "Welcome, " +
-                    (user.displayName || "User");
-
-
-                userIdElement.textContent =
-                    data.memeCoinID;
-
-
-                if (user.photoURL) {
-
-                    profilePhoto.src =
-                        user.photoURL;
-
-                }
-
-                loginBtn.style.display =
-                    "none";
+                await signOut(auth);
 
                 profile.style.display =
-                    "block";
+                    "none";
+
+                loginBtn.style.display =
+                    "inline-block";
+
+                status.textContent =
+                    "You have been logged out.";
+
+            } catch (error) {
+
+                console.error(error);
+
+                status.textContent =
+                    "Logout failed.";
 
             }
 
         }
+    );
 
-    });
+
+    // Check login state
+
+    onAuthStateChanged(
+        auth,
+        async (user) => {
+
+            if (!user) {
+
+                profile.style.display =
+                    "none";
+
+                loginBtn.style.display =
+                    "inline-block";
+
+                return;
+            }
+
+
+            try {
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
+
+                const userSnapshot =
+                    await getDoc(userRef);
+
+
+                if (userSnapshot.exists()) {
+
+                    const data =
+                        userSnapshot.data();
+
+                    displayProfile(
+                        user,
+                        data
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                status.textContent =
+                    "Could not load your profile.";
+
+            }
+
+        }
+    );
 
 </script>
 
