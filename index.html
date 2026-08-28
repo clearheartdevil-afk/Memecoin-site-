@@ -3375,6 +3375,116 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
+
+    /* =====================================================
+   FIRESTORE ASSET LOADER
+===================================================== */
+
+async function loadAssetsFromFirestore(){
+
+    try{
+
+        const snapshot =
+            await db.collection("assets").get();
+
+        coins =
+            snapshot.docs.map(doc => {
+
+                const data =
+                    doc.data();
+
+                let frontendTier =
+                    data.tier;
+
+                /*
+                 * Firestore currently stores
+                 * "Not Yet Ranked".
+                 *
+                 * Keep the original Firestore
+                 * value untouched and use the
+                 * existing "new" tier for UI.
+                 */
+
+                if(
+                    frontendTier ===
+                    "Not Yet Ranked"
+                ){
+
+                    frontendTier = "new";
+
+                }
+
+                return {
+
+                    id:
+                        data.coinID ||
+                        doc.id,
+
+                    name:
+                        data.name ||
+                        "Unnamed Coin",
+
+                    symbol:
+                        data.symbol ||
+                        "",
+
+                    description:
+                        data.description ||
+                        "",
+
+                    tier:
+                        frontendTier,
+
+                    adminPrice:
+                        Number(
+                            data.primaryPrice || 0
+                        ),
+
+                    ownerId:
+                        data.ownerId ||
+                        data.createdBy ||
+                        "",
+
+                    ownerName:
+                        data.ownerName ||
+                        "",
+
+                    emoji:
+                        data.emoji ||
+                        "🪙",
+
+                    color:
+                        data.color ||
+                        "#8b5cf6",
+
+                    listing:
+                        null,
+
+                    history:
+                        []
+
+                };
+
+            });
+
+        console.log(
+            "Firestore assets loaded:",
+            coins.length
+        );
+
+        renderAll();
+
+    }
+    catch(error){
+
+        console.error(
+            "Failed to load Firestore assets:",
+            error
+        );
+
+    }
+
+}
     
 let CURRENT_USER = {
 
