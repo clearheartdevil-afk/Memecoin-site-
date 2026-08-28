@@ -2838,6 +2838,234 @@ async function createCommunityPost() {
         );
     }
 }
+
+    /* =====================================================
+   LOAD COMMUNITY POSTS
+   REAL FIRESTORE
+===================================================== */
+
+async function loadCommunityPosts() {
+
+    const feed =
+        document.getElementById(
+            "communityFeed"
+        );
+
+    if (!feed) {
+        return;
+    }
+
+    feed.innerHTML =
+        "<p>Loading community posts...</p>";
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection("communityPosts")
+                .where(
+                    "status",
+                    "==",
+                    "active"
+                )
+                .orderBy(
+                    "createdAt",
+                    "desc"
+                )
+                .limit(50)
+                .get();
+
+
+        if (snapshot.empty) {
+
+            feed.innerHTML =
+                "<p>No community posts yet.</p>";
+
+            return;
+        }
+
+
+        feed.innerHTML = "";
+
+
+        snapshot.forEach((doc) => {
+
+            const post =
+                doc.data();
+
+            const postElement =
+                document.createElement("div");
+
+            postElement.className =
+                "card";
+
+            postElement.style.marginBottom =
+                "16px";
+
+
+            const safeName =
+                escapeHTML(
+                    post.authorName ||
+                    "User"
+                );
+
+            const safeText =
+                escapeHTML(
+                    post.text || ""
+                );
+
+
+            let mediaHTML = "";
+
+
+            if (
+                post.mediaType ===
+                "image" &&
+                post.mediaURL
+            ) {
+
+                mediaHTML = `
+                    <img
+                        src="${post.mediaURL}"
+                        alt="Community post"
+                        style="
+                            width:100%;
+                            max-height:500px;
+                            object-fit:contain;
+                            border-radius:12px;
+                            margin-top:12px;
+                        "
+                    >
+                `;
+
+            } else if (
+                post.mediaType ===
+                "video" &&
+                post.mediaURL
+            ) {
+
+                mediaHTML = `
+                    <video
+                        controls
+                        style="
+                            width:100%;
+                            max-height:500px;
+                            border-radius:12px;
+                            margin-top:12px;
+                        "
+                    >
+                        <source
+                            src="${post.mediaURL}"
+                        >
+                    </video>
+                `;
+            }
+
+
+            postElement.innerHTML = `
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:center;
+                        gap:10px;
+                    "
+                >
+
+                    ${
+                        post.authorPhotoURL
+                            ? `
+                            <img
+                                src="${post.authorPhotoURL}"
+                                alt=""
+                                style="
+                                    width:42px;
+                                    height:42px;
+                                    border-radius:50%;
+                                    object-fit:cover;
+                                "
+                            >
+                            `
+                            : `
+                            <div
+                                style="
+                                    width:42px;
+                                    height:42px;
+                                    border-radius:50%;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    background:#333;
+                                "
+                            >
+                                👤
+                            </div>
+                            `
+                    }
+
+                    <strong>
+                        ${safeName}
+                    </strong>
+
+                </div>
+
+
+                ${
+                    safeText
+                        ? `
+                        <p
+                            style="
+                                margin-top:12px;
+                                white-space:pre-wrap;
+                            "
+                        >
+                            ${safeText}
+                        </p>
+                        `
+                        : ""
+                }
+
+
+                ${mediaHTML}
+
+
+                <div
+                    style="
+                        margin-top:12px;
+                        opacity:.7;
+                        font-size:13px;
+                    "
+                >
+                    ❤️ ${post.likes || 0}
+                    &nbsp;&nbsp;
+                    💬 ${post.commentsCount || 0}
+                </div>
+
+            `;
+
+
+            feed.appendChild(
+                postElement
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Load Community Posts Error:",
+            error
+        );
+
+        feed.innerHTML = `
+            <p>
+                Unable to load community posts.
+            </p>
+        `;
+    }
+}
     
 /* =====================================================
    FIREBASE INITIALIZATION
@@ -3949,32 +4177,51 @@ function showPage(pageId,button){
     });
 
 
+    /* ---------------------------------------------
+       PAGE LOADERS
+    --------------------------------------------- */
+
     if(pageId === "marketplace"){
         renderMarketplace();
     }
+
 
     if(pageId === "mycoins"){
         renderMyCoins();
     }
 
+
     if(pageId === "leaderboard"){
         renderLeaderboard();
     }
+
 
     if(pageId === "listings"){
         renderMyListings();
     }
 
+
     if(pageId === "history"){
         renderHistory();
     }
+
 
     if(pageId === "admin"){
         renderAdminReview();
     }
 
-}
 
+    /* ---------------------------------------------
+       REAL COMMUNITY FEED
+    --------------------------------------------- */
+
+    if(pageId === "community"){
+
+        loadCommunityPosts();
+
+    }
+
+}
 
 /* =====================================================
    COIN CARD
