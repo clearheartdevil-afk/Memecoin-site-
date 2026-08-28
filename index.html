@@ -4403,6 +4403,38 @@ function getTierBadgeClass(tier){
 
 }
 
+    /* =====================================================
+   WALLET & STATS UI
+===================================================== */
+
+function updateWalletUI(){
+
+    const walletElement =
+        document.getElementById("walletBalance");
+
+    if(!walletElement){
+        return;
+    }
+
+    walletElement.textContent =
+        money(walletBalance);
+
+}
+
+
+function updateStats(){
+
+    /*
+     * Keeps the existing UI/render system
+     * from throwing a JavaScript error.
+     *
+     * Real Firestore statistics will be
+     * connected during the backend migration.
+     */
+
+    return;
+
+}
 
 /* =====================================================
    PRICE
@@ -5164,8 +5196,8 @@ function openPurchase(coinId){
         margin-top:10px;
     "
     onclick="
-        simulatePurchase()
-    ">
+    purchaseCoin()
+">
 
     Pay ${money(total)} USDT
 
@@ -5187,8 +5219,8 @@ function openPurchase(coinId){
    SIMULATED PURCHASE
 ===================================================== */
 
-function simulatePurchase(){
-
+async function purchaseCoin(){
+    
     const coin =
         getCoin(selectedCoinId);
 
