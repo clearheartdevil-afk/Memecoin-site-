@@ -1413,9 +1413,23 @@ footer{
 
         </div>
 
-        <div class="user-avatar">
-            U
-        </div>
+        <div class="wallet">
+
+    <div class="wallet-balance">
+
+        USDT Balance:
+
+        <strong id="walletBalance">
+            $100.00
+        </strong>
+
+    </div>
+
+    <div class="user-avatar">
+        U
+    </div>
+
+</div>
 
     </div>
 
@@ -2246,6 +2260,61 @@ Digital collectible marketplace demo
 
 
 <!-- =====================================================
+     USER PROFILE MODAL
+===================================================== -->
+
+<div
+    id="profileModal"
+    class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    👤 My Profile
+                </h2>
+
+                <p
+                    style="
+                        color:var(--muted);
+                        margin-top:5px;
+                    ">
+
+                    Manage your MemeCoinSite account.
+
+                </p>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="
+                    closeModal('profileModal')
+                ">
+
+                ✕
+
+            </button>
+
+        </div>
+
+
+        <div id="profileContent">
+
+            <!-- Profile content will appear here -->
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
      TOAST
 ===================================================== -->
 
@@ -2263,13 +2332,221 @@ Digital collectible marketplace demo
 
 const PLATFORM_FEE_PERCENT = 1;
 
-const CURRENT_USER = {
+/*
+   Firebase user information
 
-    id:"user_001",
+   IMPORTANT:
+   These values are temporary fallbacks until
+   Firebase Authentication is connected.
+*/
 
-    name:"Black Devil"
+let CURRENT_USER = {
+
+    id: "user_001",
+
+    name: "Black Devil",
+
+    email: "",
+
+    photoURL: "",
+
+    country: "",
+
+    language: "English",
+
+    walletAddresses: [],
+
+    createdAt: null
 
 };
+
+
+/* =====================================================
+   USER PROFILE STATE
+===================================================== */
+
+let currentUserProfile = null;
+
+
+/* =====================================================
+   SUPPORTED LANGUAGES
+===================================================== */
+
+const SUPPORTED_LANGUAGES = [
+
+    {
+        code: "en",
+        name: "English"
+    },
+
+    {
+        code: "hi",
+        name: "हिन्दी"
+    },
+
+    {
+        code: "es",
+        name: "Español"
+    },
+
+    {
+        code: "fr",
+        name: "Français"
+    },
+
+    {
+        code: "de",
+        name: "Deutsch"
+    },
+
+    {
+        code: "pt",
+        name: "Português"
+    },
+
+    {
+        code: "ar",
+        name: "العربية"
+    },
+
+    {
+        code: "bn",
+        name: "বাংলা"
+    },
+
+    {
+        code: "ja",
+        name: "日本語"
+    },
+
+    {
+        code: "ko",
+        name: "한국어"
+    },
+
+    {
+        code: "zh",
+        name: "中文"
+    },
+
+    {
+        code: "ru",
+        name: "Русский"
+    }
+
+];
+
+
+/* =====================================================
+   USER PROFILE HELPERS
+===================================================== */
+
+function getCurrentUserId(){
+
+    return CURRENT_USER?.id || null;
+
+}
+
+
+function getCurrentUserName(){
+
+    return CURRENT_USER?.name || "User";
+
+}
+
+
+function getCurrentUserLanguage(){
+
+    return CURRENT_USER?.language || "en";
+
+}
+
+
+function getCurrentUserCountry(){
+
+    return CURRENT_USER?.country || "";
+
+}
+
+
+function setCurrentUserProfile(profile){
+
+    if(!profile){
+        return;
+    }
+
+
+    currentUserProfile = profile;
+
+
+    CURRENT_USER = {
+
+        ...CURRENT_USER,
+
+        ...profile
+
+    };
+
+
+    updateUserUI();
+
+}
+
+
+/* =====================================================
+   USER UI
+===================================================== */
+
+function updateUserUI(){
+
+    const avatar =
+        document.querySelector(
+            ".user-avatar"
+        );
+
+
+    if(!avatar){
+        return;
+    }
+
+
+    const name =
+        CURRENT_USER.name ||
+        "User";
+
+
+    if(
+        CURRENT_USER.photoURL
+    ){
+
+        avatar.innerHTML = `
+
+            <img
+                src="${escapeHTML(
+                    CURRENT_USER.photoURL
+                )}"
+                alt="Profile"
+                style="
+                    width:100%;
+                    height:100%;
+                    object-fit:cover;
+                    border-radius:50%;
+                "
+            >
+
+        `;
+
+    }
+    else{
+
+        avatar.textContent =
+            name
+            .charAt(0)
+            .toUpperCase();
+
+    }
+
+}
 
 
 /* =====================================================
@@ -5482,12 +5759,349 @@ function approveTier(coinId){
    UI
 ===================================================== */
 
-function updateWalletUI(){
+/* =====================================================
+   USER PROFILE
+===================================================== */
 
-    document.getElementById(
-        "walletBalance"
-    ).textContent =
-        money(walletBalance);
+function openUserProfile(){
+
+    const profileContent =
+        document.getElementById(
+            "profileContent"
+        );
+
+    if(!profileContent){
+        return;
+    }
+
+    const language =
+        CURRENT_USER.language ||
+        "en";
+
+    const country =
+        CURRENT_USER.country ||
+        "";
+
+    const wallets =
+        CURRENT_USER.walletAddresses ||
+        [];
+
+    profileContent.innerHTML = `
+
+        <div
+            style="
+                display:flex;
+                align-items:center;
+                gap:15px;
+                margin-bottom:25px;
+            "
+        >
+
+            <div
+                class="user-avatar"
+                style="
+                    width:65px;
+                    height:65px;
+                    font-size:24px;
+                "
+            >
+
+                ${escapeHTML(
+                    CURRENT_USER.name
+                        .charAt(0)
+                        .toUpperCase()
+                )}
+
+            </div>
+
+            <div>
+
+                <h2>
+                    ${escapeHTML(
+                        CURRENT_USER.name
+                    )}
+                </h2>
+
+                <p
+                    style="
+                        color:var(--muted);
+                        margin-top:5px;
+                    "
+                >
+
+                    ${escapeHTML(
+                        CURRENT_USER.email ||
+                        "Email not connected"
+                    )}
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label>
+                    Google Account Name
+                </label>
+
+                <input
+                    value="${escapeHTML(
+                        CURRENT_USER.name
+                    )}"
+                    readonly
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Country
+                </label>
+
+                <input
+                    id="profileCountry"
+                    value="${escapeHTML(
+                        country
+                    )}"
+                    placeholder="Example: India"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Preferred Language
+                </label>
+
+                <select
+                    id="profileLanguage">
+
+                    <option value="en">
+                        English
+                    </option>
+
+                    <option value="hi">
+                        हिन्दी
+                    </option>
+
+                    <option value="es">
+                        Español
+                    </option>
+
+                    <option value="fr">
+                        Français
+                    </option>
+
+                    <option value="de">
+                        Deutsch
+                    </option>
+
+                    <option value="pt">
+                        Português
+                    </option>
+
+                    <option value="ar">
+                        العربية
+                    </option>
+
+                    <option value="bn">
+                        বাংলা
+                    </option>
+
+                    <option value="ja">
+                        日本語
+                    </option>
+
+                    <option value="ko">
+                        한국어
+                    </option>
+
+                    <option value="zh">
+                        中文
+                    </option>
+
+                    <option value="ru">
+                        Русский
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    MemeCoinSite User ID
+                </label>
+
+                <input
+                    value="${escapeHTML(
+                        CURRENT_USER.id
+                    )}"
+                    readonly
+                >
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label>
+                    Crypto Wallet Addresses
+                </label>
+
+                <textarea
+                    id="profileWallets"
+                    placeholder="Add wallet addresses, one per line"
+                >${escapeHTML(
+                    wallets.join("\n")
+                )}</textarea>
+
+                <div class="help-text">
+
+                    Add and manage your crypto
+                    wallet addresses here.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <button
+            class="primary-btn"
+            style="width:100%;"
+            onclick="saveUserProfile()">
+
+            Save Profile
+
+        </button>
+
+    `;
+
+
+    document
+        .getElementById(
+            "profileModal"
+        )
+        .classList.add("show");
+
+}
+
+
+/* =====================================================
+   SAVE USER PROFILE
+===================================================== */
+
+function saveUserProfile(){
+
+    const country =
+        document
+        .getElementById(
+            "profileCountry"
+        )
+        ?.value
+        .trim();
+
+
+    const language =
+        document
+        .getElementById(
+            "profileLanguage"
+        )
+        ?.value;
+
+
+    const walletText =
+        document
+        .getElementById(
+            "profileWallets"
+        )
+        ?.value || "";
+
+
+    const wallets =
+        walletText
+        .split("\n")
+        .map(
+            wallet =>
+                wallet.trim()
+        )
+        .filter(
+            wallet =>
+                wallet.length > 0
+        );
+
+
+    CURRENT_USER.country =
+        country || "";
+
+
+    CURRENT_USER.language =
+        language || "en";
+
+
+    CURRENT_USER.walletAddresses =
+        wallets;
+
+
+    closeModal(
+        "profileModal"
+    );
+
+
+    updateUserUI();
+
+
+    toast(
+        "Profile updated successfully.",
+        "success"
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE USER AVATAR
+===================================================== */
+
+function updateUserUI(){
+
+    const avatar =
+        document.getElementById(
+            "userAvatar"
+        );
+
+
+    if(!avatar){
+        return;
+    }
+
+
+    const name =
+        CURRENT_USER.name ||
+        "User";
+
+
+    avatar.textContent =
+        name
+        .charAt(0)
+        .toUpperCase();
 
 }
 
