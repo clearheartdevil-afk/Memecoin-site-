@@ -1413,29 +1413,26 @@ footer{
 
         </div>
 
-        <div class="wallet">
 
-    <div class="wallet-balance">
+        <div
+            id="userAvatar"
+            class="user-avatar"
+            onclick="openUserProfile()"
+            style="cursor:pointer;"
+            title="My Profile"
+        >
+            U
+        </div>
 
-        USDT Balance:
 
-        <strong id="walletBalance">
-            $100.00
-        </strong>
-
-    </div>
-
-    <div
-    id="userAvatar"
-    class="user-avatar"
-    onclick="openUserProfile()"
-    style="cursor:pointer;"
-    title="My Profile"
->
-    U
-</div>
-
-</div>
+        <button
+            id="logoutBtn"
+            class="secondary-btn"
+            onclick="logoutUser()"
+            style="display:none;"
+        >
+            Logout
+        </button>
 
     </div>
 
@@ -2481,6 +2478,34 @@ async function loginWithGoogle() {
 
     }
 }
+
+    /* =====================================================
+   FIREBASE LOGOUT
+===================================================== */
+
+async function logoutUser() {
+
+    try {
+
+        await auth.signOut();
+
+        console.log("Firebase logout successful");
+
+        showToast("Logged out successfully");
+
+    } catch (error) {
+
+        console.error(
+            "Logout Error:",
+            error
+        );
+
+        alert(
+            "Logout failed: " +
+            error.message
+        );
+    }
+}
     
 /* =====================================================
    FIREBASE INITIALIZATION
@@ -2552,10 +2577,19 @@ auth.onAuthStateChanged(async (user) => {
         };
 
         if (googleBtn) {
-            googleBtn.style.display = "";
-            googleBtn.textContent =
-                "🔵 Continue with Google";
-        }
+
+    googleBtn.style.display = "";
+
+    googleBtn.textContent =
+        "🔵 Continue with Google";
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+        logoutBtn.style.display = "none";
+    }
+}
 
         updateUserInterface(null);
         updateUserUI();
@@ -2656,7 +2690,12 @@ auth.onAuthStateChanged(async (user) => {
                 "✅ Google Connected";
 
             googleBtn.disabled = true;
+const logoutBtn =
+    document.getElementById("logoutBtn");
 
+if (logoutBtn) {
+    logoutBtn.style.display = "block";
+}
         }
 
         updateUserInterface(
