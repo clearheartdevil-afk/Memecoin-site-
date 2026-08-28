@@ -2841,7 +2841,7 @@ async function createCommunityPost() {
 
     /* =====================================================
    LOAD COMMUNITY POSTS
-   REAL FIRESTORE
+   REAL FIRESTORE + LIKES
 ===================================================== */
 
 async function loadCommunityPosts() {
@@ -2857,7 +2857,6 @@ async function loadCommunityPosts() {
 
     feed.innerHTML =
         "<p>Loading community posts...</p>";
-
 
     try {
 
@@ -2885,10 +2884,13 @@ async function loadCommunityPosts() {
         feed.innerHTML = "";
 
 
-        snapshot.forEach((doc) => {
+        for (const doc of snapshot.docs) {
 
             const post =
                 doc.data();
+
+            const postId =
+                doc.id;
 
             const postElement =
                 document.createElement("div");
@@ -2957,6 +2959,33 @@ async function loadCommunityPosts() {
                     </video>
                 `;
             }
+
+
+            /* =================================================
+               CHECK CURRENT USER LIKE
+            ================================================= */
+
+            let userLiked = false;
+
+            if (firebaseUser) {
+
+                const likeSnap =
+                    await db
+                        .collection(
+                            "communityPosts"
+                        )
+                        .doc(postId)
+                        .collection("likes")
+                        .doc(firebaseUser.uid)
+                        .get();
+
+                userLiked =
+                    likeSnap.exists;
+            }
+
+
+            const likesCount =
+                post.likes || 0;
 
 
             postElement.innerHTML = `
@@ -3029,13 +3058,41 @@ async function loadCommunityPosts() {
                 <div
                     style="
                         margin-top:12px;
-                        opacity:.7;
-                        font-size:13px;
+                        display:flex;
+                        gap:12px;
+                        align-items:center;
                     "
                 >
-                    ❤️ ${post.likes || 0}
-                    &nbsp;&nbsp;
-                    💬 ${post.commentsCount || 0}
+
+                    <button
+                        type="button"
+                        class="community-like-btn"
+                        data-post-id="${postId}"
+                        style="
+                            border:none;
+                            background:none;
+                            cursor:pointer;
+                            font-size:15px;
+                        "
+                    >
+                        ${
+                            userLiked
+                                ? "❤️"
+                                : "♡"
+                        }
+                        ${likesCount}
+                    </button>
+
+
+                    <span
+                        style="
+                            opacity:.7;
+                            font-size:13px;
+                        "
+                    >
+                        💬 ${post.commentsCount || 0}
+                    </span>
+
                 </div>
 
             `;
@@ -3045,7 +3102,127 @@ async function loadCommunityPosts() {
                 postElement
             );
 
-        });
+
+            /* =================================================
+               LIKE BUTTON
+            ================================================= */
+
+            const likeButton =
+                postElement.querySelector(
+                    ".community-like-btn"
+                );
+
+
+            if (likeButton) {
+
+                likeButton.addEventListener(
+                    "click",
+                    async () => {
+
+                        if (!firebaseUser) {
+
+                            alert(
+                                "Please login first."
+                            );
+
+                            return;
+                        }
+
+
+                        likeButton.disabled =
+                            true;
+
+
+                        try {
+
+                            const postRef =
+                                db
+                                    .collection(
+                                        "communityPosts"
+                                    )
+                                    .doc(postId);
+
+
+                            const likeRef =
+                                postRef
+                                    .collection(
+                                        "likes"
+                                    )
+                                    .doc(
+                                        firebaseUser.uid
+                                    );
+
+
+                            const likeSnap =
+                                await likeRef.get();
+
+
+                            if (
+                                likeSnap.exists
+                            ) {
+
+                                await likeRef.delete();
+
+                                await postRef.update({
+
+                                    likes:
+                                        firebase.firestore.FieldValue.increment(
+                                            -1
+                                        )
+
+                                });
+
+                            } else {
+
+                                await likeRef.set({
+
+                                    uid:
+                                        firebaseUser.uid,
+
+                                    createdAt:
+                                        firebase.firestore.FieldValue.serverTimestamp()
+
+                                });
+
+                                await postRef.update({
+
+                                    likes:
+                                        firebase.firestore.FieldValue.increment(
+                                            1
+                                        )
+
+                                });
+
+                            }
+
+
+                            await loadCommunityPosts();
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "Like Error:",
+                                error
+                            );
+
+                            alert(
+                                "Unable to update like."
+                            );
+
+                        } finally {
+
+                            likeButton.disabled =
+                                false;
+
+                        }
+
+                    }
+                );
+
+            }
+
+        }
 
 
     } catch (error) {
