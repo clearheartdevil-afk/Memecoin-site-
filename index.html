@@ -1425,9 +1425,15 @@ footer{
 
     </div>
 
-    <div class="user-avatar">
-        U
-    </div>
+    <div
+    id="userAvatar"
+    class="user-avatar"
+    onclick="openUserProfile()"
+    style="cursor:pointer;"
+    title="My Profile"
+>
+    U
+</div>
 
 </div>
 
@@ -1479,24 +1485,34 @@ footer{
 
         <div class="hero-buttons">
 
-            <button
-                class="primary-btn"
-                onclick="showPage('marketplace')">
+    <button
+        class="primary-btn"
+        onclick="showPage('marketplace')">
 
-                Explore Marketplace
+        Explore Marketplace
 
-            </button>
+    </button>
 
 
-            <button
-                class="secondary-btn"
-                onclick="showPage('leaderboard')">
+    <button
+        class="secondary-btn"
+        onclick="showPage('leaderboard')">
 
-                🏆 Leaderboard
+        🏆 Leaderboard
 
-            </button>
+    </button>
 
-        </div>
+
+    <button
+    id="googleLoginBtn"
+    class="secondary-btn"
+    onclick="loginWithGoogle()">
+
+    🔵 Continue with Google
+
+</button>
+
+</div>
 
     </div>
 
@@ -2323,6 +2339,9 @@ Digital collectible marketplace demo
     class="toast">
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 <script>
 
@@ -2332,19 +2351,155 @@ Digital collectible marketplace demo
 
 const PLATFORM_FEE_PERCENT = 1;
 
-/*
-   Firebase user information
+/* =====================================================
+   FIREBASE CONFIG
+===================================================== */
 
-   IMPORTANT:
-   These values are temporary fallbacks until
-   Firebase Authentication is connected.
-*/
+const firebaseConfig = {
+    apiKey: "AIzaSyCt3Dn15Qs7KpoTro2CrDbvP0wNqDluvII",
+    authDomain: "memecoinsite-52a7f.firebaseapp.com",
+    projectId: "memecoinsite-52a7f",
+    storageBucket: "memecoinsite-52a7f.firebasestorage.app",
+    messagingSenderId: "427751968898",
+    appId: "1:427751968898:web:5ce1f4209e5beb4f3ce49b"
+};
+    
+/* =====================================================
+   GOOGLE LOGIN
+===================================================== */
+
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+async function loginWithGoogle() {
+
+    try {
+
+        const result =
+            await auth.signInWithPopup(
+                googleProvider
+            );
+
+        const user =
+            result.user;
+
+        CURRENT_USER.uid =
+            user.uid;
+
+        CURRENT_USER.id =
+            user.uid;
+
+        CURRENT_USER.name =
+            user.displayName || "";
+
+        CURRENT_USER.email =
+            user.email || "";
+
+        CURRENT_USER.photoURL =
+            user.photoURL || "";
+
+        const userRef =
+            db.collection("users")
+              .doc(user.uid);
+
+        const userSnap =
+            await userRef.get();
+
+        if (!userSnap.exists) {
+
+            await userRef.set({
+
+                uid: user.uid,
+
+                id: user.uid,
+
+                name:
+                    user.displayName || "",
+
+                email:
+                    user.email || "",
+
+                photoURL:
+                    user.photoURL || "",
+
+                country: "",
+
+                language: "English",
+
+                walletAddresses: [],
+
+                createdAt:
+                    firebase.firestore.FieldValue
+                        .serverTimestamp()
+
+            });
+
+        } else {
+
+            const data =
+                userSnap.data();
+
+            CURRENT_USER.country =
+                data.country || "";
+
+            CURRENT_USER.language =
+                data.language || "English";
+
+            CURRENT_USER.walletAddresses =
+                data.walletAddresses || [];
+
+            CURRENT_USER.createdAt =
+                data.createdAt || null;
+
+        }
+
+        console.log(
+            "REAL FIREBASE UID:",
+            user.uid
+        );
+
+        console.log(
+            "GOOGLE NAME:",
+            user.displayName
+        );
+
+        console.log(
+            "GOOGLE EMAIL:",
+            user.email
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Google Login Error:",
+            error
+        );
+
+        alert(
+            "Google Login failed: " +
+            error.message
+        );
+
+    }
+}
+    
+/* =====================================================
+   FIREBASE INITIALIZATION
+===================================================== */
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+const auth = firebase.auth();
+const db = firebase.firestore();
 
 let CURRENT_USER = {
 
-    id: "user_001",
+    id: "",
 
-    name: "Black Devil",
+    uid: "",
+
+    name: "",
 
     email: "",
 
@@ -2357,7 +2512,6 @@ let CURRENT_USER = {
     walletAddresses: [],
 
     createdAt: null
-
 };
 
 
@@ -2365,8 +2519,352 @@ let CURRENT_USER = {
    USER PROFILE STATE
 ===================================================== */
 
+let currentUser = null;
 let currentUserProfile = null;
+let firebaseUser = null;
 
+/* =====================================================
+   FIREBASE AUTH STATE
+===================================================== */
+
+auth.onAuthStateChanged(async (user) => {
+
+    firebaseUser = user;
+    currentUser = user;
+
+    const googleBtn =
+        document.getElementById("googleLoginBtn");
+
+    if (!user) {
+
+        currentUserProfile = null;
+
+        CURRENT_USER = {
+            id: "",
+            uid: "",
+            name: "",
+            email: "",
+            photoURL: "",
+            country: "",
+            language: "English",
+            walletAddresses: [],
+            createdAt: null
+        };
+
+        if (googleBtn) {
+            googleBtn.style.display = "";
+            googleBtn.textContent =
+                "🔵 Continue with Google";
+        }
+
+        updateUserInterface(null);
+        updateUserUI();
+
+        return;
+    }
+
+    try {
+
+        const userRef =
+            db.collection("users")
+              .doc(user.uid);
+
+        const userSnap =
+            await userRef.get();
+
+        if (userSnap.exists) {
+
+            currentUserProfile =
+                userSnap.data();
+
+        } else {
+
+            currentUserProfile = {
+
+                uid: user.uid,
+
+                id: user.uid,
+
+                name:
+                    user.displayName || "",
+
+                email:
+                    user.email || "",
+
+                photoURL:
+                    user.photoURL || "",
+
+                country: "",
+
+                language: "English",
+
+                walletAddresses: [],
+
+                createdAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            };
+
+            await userRef.set(
+                currentUserProfile,
+                { merge: true }
+            );
+        }
+
+        CURRENT_USER.uid =
+            user.uid;
+
+        CURRENT_USER.id =
+            user.uid;
+
+        CURRENT_USER.name =
+            currentUserProfile.name ||
+            user.displayName ||
+            "";
+
+        CURRENT_USER.email =
+            currentUserProfile.email ||
+            user.email ||
+            "";
+
+        CURRENT_USER.photoURL =
+            currentUserProfile.photoURL ||
+            user.photoURL ||
+            "";
+
+        CURRENT_USER.country =
+            currentUserProfile.country ||
+            "";
+
+        CURRENT_USER.language =
+            currentUserProfile.language ||
+            "English";
+
+        CURRENT_USER.walletAddresses =
+            currentUserProfile.walletAddresses ||
+            [];
+
+        CURRENT_USER.createdAt =
+            currentUserProfile.createdAt ||
+            null;
+
+        if (googleBtn) {
+
+            googleBtn.textContent =
+                "✅ Google Connected";
+
+            googleBtn.disabled = true;
+
+        }
+
+        updateUserInterface(
+            currentUserProfile
+        );
+
+        updateUserUI();
+
+        updateStats();
+
+    } catch (error) {
+
+        console.error(
+            "User profile error:",
+            error
+        );
+    }
+});
+/* =====================================================
+   USER INTERFACE
+===================================================== */
+
+function updateUserInterface(profile) {
+    const userNameElements = document.querySelectorAll("[data-user-name]");
+    const userEmailElements = document.querySelectorAll("[data-user-email]");
+    const userAvatarElements = document.querySelectorAll("[data-user-avatar]");
+
+    if (!profile) {
+        userNameElements.forEach(el => {
+            el.textContent = "Guest";
+        });
+
+        userEmailElements.forEach(el => {
+            el.textContent = "";
+        });
+
+        userAvatarElements.forEach(el => {
+            el.textContent = "U";
+            el.removeAttribute("src");
+        });
+
+        return;
+    }
+
+    const name = profile.name || "User";
+    const email = profile.email || "";
+    const photoURL = profile.photoURL || "";
+
+    userNameElements.forEach(el => {
+        el.textContent = name;
+    });
+
+    userEmailElements.forEach(el => {
+        el.textContent = email;
+    });
+
+    userAvatarElements.forEach(el => {
+        if (photoURL) {
+            el.textContent = "";
+            el.src = photoURL;
+        } else {
+            el.textContent = name.charAt(0).toUpperCase();
+        }
+    });
+}
+
+/* =====================================================
+   FIREBASE AUTH STATE
+===================================================== */
+
+auth.onAuthStateChanged(async (user) => {
+
+    firebaseUser = user;
+    currentUser = user;
+
+    const googleBtn =
+        document.getElementById("googleLoginBtn");
+
+    if (!user) {
+
+        currentUserProfile = null;
+
+        CURRENT_USER = {
+            id: "",
+            uid: "",
+            name: "",
+            email: "",
+            photoURL: "",
+            country: "",
+            language: "English",
+            walletAddresses: [],
+            createdAt: null
+        };
+
+        if (googleBtn) {
+            googleBtn.style.display = "";
+            googleBtn.textContent =
+                "🔵 Continue with Google";
+        }
+
+        updateUserInterface(null);
+        updateUserUI();
+
+        return;
+    }
+
+    try {
+
+        const userRef =
+            db.collection("users")
+            .doc(user.uid);
+
+        const userSnap =
+            await userRef.get();
+
+        if (userSnap.exists) {
+
+            currentUserProfile =
+                userSnap.data();
+
+        } else {
+
+            currentUserProfile = {
+
+                uid: user.uid,
+                id: user.uid,
+
+                name:
+                    user.displayName || "",
+
+                email:
+                    user.email || "",
+
+                photoURL:
+                    user.photoURL || "",
+
+                country: "",
+                language: "English",
+                walletAddresses: [],
+
+                createdAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+            };
+
+            await userRef.set(
+                currentUserProfile,
+                { merge: true }
+            );
+        }
+
+        CURRENT_USER.uid = user.uid;
+        CURRENT_USER.id = user.uid;
+
+        CURRENT_USER.name =
+            currentUserProfile.name ||
+            user.displayName ||
+            "";
+
+        CURRENT_USER.email =
+            currentUserProfile.email ||
+            user.email ||
+            "";
+
+        CURRENT_USER.photoURL =
+            currentUserProfile.photoURL ||
+            user.photoURL ||
+            "";
+
+        CURRENT_USER.country =
+            currentUserProfile.country || "";
+
+        CURRENT_USER.language =
+            currentUserProfile.language ||
+            "English";
+
+        CURRENT_USER.walletAddresses =
+            currentUserProfile.walletAddresses ||
+            [];
+
+        CURRENT_USER.createdAt =
+            currentUserProfile.createdAt ||
+            null;
+
+        if (googleBtn) {
+
+            googleBtn.textContent =
+                "✅ Google Connected";
+
+            googleBtn.disabled = true;
+        }
+
+        updateUserInterface(
+            currentUserProfile
+        );
+
+        updateUserUI();
+        updateStats();
+
+    } catch (error) {
+
+        console.error(
+            "User profile error:",
+            error
+        );
+    }
+});
 
 /* =====================================================
    SUPPORTED LANGUAGES
@@ -6005,76 +6503,124 @@ function openUserProfile(){
 
 
 /* =====================================================
-   SAVE USER PROFILE
+   SAVE USER PROFILE - FIREBASE
 ===================================================== */
 
-function saveUserProfile(){
+async function saveUserProfile(){
+
+    if (!firebaseUser) {
+        toast(
+            "Please login with Google first.",
+            "error"
+        );
+        return;
+    }
 
     const country =
         document
-        .getElementById(
-            "profileCountry"
-        )
+        .getElementById("profileCountry")
         ?.value
-        .trim();
-
+        .trim() || "";
 
     const language =
         document
-        .getElementById(
-            "profileLanguage"
-        )
-        ?.value;
-
+        .getElementById("profileLanguage")
+        ?.value || "en";
 
     const walletText =
         document
-        .getElementById(
-            "profileWallets"
-        )
+        .getElementById("profileWallets")
         ?.value || "";
-
 
     const wallets =
         walletText
         .split("\n")
-        .map(
-            wallet =>
-                wallet.trim()
-        )
-        .filter(
-            wallet =>
-                wallet.length > 0
+        .map(wallet => wallet.trim())
+        .filter(wallet => wallet.length > 0);
+
+    try {
+
+        await db
+            .collection("users")
+            .doc(firebaseUser.uid)
+            .set({
+
+                uid: firebaseUser.uid,
+
+                id: firebaseUser.uid,
+
+                name:
+                    firebaseUser.displayName || "",
+
+                email:
+                    firebaseUser.email || "",
+
+                photoURL:
+                    firebaseUser.photoURL || "",
+
+                country: country,
+
+                language: language,
+
+                walletAddresses: wallets,
+
+                updatedAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            }, {
+                merge: true
+            });
+
+
+        CURRENT_USER.uid =
+            firebaseUser.uid;
+
+        CURRENT_USER.id =
+            firebaseUser.uid;
+
+        CURRENT_USER.name =
+            firebaseUser.displayName || "";
+
+        CURRENT_USER.email =
+            firebaseUser.email || "";
+
+        CURRENT_USER.photoURL =
+            firebaseUser.photoURL || "";
+
+        CURRENT_USER.country =
+            country;
+
+        CURRENT_USER.language =
+            language;
+
+        CURRENT_USER.walletAddresses =
+            wallets;
+
+
+        closeModal("profileModal");
+
+        updateUserUI();
+
+        toast(
+            "Profile saved to Firebase.",
+            "success"
         );
 
+    } catch (error) {
 
-    CURRENT_USER.country =
-        country || "";
+        console.error(
+            "Profile save error:",
+            error
+        );
 
-
-    CURRENT_USER.language =
-        language || "en";
-
-
-    CURRENT_USER.walletAddresses =
-        wallets;
-
-
-    closeModal(
-        "profileModal"
-    );
-
-
-    updateUserUI();
-
-
-    toast(
-        "Profile updated successfully.",
-        "success"
-    );
-
+        toast(
+            "Could not save profile.",
+            "error"
+        );
+    }
 }
-
 
 /* =====================================================
    UPDATE USER AVATAR
@@ -6087,55 +6633,42 @@ function updateUserUI(){
             "userAvatar"
         );
 
-
     if(!avatar){
         return;
     }
-
 
     const name =
         CURRENT_USER.name ||
         "User";
 
+    const photoURL =
+        CURRENT_USER.photoURL ||
+        "";
 
-    avatar.textContent =
-        name
-        .charAt(0)
-        .toUpperCase();
+    if(photoURL){
 
+        avatar.innerHTML = `
+            <img
+                src="${escapeHTML(photoURL)}"
+                alt="${escapeHTML(name)}"
+                style="
+                    width:100%;
+                    height:100%;
+                    object-fit:cover;
+                    border-radius:50%;
+                "
+            >
+        `;
+
+    } else {
+
+        avatar.textContent =
+            name
+            .charAt(0)
+            .toUpperCase();
+    }
 }
-
-
-function updateStats(){
-
-    document.getElementById(
-        "statCoins"
-    ).textContent =
-        coins.length;
-
-
-    document.getElementById(
-        "statListings"
-    ).textContent =
-
-        coins.filter(
-            c => c.listing
-        ).length;
-
-
-    document.getElementById(
-        "statOwned"
-    ).textContent =
-
-        coins.filter(
-            c =>
-                c.ownerId ===
-                CURRENT_USER.id
-        ).length;
-
-}
-
-
+    
 /* =====================================================
    RENDER EVERYTHING
 ===================================================== */
@@ -6270,6 +6803,11 @@ renderAll();
 updateWalletUI();
 
 </script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 </body>
 </html>
