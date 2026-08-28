@@ -1381,6 +1381,12 @@ footer{
         </button>
 
         <button
+    class="nav-btn"
+    onclick="showPage('community',this)">
+    Community
+</button>
+        
+        <button
             class="nav-btn"
             onclick="showPage('listings',this)">
             My Listings
@@ -1702,7 +1708,83 @@ footer{
 
 </section>
 
+<!-- =====================================================
+     COMMUNITY
+===================================================== -->
 
+<section
+    id="community"
+    class="page">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                Community
+            </h2>
+
+            <p>
+                Connect with other MemeCoinSite users.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CREATE POST -->
+
+    <div class="card">
+
+        <h3>
+            Create a Post
+        </h3>
+
+        <textarea
+            id="communityPostText"
+            placeholder="Share something with the community..."
+            rows="4">
+        </textarea>
+
+
+        <div style="margin-top:12px;">
+
+            <input
+                type="file"
+                id="communityPostMedia"
+                accept="image/*,video/*"
+            >
+
+        </div>
+
+
+        <button
+            class="primary-btn"
+            onclick="createCommunityPost()"
+            style="margin-top:12px;">
+
+            Publish Post
+
+        </button>
+
+    </div>
+
+
+    <!-- COMMUNITY FEED -->
+
+    <div
+        id="communityFeed"
+        style="margin-top:24px;">
+
+        <p>
+            Loading community posts...
+        </p>
+
+    </div>
+
+</section>
+    
 <!-- =====================================================
      MARKETPLACE
 ===================================================== -->
@@ -2506,6 +2588,256 @@ async function logoutUser() {
         );
     }
 }
+
+    /* =====================================================
+   CREATE COMMUNITY POST
+   REAL FIRESTORE + FIREBASE STORAGE
+===================================================== */
+
+async function createCommunityPost() {
+
+    try {
+
+        const user = auth.currentUser;
+
+        if (!user) {
+
+            alert(
+                "Please login with Google before posting."
+            );
+
+            return;
+        }
+
+
+        const textElement =
+            document.getElementById(
+                "communityPostText"
+            );
+
+        const mediaElement =
+            document.getElementById(
+                "communityPostMedia"
+            );
+
+        const text =
+            textElement?.value?.trim() || "";
+
+        const file =
+            mediaElement?.files?.[0] || null;
+
+
+        if (!text && !file) {
+
+            alert(
+                "Please write something or select a photo/video."
+            );
+
+            return;
+        }
+
+
+        /* ---------------------------------------------
+           VALIDATE FILE
+        --------------------------------------------- */
+
+        if (file) {
+
+            const allowedTypes = [
+
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "image/gif",
+
+                "video/mp4",
+                "video/webm",
+                "video/quicktime"
+
+            ];
+
+            if (!allowedTypes.includes(file.type)) {
+
+                alert(
+                    "Please upload a supported image or video."
+                );
+
+                return;
+            }
+
+
+            const maxSize =
+                50 * 1024 * 1024;
+
+            if (file.size > maxSize) {
+
+                alert(
+                    "Maximum file size is 50 MB."
+                );
+
+                return;
+            }
+        }
+
+
+        /* ---------------------------------------------
+           GET USER PROFILE
+        --------------------------------------------- */
+
+        const userRef =
+            db.collection("users")
+              .doc(user.uid);
+
+        const userSnap =
+            await userRef.get();
+
+        const profile =
+            userSnap.exists
+                ? userSnap.data()
+                : {};
+
+
+        /* ---------------------------------------------
+           CREATE POST DOCUMENT
+        --------------------------------------------- */
+
+        const postRef =
+            db.collection(
+                "communityPosts"
+            ).doc();
+
+
+        /* ---------------------------------------------
+           UPLOAD MEDIA TO FIREBASE STORAGE
+        --------------------------------------------- */
+
+        let mediaURL = "";
+        let mediaType = "";
+
+        if (file) {
+
+            mediaType =
+                file.type.startsWith("video/")
+                    ? "video"
+                    : "image";
+
+            const extension =
+                file.name
+                    .split(".")
+                    .pop()
+                    .toLowerCase();
+
+            const storagePath =
+                "communityPosts/" +
+                user.uid +
+                "/" +
+                postRef.id +
+                "." +
+                extension;
+
+            const storageRef =
+                storage
+                    .ref()
+                    .child(storagePath);
+
+            await storageRef.put(file);
+
+            mediaURL =
+                await storageRef.getDownloadURL();
+        }
+
+
+        /* ---------------------------------------------
+           SAVE REAL POST TO FIRESTORE
+        --------------------------------------------- */
+
+        await postRef.set({
+
+            postId:
+                postRef.id,
+
+            uid:
+                user.uid,
+
+            authorName:
+                profile.name ||
+                user.displayName ||
+                "User",
+
+            authorPhotoURL:
+                profile.photoURL ||
+                user.photoURL ||
+                "",
+
+            text:
+                text,
+
+            mediaURL:
+                mediaURL,
+
+            mediaType:
+                mediaType,
+
+            likes:
+                0,
+
+            commentsCount:
+                0,
+
+            createdAt:
+                firebase.firestore
+                    .FieldValue
+                    .serverTimestamp(),
+
+            status:
+                "active"
+        });
+
+
+        /* ---------------------------------------------
+           CLEAR FORM
+        --------------------------------------------- */
+
+        if (textElement) {
+            textElement.value = "";
+        }
+
+        if (mediaElement) {
+            mediaElement.value = "";
+        }
+
+
+        alert(
+            "Post published successfully."
+        );
+
+
+        /* ---------------------------------------------
+           REFRESH FEED
+        --------------------------------------------- */
+
+        if (
+            typeof loadCommunityPosts ===
+            "function"
+        ) {
+
+            loadCommunityPosts();
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Create Community Post Error:",
+            error
+        );
+
+        alert(
+            "Unable to publish post: " +
+            error.message
+        );
+    }
+}
     
 /* =====================================================
    FIREBASE INITIALIZATION
@@ -2517,7 +2849,8 @@ if (!firebase.apps.length) {
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-
+const storage = firebase.storage();
+    
 let CURRENT_USER = {
 
     id: "",
@@ -6847,6 +7180,7 @@ updateWalletUI();
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
+    
 </body>
 </html>
