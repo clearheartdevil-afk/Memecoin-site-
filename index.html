@@ -3084,14 +3084,19 @@ async function loadCommunityPosts() {
                     </button>
 
 
-                    <span
-                        style="
-                            opacity:.7;
-                            font-size:13px;
-                        "
-                    >
-                        💬 ${post.commentsCount || 0}
-                    </span>
+                    <button
+    type="button"
+    class="community-comment-btn"
+    data-post-id="${postId}"
+    style="
+        border:none;
+        background:none;
+        cursor:pointer;
+        font-size:15px;
+    "
+>
+    💬 ${post.commentsCount || 0}
+</button>
 
                 </div>
 
@@ -3220,7 +3225,126 @@ async function loadCommunityPosts() {
                     }
                 );
 
+                        }
+
+
+            /* =================================================
+               COMMENT BUTTON
+            ================================================= */
+
+            const commentButton =
+                postElement.querySelector(
+                    ".community-comment-btn"
+                );
+
+
+            if (commentButton) {
+
+                commentButton.addEventListener(
+                    "click",
+                    async () => {
+
+                        if (!firebaseUser) {
+
+                            alert(
+                                "Please login first."
+                            );
+
+                            return;
+                        }
+
+
+                        const commentText =
+                            prompt(
+                                "Write your comment:"
+                            );
+
+
+                        if (
+                            !commentText ||
+                            !commentText.trim()
+                        ) {
+
+                            return;
+                        }
+
+
+                        try {
+
+                            const postRef =
+                                db
+                                    .collection(
+                                        "communityPosts"
+                                    )
+                                    .doc(postId);
+
+
+                            const commentRef =
+                                postRef
+                                    .collection(
+                                        "comments"
+                                    )
+                                    .doc();
+
+
+                            await commentRef.set({
+
+                                uid:
+                                    firebaseUser.uid,
+
+                                authorName:
+                                    firebaseUser.displayName ||
+                                    "User",
+
+                                authorPhotoURL:
+                                    firebaseUser.photoURL ||
+                                    "",
+
+                                text:
+                                    commentText.trim(),
+
+                                createdAt:
+                                    firebase.firestore.FieldValue.serverTimestamp()
+
+                            });
+
+
+                            await postRef.update({
+
+                                commentsCount:
+                                    firebase.firestore.FieldValue.increment(
+                                        1
+                                    )
+
+                            });
+
+
+                            alert(
+                                "Comment added successfully."
+                            );
+
+
+                            await loadCommunityPosts();
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "Comment Error:",
+                                error
+                            );
+
+                            alert(
+                                "Unable to add comment."
+                            );
+
+                        }
+
+                    }
+                );
+
             }
+
 
         }
 
