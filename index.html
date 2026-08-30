@@ -4264,28 +4264,42 @@ auth.onAuthStateChanged(
 
             await finalizeSecurityInitialization();
 
+/* ---------------------------------------------
+   ADMIN / USER SITE ROUTING
+--------------------------------------------- */
 
-            /*
-             * Refresh assets after authentication.
-             */
+if (SECURITY_STATE.isAdmin) {
 
-            if (
-                typeof loadAssetsFromFirestore ===
-                "function"
-            ) {
+    showPage("admin");
 
-                await loadAssetsFromFirestore();
+} else {
 
-            } else if (
-                typeof renderAll ===
-                "function"
-            ) {
+    showPage("home");
 
-                renderAll();
+}
 
-            }
 
-        } catch (error) {
+/*
+ * Refresh assets after authentication.
+ */
+
+if (
+    typeof loadAssetsFromFirestore ===
+    "function"
+) {
+
+    await loadAssetsFromFirestore();
+
+} else if (
+    typeof renderAll ===
+    "function"
+) {
+
+    renderAll();
+
+}
+
+} catch (error) {
 
             console.error(
                 "MemeCoinSite authentication/profile error:",
@@ -6257,24 +6271,6 @@ function normalizeAdminEmail(
    ADMIN IDENTITY
 ===================================================== */
 
-function getAdminEmail() {
-
-    return (
-        MEMECOINSITE_ADMIN_EMAIL
-    );
-
-}
-
-
-/*
- * Frontend identity check.
- *
- * This is NOT the final security barrier.
- *
- * Firestore Rules/backend authorization
- * must independently enforce admin privileges.
- */
-
 function checkAdminIdentity(
     user = firebaseUser
 ) {
@@ -6286,15 +6282,21 @@ function checkAdminIdentity(
     }
 
 
-    const email =
-        normalizeAdminEmail(
-            user.email
-        );
+    /*
+     * Admin access is tied to the
+     * permanent Firebase Admin UID.
+     *
+     * This must match the UID protected
+     * by the Firestore Security Rules.
+     */
+
+    const ADMIN_UID =
+        "yoOUbX1BlZZmjGqewGSe2sI8Dn62";
 
 
     return (
-        email ===
-        MEMECOINSITE_ADMIN_EMAIL
+        user.uid ===
+        ADMIN_UID
     );
 
 }
@@ -9116,47 +9118,111 @@ function getMarketPrice(coin){
    NAVIGATION
 ===================================================== */
 
-function showPage(pageId,button){
+function showPage(pageId, button){
+
+    /*
+     * ADMIN PAGE PROTECTION
+     *
+     * Only the verified Admin UID can open
+     * the Admin Panel.
+     */
+
+    if(pageId === "admin"){
+
+        if(
+            !firebaseUser ||
+            !SECURITY_STATE.isAdmin
+        ){
+
+            console.warn(
+                "[MemeCoinSite Security] Unauthorized admin page access blocked."
+            );
+
+            toast(
+                "Admin access denied.",
+                "error"
+            );
+
+            pageId = "home";
+            button = null;
+
+        }
+
+    }
+
+
+    /*
+     * Hide all pages.
+     */
 
     document
         .querySelectorAll(".page")
         .forEach(page => {
 
-            page.classList.remove("active");
+            page.classList.remove(
+                "active"
+            );
 
         });
 
 
+    /*
+     * Show requested page.
+     */
+
     const page =
-        document.getElementById(pageId);
+        document.getElementById(
+            pageId
+        );
 
 
     if(page){
 
-        page.classList.add("active");
+        page.classList.add(
+            "active"
+        );
 
     }
 
+
+    /*
+     * Reset navigation buttons.
+     */
 
     document
         .querySelectorAll(".nav-btn")
         .forEach(btn => {
 
-            btn.classList.remove("active");
+            btn.classList.remove(
+                "active"
+            );
 
         });
 
 
+    /*
+     * Activate selected button.
+     */
+
     if(button){
 
-        button.classList.add("active");
+        button.classList.add(
+            "active"
+        );
 
     }
 
 
+    /*
+     * Scroll to top.
+     */
+
     window.scrollTo({
-        top:0,
-        behavior:"smooth"
+
+        top: 0,
+
+        behavior: "smooth"
+
     });
 
 
@@ -9165,34 +9231,47 @@ function showPage(pageId,button){
     --------------------------------------------- */
 
     if(pageId === "marketplace"){
+
         renderMarketplace();
+
     }
 
 
     if(pageId === "mycoins"){
+
         renderMyCoins();
+
     }
 
 
     if(pageId === "leaderboard"){
+
         renderLeaderboard();
+
     }
 
 
     if(pageId === "listings"){
+
         renderMyListings();
+
     }
 
 
     if(pageId === "history"){
+
         renderHistory();
+
     }
 
 
     if(pageId === "admin"){
+
         renderAdminReview();
+
     }
 
+}
 
     /* ---------------------------------------------
        REAL COMMUNITY FEED
