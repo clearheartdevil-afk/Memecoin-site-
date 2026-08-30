@@ -3376,29 +3376,6 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-    /* =====================================================
-   FIREBASE INITIALIZATION
-===================================================== */
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-
-/*
- * Use one shared Firebase instance throughout the site.
- */
-
-const auth =
-    firebase.auth();
-
-const db =
-    firebase.firestore();
-
-const storage =
-    firebase.storage();
-
-
 /* =====================================================
    FIREBASE APPLICATION STATE
 ===================================================== */
