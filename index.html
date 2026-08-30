@@ -4141,8 +4141,7 @@ function handleBannedAccount(
 auth.onAuthStateChanged(
     async (user) => {
 
-        AUTH_STATE.initialized =
-            true;
+        AUTH_STATE.initialized = true;
 
 
         /*
@@ -4200,7 +4199,8 @@ auth.onAuthStateChanged(
         try {
 
             /*
-             * Load or create profile.
+             * Load or create the
+             * user's Firestore profile.
              */
 
             const profile =
@@ -4227,7 +4227,7 @@ auth.onAuthStateChanged(
 
 
             /*
-             * Apply profile.
+             * Apply profile data.
              */
 
             applyUserProfile(
@@ -4236,7 +4236,8 @@ auth.onAuthStateChanged(
 
 
             /*
-             * Initialize security.
+             * Initialize security
+             * and admin state.
              */
 
             initializeSecurityState(
@@ -4268,7 +4269,7 @@ auth.onAuthStateChanged(
 
 
             /*
-             * Refresh assets.
+             * Refresh assets after authentication.
              */
 
             if (
@@ -4295,11 +4296,18 @@ auth.onAuthStateChanged(
                 error
             );
 
+
             AUTH_STATE.profileLoaded =
                 false;
 
+
             updateGoogleLoginUI();
 
+
+            /*
+             * Do not destroy the existing UI
+             * when profile loading fails.
+             */
 
             if (
                 typeof renderAll ===
