@@ -9749,17 +9749,24 @@ function renderMyCoins(){
 
 
 /* =====================================================
-   PURCHASE
+   PURCHASE / CRYPTO PAYMENT SELECTION
 ===================================================== */
 
-function openPurchase(coinId){
+async function openPurchase(coinId){
 
     const coin =
         getCoin(coinId);
 
 
     if(!coin){
+
+        toast(
+            "Coin not found.",
+            "error"
+        );
+
         return;
+
     }
 
 
@@ -9778,12 +9785,18 @@ function openPurchase(coinId){
     }
 
 
+    /*
+     * Determine the displayed sale price.
+     */
+
     const price =
         getMarketPrice(coin);
 
 
     const tier =
-        TIER_RULES[coin.tier];
+        TIER_RULES[
+            coin.tier
+        ];
 
 
     const fee =
@@ -9794,9 +9807,49 @@ function openPurchase(coinId){
         buyerTotal(price);
 
 
+    /*
+     * Remember which coin is being purchased.
+     */
+
     selectedCoinId =
         coinId;
 
+
+    /*
+     * Create the transaction BEFORE
+     * asking the buyer to select crypto.
+     *
+     * No ownership is transferred here.
+     */
+
+    const transaction =
+        await createTransactionForCoin(
+            coinId
+        );
+
+
+    if(!transaction){
+
+        return;
+
+    }
+
+
+    /*
+     * Save the active transaction.
+     */
+
+    window.activeTransactionId =
+        transaction.id;
+
+
+    window.activeTransaction =
+        transaction;
+
+
+    /*
+     * Build payment selection UI.
+     */
 
     document.getElementById(
         "purchaseContent"
@@ -9839,50 +9892,50 @@ function openPurchase(coinId){
 
     ${escapeHTML(coin.symbol)}
     •
-    ${escapeHTML(tier.name)}
+    ${escapeHTML(tier?.name || coin.tier)}
 
 </p>
 
 
 <div class="purchase-summary">
 
-<div class="summary-row">
+    <div class="summary-row">
 
-<span>
-    Coin price
-</span>
+        <span>
+            Coin price
+        </span>
 
-<strong>
-    ${money(price)} USDT
-</strong>
+        <strong>
+            ${money(price)} USDT
+        </strong>
 
-</div>
-
-
-<div class="summary-row">
-
-<span>
-    Platform fee (${PLATFORM_FEE_PERCENT}%)
-</span>
-
-<strong>
-    ${money(fee)} USDT
-</strong>
-
-</div>
+    </div>
 
 
-<div class="summary-row summary-total">
+    <div class="summary-row">
 
-<span>
-    Total
-</span>
+        <span>
+            Platform fee (${PLATFORM_FEE_PERCENT}%)
+        </span>
 
-<strong>
-    ${money(total)} USDT
-</strong>
+        <strong>
+            ${money(fee)} USDT
+        </strong>
 
-</div>
+    </div>
+
+
+    <div class="summary-row summary-total">
+
+        <span>
+            Total
+        </span>
+
+        <strong>
+            ${money(total)} USDT
+        </strong>
+
+    </div>
 
 </div>
 
@@ -9901,19 +9954,126 @@ function openPurchase(coinId){
 
 </div>
 
-<button
-    class="primary-btn"
+
+<div
     style="
-        width:100%;
-        margin-top:10px;
+        margin-top:20px;
     "
-    onclick="
-    purchaseCoin()
-">
+>
 
-    Pay ${money(total)} USDT
+    <h3
+        style="
+            margin-bottom:10px;
+        "
+    >
 
-</button>
+        Choose Payment Currency
+
+    </h3>
+
+
+    <p
+        style="
+            color:var(--muted);
+            font-size:13px;
+            margin-bottom:14px;
+        "
+    >
+
+        Select the cryptocurrency you will
+        use for this purchase.
+
+    </p>
+
+
+    <div
+        style="
+            display:grid;
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0,1fr)
+                );
+            gap:10px;
+        "
+    >
+
+        <button
+            type="button"
+            class="secondary-btn"
+            onclick="
+                choosePurchaseCrypto(
+                    'BTC'
+                )
+            "
+        >
+
+            ₿ BTC
+
+        </button>
+
+
+        <button
+            type="button"
+            class="secondary-btn"
+            onclick="
+                choosePurchaseCrypto(
+                    'ETH'
+                )
+            "
+        >
+
+            Ξ ETH
+
+        </button>
+
+
+        <button
+            type="button"
+            class="secondary-btn"
+            onclick="
+                choosePurchaseCrypto(
+                    'SOL'
+                )
+            "
+        >
+
+            ◎ SOL
+
+        </button>
+
+
+        <button
+            type="button"
+            class="secondary-btn"
+            onclick="
+                choosePurchaseCrypto(
+                    'USDT'
+                )
+            "
+        >
+
+            ₮ USDT
+
+        </button>
+
+    </div>
+
+
+    <div
+        id="purchaseCryptoStatus"
+        style="
+            margin-top:14px;
+            color:var(--muted);
+            font-size:13px;
+        "
+    >
+
+        No payment currency selected.
+
+    </div>
+
+</div>
 
 `;
 
@@ -9922,11 +10082,699 @@ function openPurchase(coinId){
         .getElementById(
             "purchaseModal"
         )
-        .classList.add("show");
+        .classList.add(
+            "show"
+        );
 
 }
 
 
+/* =====================================================
+   CHOOSE PURCHASE CRYPTO
+===================================================== */
+
+async function choosePurchaseCrypto(
+    crypto
+){
+
+    const transactionId =
+        window.activeTransactionId;
+
+
+    if(!transactionId){
+
+        toast(
+            "Purchase transaction not found.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const normalizedCrypto =
+        normalizeCrypto(
+            crypto
+        );
+
+
+    if(!normalizedCrypto){
+
+        toast(
+            "Only BTC, ETH, SOL and USDT are supported.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const selected =
+        await selectTransactionPaymentCurrency(
+            transactionId,
+            normalizedCrypto
+        );
+
+
+    if(!selected){
+
+        return;
+
+    }
+
+
+    const status =
+        document.getElementById(
+            "purchaseCryptoStatus"
+        );
+
+
+    if(status){
+
+        status.innerHTML = `
+
+            <strong>
+                ${escapeHTML(normalizedCrypto)}
+            </strong>
+
+            selected.
+
+            <br>
+
+            Continue to payment details.
+
+        `;
+
+    }
+
+
+    /*
+     * Load the latest transaction state.
+     */
+
+    const transaction =
+        await getTransaction(
+            transactionId
+        );
+
+
+    if(transaction){
+
+        window.activeTransaction =
+            transaction;
+
+    }
+
+
+    /*
+     * Part 5B will connect this selection
+     * to the actual payment-address/QR UI.
+     */
+
+    if(
+        typeof showCryptoPaymentDetails ===
+        "function"
+    ){
+
+        showCryptoPaymentDetails(
+            transaction
+        );
+
+    } else {
+
+        toast(
+            `${normalizedCrypto} selected. Payment details will be shown next.`,
+            "success"
+        );
+
+    }
+
+}
+
+    /* =====================================================
+   CRYPTO PAYMENT DETAILS
+===================================================== */
+
+async function showCryptoPaymentDetails(
+    transaction
+){
+
+    if(!transaction){
+
+        toast(
+            "Transaction not found.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const crypto =
+        normalizeCrypto(
+            transaction.paymentCurrency
+        );
+
+
+    if(!crypto){
+
+        toast(
+            "Payment currency has not been selected.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Payment configuration is stored separately
+     * from the transaction.
+     *
+     * This prevents wallet addresses from being
+     * scattered throughout the application code.
+     */
+
+    let paymentConfig = null;
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "paymentSettings"
+                )
+                .doc(
+                    crypto
+                )
+                .get();
+
+
+        if(
+            snapshot.exists
+        ){
+
+            paymentConfig =
+                snapshot.data();
+
+        }
+
+    } catch(error){
+
+        console.error(
+            "Payment settings error:",
+            error
+        );
+
+    }
+
+
+    /*
+     * Do not invent a wallet address.
+     */
+
+    if(
+        !paymentConfig ||
+        !paymentConfig.address
+    ){
+
+        const content =
+            document.getElementById(
+                "purchaseContent"
+            );
+
+
+        if(content){
+
+            content.innerHTML = `
+
+                <h2>
+                    ${escapeHTML(
+                        crypto
+                    )} Payment
+                </h2>
+
+                <div class="notice">
+
+                    Payment address is not configured
+                    yet.
+
+                    <br><br>
+
+                    Please contact the platform
+                    administrator.
+
+                </div>
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    style="
+                        width:100%;
+                        margin-top:15px;
+                    "
+                    onclick="
+                        closeModal(
+                            'purchaseModal'
+                        )
+                    "
+                >
+
+                    Close
+
+                </button>
+
+            `;
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+     * Calculate the amount that applies to
+     * the selected payment currency.
+     *
+     * The actual blockchain amount conversion
+     * will be added after secure price-rate
+     * handling is implemented.
+     */
+
+    const amount =
+        Number(
+            transaction.buyerTotal
+        );
+
+
+    const content =
+        document.getElementById(
+            "purchaseContent"
+        );
+
+
+    if(!content){
+
+        return;
+
+    }
+
+
+    content.innerHTML = `
+
+        <div
+            style="
+                text-align:center;
+            "
+        >
+
+            <h2>
+                Pay with
+                ${escapeHTML(crypto)}
+            </h2>
+
+
+            <p
+                style="
+                    color:var(--muted);
+                    margin-top:6px;
+                "
+            >
+
+                Transaction:
+                ${escapeHTML(
+                    transaction.transactionId ||
+                    transaction.id
+                )}
+
+            </p>
+
+        </div>
+
+
+        <div class="purchase-summary">
+
+            <div class="summary-row">
+
+                <span>
+                    Coin price
+                </span>
+
+                <strong>
+                    ${money(
+                        transaction.amount
+                    )} USDT
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Platform fee
+                </span>
+
+                <strong>
+                    ${money(
+                        transaction.platformFee
+                    )} USDT
+                </strong>
+
+            </div>
+
+
+            <div
+                class="summary-row summary-total"
+            >
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    ${money(
+                        transaction.buyerTotal
+                    )} USDT
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="fee-note"
+            style="
+                margin-top:15px;
+            "
+        >
+
+            Send your payment to the
+            <strong>
+                ${escapeHTML(crypto)}
+            </strong>
+            address below.
+
+        </div>
+
+
+        <div
+            style="
+                margin-top:18px;
+                padding:15px;
+                border-radius:12px;
+                background:rgba(
+                    255,
+                    255,
+                    255,
+                    0.04
+                );
+                border:1px solid
+                    rgba(
+                        255,
+                        255,
+                        255,
+                        0.08
+                    );
+            "
+        >
+
+            <div
+                style="
+                    font-size:12px;
+                    color:var(--muted);
+                    margin-bottom:7px;
+                "
+            >
+
+                Payment address
+
+            </div>
+
+
+            <div
+                style="
+                    word-break:break-all;
+                    font-family:monospace;
+                    font-size:13px;
+                "
+            >
+
+                ${escapeHTML(
+                    paymentConfig.address
+                )}
+
+            </div>
+
+        </div>
+
+
+        ${
+            paymentConfig.network
+                ? `
+                    <div
+                        class="notice"
+                        style="
+                            margin-top:12px;
+                        "
+                    >
+
+                        Network:
+                        <strong>
+                            ${escapeHTML(
+                                paymentConfig.network
+                            )}
+                        </strong>
+
+                    </div>
+                `
+                : ""
+        }
+
+
+        <div
+            style="
+                margin-top:20px;
+            "
+        >
+
+            <label
+                style="
+                    display:block;
+                    margin-bottom:7px;
+                "
+            >
+
+                Transaction Hash / Reference
+
+            </label>
+
+
+            <input
+                id="paymentTransactionReference"
+                type="text"
+                placeholder="Enter blockchain transaction hash"
+                autocomplete="off"
+                style="
+                    width:100%;
+                "
+            >
+
+        </div>
+
+
+        <div
+            style="
+                margin-top:15px;
+            "
+        >
+
+            <label
+                style="
+                    display:block;
+                    margin-bottom:7px;
+                "
+            >
+
+                Buyer Note
+                <span
+                    style="
+                        color:var(--muted);
+                    "
+                >
+                    (optional)
+                </span>
+
+            </label>
+
+
+            <textarea
+                id="paymentBuyerNote"
+                rows="3"
+                placeholder="Optional payment note"
+                style="
+                    width:100%;
+                    resize:vertical;
+                "
+            ></textarea>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="primary-btn"
+            style="
+                width:100%;
+                margin-top:18px;
+            "
+            onclick="
+                submitPurchasePayment()
+            "
+        >
+
+            Submit Payment for Verification
+
+        </button>
+
+
+        <button
+            type="button"
+            class="secondary-btn"
+            style="
+                width:100%;
+                margin-top:10px;
+            "
+            onclick="
+                closeModal(
+                    'purchaseModal'
+                )
+            "
+        >
+
+            Cancel
+
+        </button>
+
+    `;
+
+}
+
+
+/* =====================================================
+   SUBMIT PURCHASE PAYMENT
+===================================================== */
+
+async function submitPurchasePayment(){
+
+    const transactionId =
+        window.activeTransactionId;
+
+
+    if(!transactionId){
+
+        toast(
+            "Purchase transaction not found.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const referenceInput =
+        document.getElementById(
+            "paymentTransactionReference"
+        );
+
+
+    const noteInput =
+        document.getElementById(
+            "paymentBuyerNote"
+        );
+
+
+    const paymentReference =
+        referenceInput?.value
+            ?.trim() || "";
+
+
+    const buyerNote =
+        noteInput?.value
+            ?.trim() || "";
+
+
+    if(!paymentReference){
+
+        toast(
+            "Enter your blockchain transaction hash/reference.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const success =
+        await submitTransactionPayment({
+
+            transactionId:
+                transactionId,
+
+            paymentReference:
+                paymentReference,
+
+            paymentProof:
+                null,
+
+            buyerNote:
+                buyerNote
+
+        });
+
+
+    if(!success){
+
+        return;
+
+    }
+
+
+    /*
+     * Payment is now submitted for admin
+     * verification.
+     *
+     * Ownership is still unchanged.
+     */
+
+    closeModal(
+        "purchaseModal"
+    );
+
+
+    window.activeTransaction =
+        await getTransaction(
+            transactionId
+        );
+
+
+    toast(
+        "Payment submitted. Waiting for admin verification.",
+        "success"
+    );
+
+}
+    
 /* =====================================================
    TRANSACTION SYSTEM
 ===================================================== */
