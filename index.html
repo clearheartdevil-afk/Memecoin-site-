@@ -3377,115 +3377,44 @@ const db = firebase.firestore();
 const storage = firebase.storage();
 
     /* =====================================================
-   FIRESTORE ASSET LOADER
+   FIREBASE INITIALIZATION
 ===================================================== */
 
-async function loadAssetsFromFirestore(){
-
-    try{
-
-        const snapshot =
-            await db.collection("assets").get();
-
-        coins =
-            snapshot.docs.map(doc => {
-
-                const data =
-                    doc.data();
-
-                let frontendTier =
-                    data.tier;
-
-                /*
-                 * Firestore currently stores
-                 * "Not Yet Ranked".
-                 *
-                 * Keep the original Firestore
-                 * value untouched and use the
-                 * existing "new" tier for UI.
-                 */
-
-                if(
-                    frontendTier ===
-                    "Not Yet Ranked"
-                ){
-
-                    frontendTier = "new";
-
-                }
-
-                return {
-
-                    id:
-                        data.coinID ||
-                        doc.id,
-
-                    name:
-                        data.name ||
-                        "Unnamed Coin",
-
-                    symbol:
-                        data.symbol ||
-                        "",
-
-                    description:
-                        data.description ||
-                        "",
-
-                    tier:
-                        frontendTier,
-
-                    adminPrice:
-                        Number(
-                            data.primaryPrice || 0
-                        ),
-
-                    ownerId:
-                        data.ownerId ||
-                        data.createdBy ||
-                        "",
-
-                    ownerName:
-                        data.ownerName ||
-                        "",
-
-                    emoji:
-                        data.emoji ||
-                        "🪙",
-
-                    color:
-                        data.color ||
-                        "#8b5cf6",
-
-                    listing:
-                        null,
-
-                    history:
-                        []
-
-                };
-
-            });
-
-        console.log(
-            "Firestore assets loaded:",
-            coins.length
-        );
-
-        renderAll();
-
-    }
-    catch(error){
-
-        console.error(
-            "Failed to load Firestore assets:",
-            error
-        );
-
-    }
-
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 }
-    
+
+
+/*
+ * Use one shared Firebase instance throughout the site.
+ */
+
+const auth =
+    firebase.auth();
+
+const db =
+    firebase.firestore();
+
+const storage =
+    firebase.storage();
+
+
+/* =====================================================
+   FIREBASE APPLICATION STATE
+===================================================== */
+
+let firebaseUser = null;
+
+let currentUser = null;
+
+let currentUserProfile = null;
+
+
+/*
+ * CURRENT_USER is the application's normalized
+ * representation of the Firebase user.
+ */
+
 let CURRENT_USER = {
 
     id: "",
@@ -3505,373 +3434,5011 @@ let CURRENT_USER = {
     walletAddresses: [],
 
     createdAt: null
+
 };
 
 
 /* =====================================================
-   USER PROFILE STATE
+   AUTH / ACCOUNT STATE
 ===================================================== */
 
-let currentUser = null;
-let currentUserProfile = null;
-let firebaseUser = null;
+let AUTH_STATE = {
+
+    initialized: false,
+
+    signedIn: false,
+
+    profileLoaded: false,
+
+    banned: false,
+
+    isAdmin: false,
+
+    adminVerified: false
+
+};
+
 
 /* =====================================================
-   FIREBASE AUTH STATE
+   ADMIN FOUNDATION
 ===================================================== */
 
-auth.onAuthStateChanged(async (user) => {
+/*
+ * The admin identity will ultimately be enforced by
+ * Firebase Security Rules / backend authorization.
+ *
+ * The frontend check below is ONLY for UI visibility.
+ *
+ * Never treat this client-side email check as security.
+ */
 
-    firebaseUser = user;
-    currentUser = user;
+const ADMIN_EMAIL =
+    "clearheartdevil@gmail.com";
 
-    const googleBtn =
-        document.getElementById("googleLoginBtn");
+
+/*
+ * Normalize email before comparison.
+ */
+
+function normalizeEmail(email) {
+
+    return String(email || "")
+        .trim()
+        .toLowerCase();
+
+}
+
+
+/*
+ * Frontend admin identification.
+ *
+ * Security-critical admin operations will later be
+ * protected separately through Firestore Security Rules
+ * and server-side verification.
+ */
+
+function isAdminUser(user = firebaseUser) {
 
     if (!user) {
-
-        currentUserProfile = null;
-
-        CURRENT_USER = {
-            id: "",
-            uid: "",
-            name: "",
-            email: "",
-            photoURL: "",
-            country: "",
-            language: "English",
-            walletAddresses: [],
-            createdAt: null
-        };
-
-        if (googleBtn) {
-
-    googleBtn.style.display = "";
-
-    googleBtn.textContent =
-        "🔵 Continue with Google";
-
-    const logoutBtn =
-        document.getElementById("logoutBtn");
-
-    if (logoutBtn) {
-        logoutBtn.style.display = "none";
+        return false;
     }
+
+    return (
+        normalizeEmail(user.email) ===
+        ADMIN_EMAIL
+    );
+
 }
 
-        updateUserInterface(null);
-        updateUserUI();
 
-        return;
-    }
-
-    try {
-
-        const userRef =
-            db.collection("users")
-              .doc(user.uid);
-
-        const userSnap =
-            await userRef.get();
-
-        if (userSnap.exists) {
-
-            currentUserProfile =
-                userSnap.data();
-
-        } else {
-
-            currentUserProfile = {
-
-                uid: user.uid,
-
-                id: user.uid,
-
-                name:
-                    user.displayName || "",
-
-                email:
-                    user.email || "",
-
-                photoURL:
-                    user.photoURL || "",
-
-                country: "",
-
-                language: "English",
-
-                walletAddresses: [],
-
-                createdAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
-
-            };
-
-            await userRef.set(
-                currentUserProfile,
-                { merge: true }
-            );
-        }
-
-        CURRENT_USER.uid =
-            user.uid;
-
-        CURRENT_USER.id =
-            user.uid;
-
-        CURRENT_USER.name =
-            currentUserProfile.name ||
-            user.displayName ||
-            "";
-
-        CURRENT_USER.email =
-            currentUserProfile.email ||
-            user.email ||
-            "";
-
-        CURRENT_USER.photoURL =
-            currentUserProfile.photoURL ||
-            user.photoURL ||
-            "";
-
-        CURRENT_USER.country =
-            currentUserProfile.country ||
-            "";
-
-        CURRENT_USER.language =
-            currentUserProfile.language ||
-            "English";
-
-        CURRENT_USER.walletAddresses =
-            currentUserProfile.walletAddresses ||
-            [];
-
-        CURRENT_USER.createdAt =
-            currentUserProfile.createdAt ||
-            null;
-
-        if (googleBtn) {
-
-            googleBtn.textContent =
-                "✅ Google Connected";
-
-            googleBtn.disabled = true;
-const logoutBtn =
-    document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-    logoutBtn.style.display = "block";
-}
-        }
-
-        updateUserInterface(
-            currentUserProfile
-        );
-
-        updateUserUI();
-
-        updateStats();
-
-    } catch (error) {
-
-        console.error(
-            "User profile error:",
-            error
-        );
-    }
-});
 /* =====================================================
-   USER INTERFACE
+   USER ID HELPERS
+===================================================== */
+
+function getCurrentUserId() {
+
+    return (
+        CURRENT_USER?.uid ||
+        CURRENT_USER?.id ||
+        firebaseUser?.uid ||
+        null
+    );
+
+}
+
+
+function getCurrentUserName() {
+
+    return (
+        CURRENT_USER?.name ||
+        firebaseUser?.displayName ||
+        "User"
+    );
+
+}
+
+
+function getCurrentUserEmail() {
+
+    return (
+        CURRENT_USER?.email ||
+        firebaseUser?.email ||
+        ""
+    );
+
+}
+
+
+function getCurrentUserLanguage() {
+
+    return (
+        CURRENT_USER?.language ||
+        "en"
+    );
+
+}
+
+
+function getCurrentUserCountry() {
+
+    return (
+        CURRENT_USER?.country ||
+        ""
+    );
+
+}
+
+
+/* =====================================================
+   RESET USER STATE
+===================================================== */
+
+function resetAuthenticatedState() {
+
+    firebaseUser = null;
+
+    currentUser = null;
+
+    currentUserProfile = null;
+
+
+    CURRENT_USER = {
+
+        id: "",
+
+        uid: "",
+
+        name: "",
+
+        email: "",
+
+        photoURL: "",
+
+        country: "",
+
+        language: "English",
+
+        walletAddresses: [],
+
+        createdAt: null
+
+    };
+
+
+    AUTH_STATE = {
+
+        initialized: true,
+
+        signedIn: false,
+
+        profileLoaded: false,
+
+        banned: false,
+
+        isAdmin: false,
+
+        adminVerified: false
+
+    };
+
+}
+
+
+/* =====================================================
+   UPDATE USER INTERFACE
 ===================================================== */
 
 function updateUserInterface(profile) {
-    const userNameElements = document.querySelectorAll("[data-user-name]");
-    const userEmailElements = document.querySelectorAll("[data-user-email]");
-    const userAvatarElements = document.querySelectorAll("[data-user-avatar]");
+
+    const userNameElements =
+        document.querySelectorAll(
+            "[data-user-name]"
+        );
+
+    const userEmailElements =
+        document.querySelectorAll(
+            "[data-user-email]"
+        );
+
+    const userAvatarElements =
+        document.querySelectorAll(
+            "[data-user-avatar]"
+        );
+
+
+    /*
+     * Guest state.
+     */
 
     if (!profile) {
-        userNameElements.forEach(el => {
-            el.textContent = "Guest";
-        });
 
-        userEmailElements.forEach(el => {
-            el.textContent = "";
-        });
+        userNameElements.forEach(
+            element => {
 
-        userAvatarElements.forEach(el => {
-            el.textContent = "U";
-            el.removeAttribute("src");
-        });
+                element.textContent =
+                    "Guest";
 
+            }
+        );
+
+
+        userEmailElements.forEach(
+            element => {
+
+                element.textContent =
+                    "";
+
+            }
+        );
+
+
+        userAvatarElements.forEach(
+            element => {
+
+                element.textContent =
+                    "U";
+
+                element.removeAttribute(
+                    "src"
+                );
+
+            }
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+     * Logged-in state.
+     */
+
+    const name =
+        profile.name ||
+        firebaseUser?.displayName ||
+        "User";
+
+
+    const email =
+        profile.email ||
+        firebaseUser?.email ||
+        "";
+
+
+    const photoURL =
+        profile.photoURL ||
+        firebaseUser?.photoURL ||
+        "";
+
+
+    userNameElements.forEach(
+        element => {
+
+            element.textContent =
+                name;
+
+        }
+    );
+
+
+    userEmailElements.forEach(
+        element => {
+
+            element.textContent =
+                email;
+
+        }
+    );
+
+
+    userAvatarElements.forEach(
+        element => {
+
+            if (photoURL) {
+
+                /*
+                 * Some avatar elements may be
+                 * image elements while others may
+                 * be text containers.
+                 */
+
+                if (
+                    element.tagName ===
+                    "IMG"
+                ) {
+
+                    element.src =
+                        photoURL;
+
+                    element.alt =
+                        name;
+
+                } else {
+
+                    element.textContent =
+                        "";
+
+                    element.style.backgroundImage =
+                        `url("${photoURL}")`;
+
+                    element.style.backgroundSize =
+                        "cover";
+
+                    element.style.backgroundPosition =
+                        "center";
+
+                }
+
+            } else {
+
+                element.style.backgroundImage =
+                    "";
+
+                element.removeAttribute(
+                    "src"
+                );
+
+                element.textContent =
+                    name
+                        .charAt(0)
+                        .toUpperCase();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   GOOGLE LOGIN BUTTON STATE
+===================================================== */
+
+function updateGoogleLoginUI() {
+
+    const googleBtn =
+        document.getElementById(
+            "googleLoginBtn"
+        );
+
+    const logoutBtn =
+        document.getElementById(
+            "logoutBtn"
+        );
+
+
+    if (!googleBtn) {
         return;
     }
 
-    const name = profile.name || "User";
-    const email = profile.email || "";
-    const photoURL = profile.photoURL || "";
 
-    userNameElements.forEach(el => {
-        el.textContent = name;
-    });
+    if (!firebaseUser) {
 
-    userEmailElements.forEach(el => {
-        el.textContent = email;
-    });
+        googleBtn.style.display =
+            "";
 
-    userAvatarElements.forEach(el => {
-        if (photoURL) {
-            el.textContent = "";
-            el.src = photoURL;
-        } else {
-            el.textContent = name.charAt(0).toUpperCase();
+        googleBtn.disabled =
+            false;
+
+        googleBtn.textContent =
+            "🔵 Continue with Google";
+
+
+        if (logoutBtn) {
+
+            logoutBtn.style.display =
+                "none";
+
         }
-    });
+
+
+        return;
+
+    }
+
+
+    googleBtn.style.display =
+        "";
+
+    googleBtn.disabled =
+        true;
+
+    googleBtn.textContent =
+        "✅ Google Connected";
+
+
+    if (logoutBtn) {
+
+        logoutBtn.style.display =
+            "block";
+
+    }
+
 }
 
+
 /* =====================================================
-   FIREBASE AUTH STATE
+   LOAD USER PROFILE
 ===================================================== */
 
-auth.onAuthStateChanged(async (user) => {
-
-    firebaseUser = user;
-    currentUser = user;
-
-    const googleBtn =
-        document.getElementById("googleLoginBtn");
+async function loadUserProfile(
+    user
+) {
 
     if (!user) {
 
-        currentUserProfile = null;
+        return null;
 
-        CURRENT_USER = {
-            id: "",
-            uid: "",
-            name: "",
-            email: "",
-            photoURL: "",
-            country: "",
-            language: "English",
-            walletAddresses: [],
-            createdAt: null
-        };
+    }
 
-        if (googleBtn) {
-            googleBtn.style.display = "";
-            googleBtn.textContent =
-                "🔵 Continue with Google";
+
+    const userRef =
+        db
+            .collection("users")
+            .doc(user.uid);
+
+
+    const userSnap =
+        await userRef.get();
+
+
+    /*
+     * Existing profile.
+     */
+
+    if (userSnap.exists) {
+
+        return userSnap.data();
+
+    }
+
+
+    /*
+     * New user.
+     *
+     * We create only normal profile fields.
+     *
+     * Security/admin fields must NOT be
+     * client-controlled.
+     */
+
+    const newProfile = {
+
+        uid:
+            user.uid,
+
+        id:
+            user.uid,
+
+        name:
+            user.displayName ||
+            "",
+
+        email:
+            user.email ||
+            "",
+
+        photoURL:
+            user.photoURL ||
+            "",
+
+        country:
+            "",
+
+        language:
+            "English",
+
+        walletAddresses:
+            [],
+
+        createdAt:
+            firebase.firestore
+                .FieldValue
+                .serverTimestamp(),
+
+        updatedAt:
+            firebase.firestore
+                .FieldValue
+                .serverTimestamp()
+
+    };
+
+
+    await userRef.set(
+        newProfile,
+        {
+            merge: true
         }
+    );
 
-        updateUserInterface(null);
-        updateUserUI();
+
+    return newProfile;
+
+}
+
+
+/* =====================================================
+   APPLY USER PROFILE TO APPLICATION STATE
+===================================================== */
+
+function applyUserProfile(
+    profile
+) {
+
+    if (!profile) {
 
         return;
+
     }
+
+
+    currentUserProfile =
+        profile;
+
+
+    CURRENT_USER = {
+
+        ...CURRENT_USER,
+
+        ...profile,
+
+        uid:
+            profile.uid ||
+            firebaseUser?.uid ||
+            "",
+
+        id:
+            profile.id ||
+            profile.uid ||
+            firebaseUser?.uid ||
+            "",
+
+        name:
+            profile.name ||
+            firebaseUser?.displayName ||
+            "",
+
+        email:
+            profile.email ||
+            firebaseUser?.email ||
+            "",
+
+        photoURL:
+            profile.photoURL ||
+            firebaseUser?.photoURL ||
+            "",
+
+        country:
+            profile.country ||
+            "",
+
+        language:
+            profile.language ||
+            "English",
+
+        walletAddresses:
+            Array.isArray(
+                profile.walletAddresses
+            )
+                ? profile.walletAddresses
+                : [],
+
+        createdAt:
+            profile.createdAt ||
+            null
+
+    };
+
+
+    /*
+     * Frontend admin flag.
+     */
+
+    AUTH_STATE.isAdmin =
+        isAdminUser(firebaseUser);
+
+
+    AUTH_STATE.adminVerified =
+        AUTH_STATE.isAdmin;
+
+
+    AUTH_STATE.profileLoaded =
+        true;
+
+
+    /*
+     * Keep the existing UI system alive.
+     */
+
+    updateUserInterface(
+        currentUserProfile
+    );
+
+
+    if (
+        typeof updateUserUI ===
+        "function"
+    ) {
+
+        updateUserUI();
+
+    }
+
+
+    if (
+        typeof updateStats ===
+        "function"
+    ) {
+
+        updateStats();
+
+    }
+
+
+    updateGoogleLoginUI();
+
+}
+
+
+/* =====================================================
+   ACCOUNT STATUS CHECK
+===================================================== */
+
+/*
+ * This is intentionally defensive.
+ *
+ * Existing users may not yet have a "banned" field.
+ *
+ * Later we will make banning/unbanning an
+ * admin-controlled secured system.
+ */
+
+function isUserBanned(
+    profile
+) {
+
+    if (!profile) {
+
+        return false;
+
+    }
+
+
+    return (
+        profile.banned === true ||
+        profile.status === "banned"
+    );
+
+}
+
+
+/* =====================================================
+   HANDLE BANNED ACCOUNT
+===================================================== */
+
+function handleBannedAccount(
+    profile
+) {
+
+    AUTH_STATE.banned =
+        true;
+
+
+    /*
+     * Do not silently modify or delete
+     * the user's account.
+     *
+     * The admin/security system will control
+     * the actual ban.
+     */
+
+    updateUserInterface(
+        profile
+    );
+
+
+    updateGoogleLoginUI();
+
+
+    /*
+     * Stop here for now.
+     *
+     * We will add a proper blocked-account
+     * screen in the next security stage.
+     */
+
+    console.warn(
+        "MemeCoinSite account is marked as banned."
+    );
+
+}
+
+
+/* =====================================================
+   SINGLE FIREBASE AUTH STATE LISTENER
+===================================================== */
+
+/*
+ * IMPORTANT:
+ *
+ * There is intentionally ONLY ONE
+ * auth.onAuthStateChanged listener.
+ *
+ * The previous file contained duplicate
+ * authentication listeners.
+ */
+
+auth.onAuthStateChanged(
+    async (user) => {
+
+        AUTH_STATE.initialized =
+            true;
+
+
+        /*
+         * Logged out.
+         */
+
+        if (!user) {
+
+            resetAuthenticatedState();
+
+            updateUserInterface(
+                null
+            );
+
+            if (
+                typeof updateUserUI ===
+                "function"
+            ) {
+
+                updateUserUI();
+
+            }
+
+
+            updateGoogleLoginUI();
+
+
+            /*
+             * Keep the existing rendering
+             * system working.
+             */
+
+            if (
+                typeof renderAll ===
+                "function"
+            ) {
+
+                renderAll();
+
+            }
+
+
+            return;
+
+        }
+
+
+        /*
+         * Logged in.
+         */
+
+        firebaseUser =
+            user;
+
+        currentUser =
+            user;
+
+
+        AUTH_STATE.signedIn =
+            true;
+
+
+        try {
+
+            /*
+             * Load or create the
+             * user's Firestore profile.
+             */
+
+            const profile =
+                await loadUserProfile(
+                    user
+                );
+
+
+            /*
+             * Check account status.
+             */
+
+            if (
+                isUserBanned(
+                    profile
+                )
+            ) {
+
+                handleBannedAccount(
+                    profile
+                );
+
+            }
+
+
+                       /*
+             * Apply profile data.
+             */
+
+            applyUserProfile(
+                profile
+            );
+
+
+            /*
+             * Initialize security and admin state.
+             */
+
+            initializeSecurityState(
+                profile
+            );
+
+            await finalizeSecurityInitialization();
+
+
+            /*
+             * Refresh assets after authentication.
+             */
+
+            if (
+                typeof loadAssetsFromFirestore ===
+                "function"
+            ) {
+
+                await loadAssetsFromFirestore();
+
+            } else if (
+                typeof renderAll ===
+                "function"
+            ) {
+
+                renderAll();
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "MemeCoinSite authentication/profile error:",
+                error
+            );
+
+
+            AUTH_STATE.profileLoaded =
+                false;
+
+
+            updateGoogleLoginUI();
+
+
+            /*
+             * Do not destroy the existing UI
+             * when profile loading fails.
+             */
+
+            if (
+                typeof renderAll ===
+                "function"
+            ) {
+
+                renderAll();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FIRESTORE ASSET + MARKETPLACE DATA LAYER
+   PART 3A
+===================================================== */
+
+async function loadAssetsFromFirestore(){
 
     try {
 
-        const userRef =
-            db.collection("users")
-            .doc(user.uid);
+        /*
+         * Load all primary assets.
+         */
 
-        const userSnap =
-            await userRef.get();
+        const assetSnapshot =
+            await db
+                .collection("assets")
+                .get();
 
-        if (userSnap.exists) {
 
-            currentUserProfile =
-                userSnap.data();
+        /*
+         * Load active marketplace listings.
+         *
+         * We intentionally read the marketplace
+         * collection separately from assets.
+         */
 
-        } else {
+        let listingSnapshot = null;
 
-            currentUserProfile = {
 
-                uid: user.uid,
-                id: user.uid,
+        try {
 
-                name:
-                    user.displayName || "",
+            listingSnapshot =
+                await db
+                    .collection("marketplace")
+                    .where(
+                        "status",
+                        "==",
+                        "active"
+                    )
+                    .get();
 
-                email:
-                    user.email || "",
+        } catch (listingError) {
 
-                photoURL:
-                    user.photoURL || "",
+            /*
+             * Older listings may not yet contain
+             * a status field.
+             *
+             * We don't want one missing/old field
+             * to stop the entire marketplace from
+             * loading.
+             */
 
-                country: "",
-                language: "English",
-                walletAddresses: [],
-
-                createdAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
-            };
-
-            await userRef.set(
-                currentUserProfile,
-                { merge: true }
+            console.warn(
+                "Active marketplace query unavailable:",
+                listingError
             );
+
         }
 
-        CURRENT_USER.uid = user.uid;
-        CURRENT_USER.id = user.uid;
 
-        CURRENT_USER.name =
-            currentUserProfile.name ||
-            user.displayName ||
-            "";
+        /*
+         * Convert marketplace documents into
+         * a lookup table by coin ID.
+         */
 
-        CURRENT_USER.email =
-            currentUserProfile.email ||
-            user.email ||
-            "";
+        const listingsByCoinId = {};
 
-        CURRENT_USER.photoURL =
-            currentUserProfile.photoURL ||
-            user.photoURL ||
-            "";
 
-        CURRENT_USER.country =
-            currentUserProfile.country || "";
+        if (listingSnapshot) {
 
-        CURRENT_USER.language =
-            currentUserProfile.language ||
-            "English";
+            listingSnapshot.docs.forEach(
+                doc => {
 
-        CURRENT_USER.walletAddresses =
-            currentUserProfile.walletAddresses ||
-            [];
+                    const data =
+                        doc.data();
 
-        CURRENT_USER.createdAt =
-            currentUserProfile.createdAt ||
-            null;
 
-        if (googleBtn) {
+                    const coinId =
+                        data.coinId ||
+                        data.assetId ||
+                        data.coinID;
 
-            googleBtn.textContent =
-                "✅ Google Connected";
 
-            googleBtn.disabled = true;
+                    if (!coinId) {
+
+                        return;
+
+                    }
+
+
+                    listingsByCoinId[
+                        coinId
+                    ] = {
+
+                        id:
+                            doc.id,
+
+                        ...data
+
+                    };
+
+                }
+            );
+
         }
 
-        updateUserInterface(
-            currentUserProfile
+
+        /*
+         * Load history.
+         *
+         * History is stored separately so that
+         * ownership/design history survives
+         * marketplace operations.
+         */
+
+        const historyByCoinId = {};
+
+
+        try {
+
+            const historySnapshot =
+                await db
+                    .collection(
+                        "ownershipHistory"
+                    )
+                    .get();
+
+
+            historySnapshot.docs.forEach(
+                doc => {
+
+                    const data =
+                        doc.data();
+
+
+                    const coinId =
+                        data.coinId ||
+                        data.assetId ||
+                        data.coinID;
+
+
+                    if (!coinId) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        !historyByCoinId[
+                            coinId
+                        ]
+                    ) {
+
+                        historyByCoinId[
+                            coinId
+                        ] = [];
+
+                    }
+
+
+                    historyByCoinId[
+                        coinId
+                    ].push({
+
+                        id:
+                            doc.id,
+
+                        ...data
+
+                    });
+
+                }
+            );
+
+
+        } catch (historyError) {
+
+            /*
+             * History collection may not exist
+             * until the first persistent history
+             * operation is performed.
+             */
+
+            console.warn(
+                "Ownership history collection unavailable:",
+                historyError
+            );
+
+        }
+
+
+        /*
+         * Convert every asset into the application's
+         * normalized coin structure.
+         */
+
+        coins =
+            assetSnapshot.docs.map(
+                doc => {
+
+                    const data =
+                        doc.data();
+
+
+                    let frontendTier =
+                        data.tier;
+
+
+                    /*
+                     * Preserve the existing database
+                     * convention used by this project.
+                     */
+
+                    if (
+                        frontendTier ===
+                        "Not Yet Ranked"
+                    ) {
+
+                        frontendTier =
+                            "new";
+
+                    }
+
+
+                    const coinId =
+                        data.coinID ||
+                        data.coinId ||
+                        doc.id;
+
+
+                    const listing =
+                        listingsByCoinId[
+                            coinId
+                        ] ||
+                        null;
+
+
+                    const history =
+                        historyByCoinId[
+                            coinId
+                        ] ||
+                        [];
+
+
+                    /*
+                     * If an old asset document still
+                     * contains an embedded listing/history,
+                     * preserve it as fallback.
+                     */
+
+                    const fallbackListing =
+                        data.listing ||
+                        null;
+
+
+                    const fallbackHistory =
+                        Array.isArray(
+                            data.history
+                        )
+                            ? data.history
+                            : [];
+
+
+                    return {
+
+                        id:
+                            coinId,
+
+                        firestoreId:
+                            doc.id,
+
+                        name:
+                            data.name ||
+                            "Unnamed Coin",
+
+                        symbol:
+                            data.symbol ||
+                            "",
+
+                        description:
+                            data.description ||
+                            "",
+
+                        tier:
+                            frontendTier ||
+                            "new",
+
+                        adminPrice:
+                            Number(
+                                data.primaryPrice ??
+                                data.adminPrice ??
+                                0
+                            ),
+
+                        ownerId:
+                            data.ownerId ||
+                            "",
+
+                        ownerName:
+                            data.ownerName ||
+                            "",
+
+                        ownerEmail:
+                            data.ownerEmail ||
+                            "",
+
+                        emoji:
+                            data.emoji ||
+                            "🪙",
+
+                        color:
+                            data.color ||
+                            "#8b5cf6",
+
+                        adminCreated:
+                            data.adminCreated === true,
+
+                        createdBy:
+                            data.createdBy ||
+                            "",
+
+                        createdAt:
+                            data.createdAt ||
+                            null,
+
+                        updatedAt:
+                            data.updatedAt ||
+                            null,
+
+                        /*
+                         * Marketplace listing.
+                         *
+                         * New marketplace collection
+                         * takes priority over the legacy
+                         * embedded listing.
+                         */
+
+                        listing:
+                            listing ||
+                            fallbackListing,
+
+                        /*
+                         * Persistent ownership/design
+                         * history.
+                         */
+
+                        history:
+                            history.length
+                                ? history
+                                : fallbackHistory
+
+                    };
+
+                }
+            );
+
+
+        /*
+         * Sort history chronologically for each coin.
+         */
+
+        coins.forEach(
+            coin => {
+
+                if (
+                    !Array.isArray(
+                        coin.history
+                    )
+                ) {
+
+                    coin.history =
+                        [];
+
+                }
+
+
+                coin.history.sort(
+                    (
+                        a,
+                        b
+                    ) => {
+
+                        const aTime =
+                            getFirestoreTimestampMillis(
+                                a.createdAt ||
+                                a.timestamp ||
+                                a.date
+                            );
+
+
+                        const bTime =
+                            getFirestoreTimestampMillis(
+                                b.createdAt ||
+                                b.timestamp ||
+                                b.date
+                            );
+
+
+                        return (
+                            aTime -
+                            bTime
+                        );
+
+                    }
+                );
+
+            }
         );
 
-        updateUserUI();
-        updateStats();
+
+        console.log(
+            "Firestore assets loaded:",
+            coins.length
+        );
+
+
+        console.log(
+            "Active marketplace listings loaded:",
+            Object.keys(
+                listingsByCoinId
+            ).length
+        );
+
+
+        /*
+         * Keep existing UI working.
+         */
+
+        if (
+            typeof renderAll ===
+            "function"
+        ) {
+
+            renderAll();
+
+        }
+
 
     } catch (error) {
 
         console.error(
-            "User profile error:",
+            "Failed to load Firestore assets:",
             error
         );
+
+
+        /*
+         * Don't replace the existing local
+         * application state with an empty array
+         * after a temporary Firestore failure.
+         */
+
     }
-});
+
+}
+
+
+/* =====================================================
+   FIRESTORE TIMESTAMP HELPER
+===================================================== */
+
+function getFirestoreTimestampMillis(
+    value
+) {
+
+    if (!value) {
+
+        return 0;
+
+    }
+
+
+    /*
+     * Firebase Timestamp.
+     */
+
+    if (
+        typeof value.toMillis ===
+        "function"
+    ) {
+
+        return value.toMillis();
+
+    }
+
+
+    /*
+     * JavaScript Date.
+     */
+
+    if (
+        value instanceof Date
+    ) {
+
+        return value.getTime();
+
+    }
+
+
+    /*
+     * Firestore serialized timestamp.
+     */
+
+    if (
+        typeof value.seconds ===
+        "number"
+    ) {
+
+        return (
+            value.seconds * 1000
+        );
+
+    }
+
+
+    /*
+     * Numeric timestamp.
+     */
+
+    if (
+        typeof value ===
+        "number"
+    ) {
+
+        return value;
+
+    }
+
+
+    /*
+     * ISO date/string.
+     */
+
+    const parsed =
+        Date.parse(
+            String(value)
+        );
+
+
+    return Number.isFinite(
+        parsed
+    )
+        ? parsed
+        : 0;
+
+}
+
+
+/* =====================================================
+   FIRESTORE SERVER TIMESTAMP
+===================================================== */
+
+function serverTimestamp() {
+
+    return firebase.firestore
+        .FieldValue
+        .serverTimestamp();
+
+}
+
+
+/* =====================================================
+   NORMALIZE COIN ID
+===================================================== */
+
+function normalizeCoinId(
+    coinId
+) {
+
+    return String(
+        coinId || ""
+    ).trim();
+
+}
+
+
+/* =====================================================
+   GET ASSET DOCUMENT REFERENCE
+===================================================== */
+
+function getAssetDocumentRef(
+    coinId
+) {
+
+    const normalizedId =
+        normalizeCoinId(
+            coinId
+        );
+
+
+    if (!normalizedId) {
+
+        return null;
+
+    }
+
+
+    const coin =
+        getCoin(
+            normalizedId
+        );
+
+
+    if (
+        coin?.firestoreId
+    ) {
+
+        return db
+            .collection("assets")
+            .doc(
+                coin.firestoreId
+            );
+
+    }
+
+
+    /*
+     * Existing project data commonly uses
+     * coinID as the logical identifier.
+     *
+     * Query it before assuming the document
+     * ID is the coin ID.
+     */
+
+    return db
+        .collection("assets")
+        .doc(
+            normalizedId
+        );
+
+}
+
+
+/* =====================================================
+   FIND ASSET DOCUMENT BY COIN ID
+===================================================== */
+
+async function findAssetDocument(
+    coinId
+) {
+
+    const normalizedId =
+        normalizeCoinId(
+            coinId
+        );
+
+
+    if (!normalizedId) {
+
+        return null;
+
+    }
+
+
+    /*
+     * First try the normalized document ID.
+     */
+
+    const directRef =
+        db
+            .collection("assets")
+            .doc(
+                normalizedId
+            );
+
+
+    const directSnap =
+        await directRef.get();
+
+
+    if (
+        directSnap.exists
+    ) {
+
+        return {
+
+            ref:
+                directRef,
+
+            snapshot:
+                directSnap
+
+        };
+
+    }
+
+
+    /*
+     * Existing database may store the logical
+     * coinID in a different document ID.
+     */
+
+    const querySnapshot =
+        await db
+            .collection("assets")
+            .where(
+                "coinID",
+                "==",
+                normalizedId
+            )
+            .limit(1)
+            .get();
+
+
+    if (
+        !querySnapshot.empty
+    ) {
+
+        const snap =
+            querySnapshot.docs[0];
+
+
+        return {
+
+            ref:
+                snap.ref,
+
+            snapshot:
+                snap
+
+        };
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+   FIND MARKETPLACE LISTING
+===================================================== */
+
+async function findMarketplaceListing(
+    coinId
+) {
+
+    const normalizedId =
+        normalizeCoinId(
+            coinId
+        );
+
+
+    if (!normalizedId) {
+
+        return null;
+
+    }
+
+
+    /*
+     * Prefer the local normalized state
+     * when available.
+     */
+
+    const coin =
+        getCoin(
+            normalizedId
+        );
+
+
+    if (
+        coin?.listing?.id
+    ) {
+
+        const ref =
+            db
+                .collection(
+                    "marketplace"
+                )
+                .doc(
+                    coin.listing.id
+                );
+
+
+        const snap =
+            await ref.get();
+
+
+        if (
+            snap.exists
+        ) {
+
+            return {
+
+                ref:
+                    ref,
+
+                snapshot:
+                    snap,
+
+                data:
+                    snap.data()
+
+            };
+
+        }
+
+    }
+
+
+    /*
+     * Search active listing by coin ID.
+     */
+
+    const snapshot =
+        await db
+            .collection(
+                "marketplace"
+            )
+            .where(
+                "coinId",
+                "==",
+                normalizedId
+            )
+            .where(
+                "status",
+                "==",
+                "active"
+            )
+            .limit(1)
+            .get();
+
+
+    if (
+        snapshot.empty
+    ) {
+
+        return null;
+
+    }
+
+
+    const doc =
+        snapshot.docs[0];
+
+
+    return {
+
+        ref:
+            doc.ref,
+
+        snapshot:
+            doc,
+
+        data:
+            doc.data()
+
+    };
+
+}
+
+
+/* =====================================================
+   VALIDATE LISTING PRICE
+===================================================== */
+
+function validateListingPrice(
+    coin,
+    price
+) {
+
+    if (!coin) {
+
+        return {
+
+            valid:
+                false,
+
+            message:
+                "Coin not found."
+
+        };
+
+    }
+
+
+    const numericPrice =
+        Number(
+            price
+        );
+
+
+    if (
+        !Number.isFinite(
+            numericPrice
+        ) ||
+        numericPrice <= 0
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            message:
+                "Enter a valid selling price."
+
+        };
+
+    }
+
+
+    const tier =
+        TIER_RULES[
+            coin.tier
+        ];
+
+
+    if (!tier) {
+
+        return {
+
+            valid:
+                false,
+
+            message:
+                "This coin has an invalid tier."
+
+        };
+
+    }
+
+
+    if (
+        numericPrice <
+        Number(tier.min)
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            message:
+                `Minimum price is ${money(tier.min)} USDT.`
+
+        };
+
+    }
+
+
+    if (
+        numericPrice >
+        Number(tier.max)
+    ) {
+
+        return {
+
+            valid:
+                false,
+
+            message:
+                `Maximum price is ${money(tier.max)} USDT.`
+
+        };
+
+    }
+
+
+    return {
+
+        valid:
+            true,
+
+        price:
+            numericPrice
+
+    };
+
+}
+
+
+/* =====================================================
+   BUILD MARKETPLACE LISTING
+===================================================== */
+
+function buildMarketplaceListing({
+
+    coin,
+
+    price
+
+}) {
+
+    const uid =
+        getCurrentUserId();
+
+
+    const userName =
+        getCurrentUserName();
+
+
+    const userEmail =
+        getCurrentUserEmail();
+
+
+    return {
+
+        coinId:
+            coin.id,
+
+        assetId:
+            coin.id,
+
+        coinName:
+            coin.name,
+
+        coinSymbol:
+            coin.symbol,
+
+        sellerId:
+            uid,
+
+        sellerName:
+            userName,
+
+        sellerEmail:
+            userEmail,
+
+        price:
+            Number(
+                price
+            ),
+
+        currency:
+            "USDT",
+
+        status:
+            "active",
+
+        createdAt:
+            serverTimestamp(),
+
+        updatedAt:
+            serverTimestamp()
+
+    };
+
+}
+
+
+/* =====================================================
+   PERSIST COIN LISTING
+===================================================== */
+
+async function persistCoinListing(
+    coinId,
+    price
+) {
+
+    const coin =
+        getCoin(
+            coinId
+        );
+
+
+    if (!coin) {
+
+        throw new Error(
+            "Coin not found."
+        );
+
+    }
+
+
+    if (
+        !requireUserAction(
+            "create_listing",
+            "Your account cannot create listings."
+        )
+    ) {
+
+        throw new Error(
+            "USER_ACTION_NOT_ALLOWED"
+        );
+
+    }
+
+
+    if (
+        coin.ownerId !==
+        getCurrentUserId()
+    ) {
+
+        throw new Error(
+            "You can only list a coin that you own."
+        );
+
+    }
+
+
+    const validation =
+        validateListingPrice(
+            coin,
+            price
+        );
+
+
+    if (
+        !validation.valid
+    ) {
+
+        throw new Error(
+            validation.message
+        );
+
+    }
+
+
+    const existing =
+        await findMarketplaceListing(
+            coin.id
+        );
+
+
+    /*
+     * If a listing already exists for this coin,
+     * update it instead of creating duplicates.
+     */
+
+    if (existing) {
+
+        /*
+         * Verify the existing seller before
+         * allowing an update.
+         */
+
+        if (
+            existing.data.sellerId !==
+            getCurrentUserId()
+        ) {
+
+            throw new Error(
+                "You cannot modify another user's listing."
+            );
+
+        }
+
+
+        await existing.ref.update({
+
+            price:
+                validation.price,
+
+            updatedAt:
+                serverTimestamp(),
+
+            status:
+                "active"
+
+        });
+
+
+        return {
+
+            id:
+                existing.ref.id,
+
+            ...existing.data,
+
+            price:
+                validation.price,
+
+            status:
+                "active"
+
+        };
+
+    }
+
+
+    /*
+     * Create a brand-new listing.
+     */
+
+    const listing =
+        buildMarketplaceListing({
+
+            coin:
+                coin,
+
+            price:
+                validation.price
+
+        });
+
+
+    const listingRef =
+        await db
+            .collection(
+                "marketplace"
+            )
+            .add(
+                listing
+            );
+
+
+    return {
+
+        id:
+            listingRef.id,
+
+        ...listing
+
+    };
+
+}
+
+
+/* =====================================================
+   APPLY LISTING TO LOCAL STATE
+===================================================== */
+
+function applyListingToCoin(
+    coinId,
+    listing
+) {
+
+    const coin =
+        getCoin(
+            coinId
+        );
+
+
+    if (!coin) {
+
+        return false;
+
+    }
+
+
+    coin.listing =
+        listing
+            ? {
+                id:
+                    listing.id,
+
+                coinId:
+                    listing.coinId ||
+                    coin.id,
+
+                sellerId:
+                    listing.sellerId,
+
+                sellerName:
+                    listing.sellerName,
+
+                sellerEmail:
+                    listing.sellerEmail ||
+                    "",
+
+                price:
+                    Number(
+                        listing.price
+                    ),
+
+                currency:
+                    listing.currency ||
+                    "USDT",
+
+                status:
+                    listing.status ||
+                    "active",
+
+                createdAt:
+                    listing.createdAt ||
+                    null,
+
+                updatedAt:
+                    listing.updatedAt ||
+                    null
+
+            }
+            : null;
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   REFRESH MARKETPLACE DATA
+===================================================== */
+
+async function refreshMarketplaceData() {
+
+    await loadAssetsFromFirestore();
+
+    return coins;
+
+}
+
+
+/* =====================================================
+   ADD PERSISTENT OWNERSHIP HISTORY
+===================================================== */
+
+async function addOwnershipHistory({
+
+    coinId,
+
+    ownerId = "",
+
+    ownerName = "",
+
+    action = "",
+
+    design = "",
+
+    previousOwnerId = "",
+
+    previousOwnerName = "",
+
+    transactionId = "",
+
+    metadata = {}
+
+} = {}) {
+
+
+    if (!coinId) {
+
+        throw new Error(
+            "coinId is required."
+        );
+
+    }
+
+
+    const historyData = {
+
+        coinId:
+            coinId,
+
+        ownerId:
+            ownerId,
+
+        ownerName:
+            ownerName,
+
+        action:
+            action,
+
+        design:
+            design,
+
+        previousOwnerId:
+            previousOwnerId,
+
+        previousOwnerName:
+            previousOwnerName,
+
+        transactionId:
+            transactionId,
+
+        metadata:
+            metadata || {},
+
+        createdAt:
+            serverTimestamp()
+
+    };
+
+
+    const historyRef =
+        await db
+            .collection(
+                "ownershipHistory"
+            )
+            .add(
+                historyData
+            );
+
+
+    return {
+
+        id:
+            historyRef.id,
+
+        ...historyData
+
+    };
+
+}
+
+
+/* =====================================================
+   LOAD COIN HISTORY
+===================================================== */
+
+async function loadCoinHistory(
+    coinId
+) {
+
+    if (!coinId) {
+
+        return [];
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "ownershipHistory"
+                )
+                .where(
+                    "coinId",
+                    "==",
+                    coinId
+                )
+                .get();
+
+
+        const history =
+            snapshot.docs.map(
+                doc => ({
+
+                    id:
+                        doc.id,
+
+                    ...doc.data()
+
+                })
+            );
+
+
+        history.sort(
+            (
+                a,
+                b
+            ) => {
+
+                return (
+                    getFirestoreTimestampMillis(
+                        a.createdAt
+                    ) -
+                    getFirestoreTimestampMillis(
+                        b.createdAt
+                    )
+                );
+
+            }
+        );
+
+
+        return history;
+
+    } catch (error) {
+
+        console.error(
+            "Load coin history error:",
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+/* =====================================================
+   SYNCHRONIZE ONE COIN FROM FIRESTORE
+===================================================== */
+
+async function refreshSingleCoin(
+    coinId
+) {
+
+    const result =
+        await findAssetDocument(
+            coinId
+        );
+
+
+    if (!result) {
+
+        return null;
+
+    }
+
+
+    const data =
+        result.snapshot.data();
+
+
+    const listing =
+        await findMarketplaceListing(
+            coinId
+        );
+
+
+    const history =
+        await loadCoinHistory(
+            coinId
+        );
+
+
+    const existing =
+        getCoin(
+            coinId
+        );
+
+
+    const normalized = {
+
+        id:
+            data.coinID ||
+            data.coinId ||
+            result.snapshot.id,
+
+        firestoreId:
+            result.snapshot.id,
+
+        name:
+            data.name ||
+            "Unnamed Coin",
+
+        symbol:
+            data.symbol ||
+            "",
+
+        description:
+            data.description ||
+            "",
+
+        tier:
+            data.tier ===
+            "Not Yet Ranked"
+                ? "new"
+                : (
+                    data.tier ||
+                    "new"
+                ),
+
+        adminPrice:
+            Number(
+                data.primaryPrice ??
+                data.adminPrice ??
+                0
+            ),
+
+        ownerId:
+            data.ownerId ||
+            "",
+
+        ownerName:
+            data.ownerName ||
+            "",
+
+        ownerEmail:
+            data.ownerEmail ||
+            "",
+
+        emoji:
+            data.emoji ||
+            "🪙",
+
+        color:
+            data.color ||
+            "#8b5cf6",
+
+        adminCreated:
+            data.adminCreated === true,
+
+        listing:
+            listing
+                ? {
+                    id:
+                        listing.ref.id,
+
+                    ...listing.data
+
+                }
+                : null,
+
+        history:
+            history
+
+    };
+
+
+    if (existing) {
+
+        Object.assign(
+            existing,
+            normalized
+        );
+
+    } else {
+
+        coins.push(
+            normalized
+        );
+
+    }
+
+
+    return normalized;
+
+}
+
+
+/* =====================================================
+   MARKETPLACE LISTING STATUS HELPERS
+===================================================== */
+
+function isListingActive(
+    coin
+) {
+
+    if (
+        !coin?.listing
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+        coin.listing.status ===
+        "active"
+    );
+
+}
+
+
+function isCoinListed(
+    coin
+) {
+
+    return (
+        !!coin?.listing &&
+        (
+            !coin.listing.status ||
+            coin.listing.status ===
+            "active"
+        )
+    );
+
+}
+
+
+/* =====================================================
+   GET LISTED COINS
+===================================================== */
+
+function getListedCoins() {
+
+    return coins.filter(
+        coin =>
+            isCoinListed(
+                coin
+            )
+    );
+
+}
+
+
+/* =====================================================
+   GET CURRENT USER LISTINGS
+===================================================== */
+
+function getCurrentUserListings() {
+
+    const uid =
+        getCurrentUserId();
+
+
+    if (!uid) {
+
+        return [];
+
+    }
+
+
+    return coins.filter(
+        coin =>
+            coin.listing &&
+            coin.listing.sellerId ===
+            uid &&
+            isCoinListed(
+                coin
+            )
+    );
+
+}
+
+/* =====================================================
+   AUTHENTICATION STATUS HELPERS
+===================================================== */
+
+function isUserSignedIn() {
+
+    return (
+        !!firebaseUser &&
+        AUTH_STATE.signedIn === true
+    );
+
+}
+
+
+function requireAuthentication(
+    message =
+        "Please login with Google first."
+) {
+
+    if (
+        !isUserSignedIn()
+    ) {
+
+        toast(
+            message,
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+function requireAdmin(
+    message =
+        "Administrator access required."
+) {
+
+    if (
+        !isUserSignedIn()
+    ) {
+
+        toast(
+            "Please login with Google first.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    if (
+        !AUTH_STATE.isAdmin
+    ) {
+
+        toast(
+            message,
+            "error"
+        );
+
+        console.warn(
+            "Unauthorized admin UI operation attempted:",
+            getCurrentUserEmail()
+        );
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   SAFE USER PROFILE STATE ACCESS
+===================================================== */
+
+function setCurrentUserProfile(
+    profile
+) {
+
+    if (!profile) {
+
+        return;
+
+    }
+
+
+    applyUserProfile(
+        profile
+    );
+
+}
+
+
+/* =====================================================
+   FIREBASE READY EVENT
+===================================================== */
+
+function isFirebaseReady() {
+
+    return (
+        AUTH_STATE.initialized === true
+    );
+
+}
+    
+/* =====================================================
+   SECURITY CONSTANTS
+===================================================== */
+
+const MEMECOINSITE_ADMIN_EMAIL =
+    "clearheartdevil@gmail.com";
+
+
+const MEMECOINSITE_ALLOWED_CRYPTO = [
+    "BTC",
+    "ETH",
+    "SOL",
+    "USDT"
+];
+
+
+const USER_STATUS = {
+
+    ACTIVE: "active",
+
+    BANNED: "banned",
+
+    SUSPENDED: "suspended",
+
+    RESTRICTED: "restricted"
+
+};
+
+
+const REPORT_STATUS = {
+
+    OPEN: "open",
+
+    UNDER_REVIEW: "under_review",
+
+    RESOLVED: "resolved",
+
+    DISMISSED: "dismissed"
+
+};
+
+
+const TRANSACTION_STATUS = {
+
+    PENDING:
+        "pending",
+
+    PAYMENT_PENDING:
+        "payment_pending",
+
+    PAYMENT_SUBMITTED:
+        "payment_submitted",
+
+    PAYMENT_VERIFIED:
+        "payment_verified",
+
+    ADMIN_REVIEW:
+        "admin_review",
+
+    APPROVED:
+        "approved",
+
+    REJECTED:
+        "rejected",
+
+    CANCELLED:
+        "cancelled",
+
+    COMPLETED:
+        "completed"
+
+};
+
+
+/* =====================================================
+   SECURITY STATE
+===================================================== */
+
+let SECURITY_STATE = {
+
+    initialized:
+        false,
+
+    authenticated:
+        false,
+
+    userStatus:
+        USER_STATUS.ACTIVE,
+
+    isAdmin:
+        false,
+
+    adminVerified:
+        false,
+
+    permissionsLoaded:
+        false,
+
+    restricted:
+        false
+
+};
+
+
+/* =====================================================
+   ADMIN EMAIL NORMALIZATION
+===================================================== */
+
+function normalizeAdminEmail(
+    email
+) {
+
+    return String(
+        email || ""
+    )
+        .trim()
+        .toLowerCase();
+
+}
+
+
+/* =====================================================
+   ADMIN IDENTITY
+===================================================== */
+
+function getAdminEmail() {
+
+    return (
+        MEMECOINSITE_ADMIN_EMAIL
+    );
+
+}
+
+
+/*
+ * Frontend identity check.
+ *
+ * This is NOT the final security barrier.
+ *
+ * Firestore Rules/backend authorization
+ * must independently enforce admin privileges.
+ */
+
+function checkAdminIdentity(
+    user = firebaseUser
+) {
+
+    if (!user) {
+
+        return false;
+
+    }
+
+
+    const email =
+        normalizeAdminEmail(
+            user.email
+        );
+
+
+    return (
+        email ===
+        MEMECOINSITE_ADMIN_EMAIL
+    );
+
+}
+
+
+/* =====================================================
+   ADMIN CHECK
+===================================================== */
+
+function isAdmin() {
+
+    return (
+        SECURITY_STATE.isAdmin === true
+    );
+
+}
+
+
+/* =====================================================
+   ADMIN VERIFICATION
+===================================================== */
+
+function verifyAdminIdentity() {
+
+    if (!firebaseUser) {
+
+        SECURITY_STATE.isAdmin =
+            false;
+
+        SECURITY_STATE.adminVerified =
+            false;
+
+        return false;
+
+    }
+
+
+    const verified =
+        checkAdminIdentity(
+            firebaseUser
+        );
+
+
+    SECURITY_STATE.isAdmin =
+        verified;
+
+
+    SECURITY_STATE.adminVerified =
+        verified;
+
+
+    /*
+     * Keep AUTH_STATE synchronized
+     * with the security state created
+     * in Part 1.
+     */
+
+    if (
+        typeof AUTH_STATE !==
+        "undefined"
+    ) {
+
+        AUTH_STATE.isAdmin =
+            verified;
+
+        AUTH_STATE.adminVerified =
+            verified;
+
+    }
+
+
+    return verified;
+
+}
+
+
+/* =====================================================
+   SECURE ADMIN REQUIREMENT
+===================================================== */
+
+function requireAdminAccess(
+    actionName =
+        "this action"
+) {
+
+    /*
+     * Authentication check.
+     */
+
+    if (!firebaseUser) {
+
+        console.warn(
+            "Admin action blocked: user not authenticated.",
+            actionName
+        );
+
+
+        toast(
+            "Please login first.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+
+    /*
+     * Admin identity check.
+     */
+
+    if (
+        !verifyAdminIdentity()
+    ) {
+
+        console.warn(
+            "Unauthorized admin action blocked:",
+            actionName,
+            firebaseUser.email
+        );
+
+
+        toast(
+            "Administrator access required.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   SAFE ADMIN OPERATION WRAPPER
+===================================================== */
+
+async function runAdminOperation(
+    actionName,
+    operation
+) {
+
+    if (
+        !requireAdminAccess(
+            actionName
+        )
+    ) {
+
+        return {
+
+            success:
+                false,
+
+            error:
+                "ADMIN_ACCESS_REQUIRED"
+
+        };
+
+    }
+
+
+    if (
+        typeof operation !==
+        "function"
+    ) {
+
+        console.error(
+            "Invalid admin operation:",
+            actionName
+        );
+
+
+        return {
+
+            success:
+                false,
+
+            error:
+                "INVALID_OPERATION"
+
+        };
+
+    }
+
+
+    try {
+
+        const result =
+            await operation();
+
+
+        return {
+
+            success:
+                true,
+
+            result:
+                result
+
+        };
+
+    } catch (error) {
+
+        console.error(
+            "Admin operation failed:",
+            actionName,
+            error
+        );
+
+
+        return {
+
+            success:
+                false,
+
+            error:
+                error
+
+        };
+
+    }
+
+}
+
+
+/* =====================================================
+   USER STATUS NORMALIZATION
+===================================================== */
+
+function normalizeUserStatus(
+    profile
+) {
+
+    if (!profile) {
+
+        return USER_STATUS.ACTIVE;
+
+    }
+
+
+    if (
+        profile.banned === true
+    ) {
+
+        return USER_STATUS.BANNED;
+
+    }
+
+
+    if (
+        profile.status ===
+        USER_STATUS.BANNED
+    ) {
+
+        return USER_STATUS.BANNED;
+
+    }
+
+
+    if (
+        profile.status ===
+        USER_STATUS.SUSPENDED
+    ) {
+
+        return USER_STATUS.SUSPENDED;
+
+    }
+
+
+    if (
+        profile.status ===
+        USER_STATUS.RESTRICTED
+    ) {
+
+        return USER_STATUS.RESTRICTED;
+
+    }
+
+
+    return USER_STATUS.ACTIVE;
+
+}
+
+
+/* =====================================================
+   USER STATUS CHECK
+===================================================== */
+
+function getCurrentUserStatus() {
+
+    return (
+        SECURITY_STATE.userStatus ||
+        USER_STATUS.ACTIVE
+    );
+
+}
+
+
+function isCurrentUserBanned() {
+
+    return (
+        getCurrentUserStatus() ===
+        USER_STATUS.BANNED
+    );
+
+}
+
+
+function isCurrentUserRestricted() {
+
+    return (
+        getCurrentUserStatus() ===
+            USER_STATUS.RESTRICTED ||
+        getCurrentUserStatus() ===
+            USER_STATUS.SUSPENDED
+    );
+
+}
+
+
+/* =====================================================
+   APPLY SECURITY PROFILE
+===================================================== */
+
+function applySecurityProfile(
+    profile
+) {
+
+    const status =
+        normalizeUserStatus(
+            profile
+        );
+
+
+    SECURITY_STATE.userStatus =
+        status;
+
+
+    SECURITY_STATE.restricted =
+        (
+            status ===
+            USER_STATUS.RESTRICTED ||
+            status ===
+            USER_STATUS.SUSPENDED
+        );
+
+
+    SECURITY_STATE.isAdmin =
+        checkAdminIdentity(
+            firebaseUser
+        );
+
+
+    SECURITY_STATE.adminVerified =
+        SECURITY_STATE.isAdmin;
+
+
+    SECURITY_STATE.permissionsLoaded =
+        true;
+
+
+    if (
+        typeof AUTH_STATE !==
+        "undefined"
+    ) {
+
+        AUTH_STATE.banned =
+            status ===
+            USER_STATUS.BANNED;
+
+        AUTH_STATE.isAdmin =
+            SECURITY_STATE.isAdmin;
+
+        AUTH_STATE.adminVerified =
+            SECURITY_STATE.adminVerified;
+
+    }
+
+}
+
+
+/* =====================================================
+   USER CAN ACCESS PLATFORM
+===================================================== */
+
+function canUsePlatform() {
+
+    if (!firebaseUser) {
+
+        /*
+         * Guests can still view
+         * public portions of the site.
+         */
+
+        return true;
+
+    }
+
+
+    if (
+        isCurrentUserBanned()
+    ) {
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   USER ACTION PERMISSION
+===================================================== */
+
+function canPerformUserAction(
+    action
+) {
+
+    if (!firebaseUser) {
+
+        return false;
+
+    }
+
+
+    if (
+        isCurrentUserBanned()
+    ) {
+
+        return false;
+
+    }
+
+
+    /*
+     * Restricted/suspended users
+     * may still be able to perform
+     * limited actions.
+     *
+     * Detailed restrictions will be
+     * enforced in later transaction
+     * and moderation modules.
+     */
+
+    if (
+        isCurrentUserRestricted()
+    ) {
+
+        const blockedActions = [
+
+            "create_listing",
+
+            "purchase",
+
+            "sell",
+
+            "send_message",
+
+            "create_post",
+
+            "comment",
+
+            "trade"
+
+        ];
+
+
+        if (
+            blockedActions.includes(
+                action
+            )
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   REQUIRE USER ACTION
+===================================================== */
+
+function requireUserAction(
+    action,
+    message =
+        "This action is not available for your account."
+) {
+
+    if (!firebaseUser) {
+
+        toast(
+            "Please login first.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    if (
+        isCurrentUserBanned()
+    ) {
+
+        toast(
+            "Your account is currently banned.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    if (
+        !canPerformUserAction(
+            action
+        )
+    ) {
+
+        toast(
+            message,
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   SECURITY AUDIT DATA
+===================================================== */
+
+function createSecurityAuditData(
+    action,
+    extra = {}
+) {
+
+    return {
+
+        action:
+            String(
+                action || ""
+            ),
+
+        actorUid:
+            firebaseUser?.uid ||
+            "",
+
+        actorEmail:
+            firebaseUser?.email ||
+            "",
+
+        actorIsAdmin:
+            isAdmin(),
+
+        createdAt:
+            firebase.firestore
+                .FieldValue
+                .serverTimestamp(),
+
+        ...extra
+
+    };
+
+}
+
+
+/* =====================================================
+   ADMIN AUDIT LOG
+===================================================== */
+
+async function createAdminAuditLog(
+    action,
+    extra = {}
+) {
+
+    if (
+        !requireAdminAccess(
+            action
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                "adminAuditLogs"
+            )
+            .add(
+                createSecurityAuditData(
+                    action,
+                    extra
+                )
+            );
+
+
+        return true;
+
+    } catch (error) {
+
+        /*
+         * Audit logging must never
+         * crash the entire application.
+         */
+
+        console.error(
+            "Admin audit log error:",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   BAN USER
+===================================================== */
+
+/*
+ * IMPORTANT:
+ *
+ * This frontend function prepares the operation.
+ *
+ * Final authorization must be enforced
+ * by Firestore Security Rules / backend.
+ */
+
+async function banUser(
+    userId,
+    reason = ""
+) {
+
+    if (
+        !requireAdminAccess(
+            "ban_user"
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (!userId) {
+
+        toast(
+            "Invalid user.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    /*
+     * Never allow the admin account
+     * to be banned through the normal
+     * user-ban interface.
+     */
+
+    if (
+        userId ===
+        firebaseUser.uid
+    ) {
+
+        toast(
+            "The administrator account cannot be banned from this interface.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        const userRef =
+            db
+                .collection(
+                    "users"
+                )
+                .doc(userId);
+
+
+        await userRef.set(
+
+            {
+
+                status:
+                    USER_STATUS.BANNED,
+
+                banned:
+                    true,
+
+                bannedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp(),
+
+                bannedBy:
+                    firebaseUser.uid,
+
+                banReason:
+                    String(
+                        reason || ""
+                    )
+
+            },
+
+            {
+                merge:
+                    true
+            }
+
+        );
+
+
+        await createAdminAuditLog(
+
+            "ban_user",
+
+            {
+
+                targetUserId:
+                    userId,
+
+                reason:
+                    String(
+                        reason || ""
+                    )
+
+            }
+
+        );
+
+
+        toast(
+            "User banned successfully.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Ban user error:",
+            error
+        );
+
+
+        toast(
+            "Unable to ban user.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   UNBAN USER
+===================================================== */
+
+async function unbanUser(
+    userId
+) {
+
+    if (
+        !requireAdminAccess(
+            "unban_user"
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (!userId) {
+
+        toast(
+            "Invalid user.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        const userRef =
+            db
+                .collection(
+                    "users"
+                )
+                .doc(userId);
+
+
+        await userRef.set(
+
+            {
+
+                status:
+                    USER_STATUS.ACTIVE,
+
+                banned:
+                    false,
+
+                unbannedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp(),
+
+                unbannedBy:
+                    firebaseUser.uid
+
+            },
+
+            {
+                merge:
+                    true
+            }
+
+        );
+
+
+        await createAdminAuditLog(
+
+            "unban_user",
+
+            {
+
+                targetUserId:
+                    userId
+
+            }
+
+        );
+
+
+        toast(
+            "User unbanned successfully.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Unban user error:",
+            error
+        );
+
+
+        toast(
+            "Unable to unban user.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   RESTRICT USER
+===================================================== */
+
+async function restrictUser(
+    userId,
+    reason = ""
+) {
+
+    if (
+        !requireAdminAccess(
+            "restrict_user"
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (!userId) {
+
+        return false;
+
+    }
+
+
+    if (
+        userId ===
+        firebaseUser.uid
+    ) {
+
+        toast(
+            "The administrator account cannot be restricted here.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                "users"
+            )
+            .doc(userId)
+            .set(
+
+                {
+
+                    status:
+                        USER_STATUS.RESTRICTED,
+
+                    restricted:
+                        true,
+
+                    restrictedAt:
+                        firebase.firestore
+                            .FieldValue
+                            .serverTimestamp(),
+
+                    restrictedBy:
+                        firebaseUser.uid,
+
+                    restrictionReason:
+                        String(
+                            reason || ""
+                        )
+
+                },
+
+                {
+                    merge:
+                        true
+                }
+
+            );
+
+
+        await createAdminAuditLog(
+
+            "restrict_user",
+
+            {
+
+                targetUserId:
+                    userId,
+
+                reason:
+                    String(
+                        reason || ""
+                    )
+
+            }
+
+        );
+
+
+        toast(
+            "User restricted.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Restrict user error:",
+            error
+        );
+
+
+        toast(
+            "Unable to restrict user.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   RESTORE USER
+===================================================== */
+
+async function restoreUser(
+    userId
+) {
+
+    if (
+        !requireAdminAccess(
+            "restore_user"
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (!userId) {
+
+        return false;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                "users"
+            )
+            .doc(userId)
+            .set(
+
+                {
+
+                    status:
+                        USER_STATUS.ACTIVE,
+
+                    banned:
+                        false,
+
+                    restricted:
+                        false,
+
+                    restoredAt:
+                        firebase.firestore
+                            .FieldValue
+                            .serverTimestamp(),
+
+                    restoredBy:
+                        firebaseUser.uid
+
+                },
+
+                {
+                    merge:
+                        true
+                }
+
+            );
+
+
+        await createAdminAuditLog(
+
+            "restore_user",
+
+            {
+
+                targetUserId:
+                    userId
+
+            }
+
+        );
+
+
+        toast(
+            "User access restored.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Restore user error:",
+            error
+        );
+
+
+        toast(
+            "Unable to restore user.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   REPORT CREATION
+===================================================== */
+
+async function createUserReport({
+
+    reportedUserId = "",
+
+    category = "other",
+
+    description = "",
+
+    evidence = null,
+
+    source = "profile"
+
+} = {}) {
+
+
+    if (!firebaseUser) {
+
+        toast(
+            "Please login first.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    if (
+        isCurrentUserBanned()
+    ) {
+
+        toast(
+            "Banned accounts cannot submit reports.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    if (
+        !reportedUserId
+    ) {
+
+        toast(
+            "Please select a user to report.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    if (
+        reportedUserId ===
+        firebaseUser.uid
+    ) {
+
+        toast(
+            "You cannot report your own account.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    if (
+        !description.trim()
+    ) {
+
+        toast(
+            "Please provide a reason for the report.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    try {
+
+        const reportRef =
+            await db
+                .collection(
+                    "reports"
+                )
+                .add({
+
+                    reporterId:
+                        firebaseUser.uid,
+
+                    reporterName:
+                        firebaseUser.displayName ||
+                        "User",
+
+                    reportedUserId:
+                        reportedUserId,
+
+                    category:
+                        String(
+                            category
+                        ),
+
+                    description:
+                        String(
+                            description
+                        ).trim(),
+
+                    evidence:
+                        evidence || null,
+
+                    source:
+                        String(
+                            source
+                        ),
+
+                    status:
+                        REPORT_STATUS.OPEN,
+
+                    createdAt:
+                        firebase.firestore
+                            .FieldValue
+                            .serverTimestamp(),
+
+                    reviewedAt:
+                        null,
+
+                    reviewedBy:
+                        null,
+
+                    resolution:
+                        ""
+
+                });
+
+
+        toast(
+            "Report submitted successfully.",
+            "success"
+        );
+
+
+        return reportRef.id;
+
+    } catch (error) {
+
+        console.error(
+            "Create report error:",
+            error
+        );
+
+
+        toast(
+            "Unable to submit report.",
+            "error"
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   ADMIN REPORT UPDATE
+===================================================== */
+
+async function updateReportStatus(
+    reportId,
+    status,
+    resolution = ""
+) {
+
+    if (
+        !requireAdminAccess(
+            "update_report"
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (!reportId) {
+
+        return false;
+
+    }
+
+
+    const allowedStatuses = [
+
+        REPORT_STATUS.OPEN,
+
+        REPORT_STATUS.UNDER_REVIEW,
+
+        REPORT_STATUS.RESOLVED,
+
+        REPORT_STATUS.DISMISSED
+
+    ];
+
+
+    if (
+        !allowedStatuses.includes(
+            status
+        )
+    ) {
+
+        toast(
+            "Invalid report status.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                "reports"
+            )
+            .doc(reportId)
+            .set(
+
+                {
+
+                    status:
+                        status,
+
+                    reviewedAt:
+                        firebase.firestore
+                            .FieldValue
+                            .serverTimestamp(),
+
+                    reviewedBy:
+                        firebaseUser.uid,
+
+                    resolution:
+                        String(
+                            resolution || ""
+                        )
+
+                },
+
+                {
+                    merge:
+                        true
+                }
+
+            );
+
+
+        await createAdminAuditLog(
+
+            "update_report",
+
+            {
+
+                reportId:
+                    reportId,
+
+                status:
+                    status
+
+            }
+
+        );
+
+
+        toast(
+            "Report updated.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Update report error:",
+            error
+        );
+
+
+        toast(
+            "Unable to update report.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   ADMIN REPORT FETCH
+===================================================== */
+
+async function getOpenReports() {
+
+    if (
+        !requireAdminAccess(
+            "view_reports"
+        )
+    ) {
+
+        return [];
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "reports"
+                )
+                .where(
+                    "status",
+                    "in",
+                    [
+
+                        REPORT_STATUS.OPEN,
+
+                        REPORT_STATUS.UNDER_REVIEW
+
+                    ]
+                )
+                .orderBy(
+                    "createdAt",
+                    "desc"
+                )
+                .limit(
+                    100
+                )
+                .get();
+
+
+        return snapshot.docs.map(
+            doc => ({
+
+                id:
+                    doc.id,
+
+                ...doc.data()
+
+            })
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Load reports error:",
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+/* =====================================================
+   ADMIN USER LOOKUP
+===================================================== */
+
+async function getUserForAdmin(
+    userId
+) {
+
+    if (
+        !requireAdminAccess(
+            "view_user"
+        )
+    ) {
+
+        return null;
+
+    }
+
+
+    if (!userId) {
+
+        return null;
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "users"
+                )
+                .doc(userId)
+                .get();
+
+
+        if (
+            !snapshot.exists
+        ) {
+
+            return null;
+
+        }
+
+
+        return {
+
+            id:
+                snapshot.id,
+
+            ...snapshot.data()
+
+        };
+
+    } catch (error) {
+
+        console.error(
+            "Admin user lookup error:",
+            error
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   ADMIN USERS LIST
+===================================================== */
+
+async function getUsersForAdmin(
+    limitCount = 100
+) {
+
+    if (
+        !requireAdminAccess(
+            "view_users"
+        )
+    ) {
+
+        return [];
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "users"
+                )
+                .orderBy(
+                    "createdAt",
+                    "desc"
+                )
+                .limit(
+                    Number(
+                        limitCount
+                    ) || 100
+                )
+                .get();
+
+
+        return snapshot.docs.map(
+            doc => ({
+
+                id:
+                    doc.id,
+
+                ...doc.data()
+
+            })
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Admin users load error:",
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+/* =====================================================
+   ADMIN PAGE PROTECTION
+===================================================== */
+
+function protectAdminPage() {
+
+    const adminPage =
+        document.getElementById(
+            "admin"
+        );
+
+
+    if (!adminPage) {
+
+        return;
+
+    }
+
+
+    const authorized =
+        verifyAdminIdentity();
+
+
+    if (!authorized) {
+
+        /*
+         * Do not remove the page from
+         * the DOM.
+         *
+         * Simply prevent normal users
+         * from using the admin controls.
+         */
+
+        adminPage.dataset.access =
+            "denied";
+
+
+        adminPage
+            .querySelectorAll(
+                "button,input,select,textarea"
+            )
+            .forEach(
+                element => {
+
+                    element.disabled =
+                        true;
+
+                }
+            );
+
+
+        return;
+
+    }
+
+
+    adminPage.dataset.access =
+        "granted";
+
+
+    adminPage
+        .querySelectorAll(
+            "button,input,select,textarea"
+        )
+        .forEach(
+            element => {
+
+                element.disabled =
+                    false;
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   ADMIN NAVIGATION PROTECTION
+===================================================== */
+
+function openAdminPage(
+    button = null
+) {
+
+    if (
+        !requireAdminAccess(
+            "open_admin"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        typeof showPage ===
+        "function"
+    ) {
+
+        showPage(
+            "admin",
+            button
+        );
+
+    }
+
+
+    protectAdminPage();
+
+}
+
+
+/* =====================================================
+   SECURITY UI UPDATE
+===================================================== */
+
+function updateSecurityUI() {
+
+    const adminButtons =
+        document.querySelectorAll(
+            "[data-admin-only]"
+        );
+
+
+    adminButtons.forEach(
+        element => {
+
+            const allowed =
+                isAdmin();
+
+
+            element.style.display =
+                allowed
+                    ? ""
+                    : "none";
+
+        }
+    );
+
+
+    const adminElements =
+        document.querySelectorAll(
+            ".admin-only"
+        );
+
+
+    adminElements.forEach(
+        element => {
+
+            const allowed =
+                isAdmin();
+
+
+            element.style.display =
+                allowed
+                    ? ""
+                    : "none";
+
+        }
+    );
+
+
+    protectAdminPage();
+
+}
+
+
+/* =====================================================
+   SECURITY INITIALIZATION
+===================================================== */
+
+function initializeSecurityState(
+    profile = null
+) {
+
+    SECURITY_STATE.initialized =
+        true;
+
+
+    SECURITY_STATE.authenticated =
+        !!firebaseUser;
+
+
+    SECURITY_STATE.isAdmin =
+        checkAdminIdentity(
+            firebaseUser
+        );
+
+
+    SECURITY_STATE.adminVerified =
+        SECURITY_STATE.isAdmin;
+
+
+    applySecurityProfile(
+        profile
+    );
+
+
+    updateSecurityUI();
+
+}
+
+
+/* =====================================================
+   SECURITY REFRESH
+===================================================== */
+
+async function refreshSecurityState() {
+
+    if (!firebaseUser) {
+
+        SECURITY_STATE = {
+
+            initialized:
+                true,
+
+            authenticated:
+                false,
+
+            userStatus:
+                USER_STATUS.ACTIVE,
+
+            isAdmin:
+                false,
+
+            adminVerified:
+                false,
+
+            permissionsLoaded:
+                false,
+
+            restricted:
+                false
+
+        };
+
+
+        updateSecurityUI();
+
+        return;
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "users"
+                )
+                .doc(
+                    firebaseUser.uid
+                )
+                .get();
+
+
+        const profile =
+            snapshot.exists
+                ? snapshot.data()
+                : null;
+
+
+        initializeSecurityState(
+            profile
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Security state refresh error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CRYPTO VALIDATION
+===================================================== */
+
+function isSupportedCrypto(
+    crypto
+) {
+
+    return MEMECOINSITE_ALLOWED_CRYPTO
+        .includes(
+            String(
+                crypto || ""
+            )
+                .trim()
+                .toUpperCase()
+        );
+
+}
+
+
+function normalizeCrypto(
+    crypto
+) {
+
+    const value =
+        String(
+            crypto || ""
+        )
+            .trim()
+            .toUpperCase();
+
+
+    return isSupportedCrypto(
+        value
+    )
+        ? value
+        : null;
+
+}
+
+
+/* =====================================================
+   TRANSACTION STATUS VALIDATION
+===================================================== */
+
+function isValidTransactionStatus(
+    status
+) {
+
+    return Object
+        .values(
+            TRANSACTION_STATUS
+        )
+        .includes(
+            status
+        );
+
+}
+
+
+/* =====================================================
+   REPORT CATEGORY NORMALIZATION
+===================================================== */
+
+const REPORT_CATEGORIES = [
+
+    "scam",
+
+    "fraud",
+
+    "harassment",
+
+    "impersonation",
+
+    "spam",
+
+    "abuse",
+
+    "suspicious_transaction",
+
+    "marketplace_issue",
+
+    "chat_issue",
+
+    "other"
+
+];
+
+
+function normalizeReportCategory(
+    category
+) {
+
+    const value =
+        String(
+            category || "other"
+        )
+            .trim()
+            .toLowerCase();
+
+
+    return REPORT_CATEGORIES.includes(
+        value
+    )
+        ? value
+        : "other";
+
+}
+
+
+/* =====================================================
+   SECURITY EVENT HELPER
+===================================================== */
+
+function securityEvent(
+    eventName,
+    data = {}
+) {
+
+    console.info(
+
+        "[MemeCoinSite Security]",
+
+        eventName,
+
+        {
+
+            uid:
+                firebaseUser?.uid ||
+                null,
+
+            email:
+                firebaseUser?.email ||
+                null,
+
+            isAdmin:
+                isAdmin(),
+
+            ...data
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   SECURITY READY
+===================================================== */
+
+async function finalizeSecurityInitialization() {
+
+    try {
+
+        await refreshSecurityState();
+
+
+        securityEvent(
+            "security_initialized"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Security initialization error:",
+            error
+        );
+
+    }
+
+}
 
 /* =====================================================
    SUPPORTED LANGUAGES
@@ -4999,19 +9566,67 @@ function renderMarketplace(){
 
 
     const filtered =
-        coins.filter(coin => {
+    coins.filter(coin => {
 
-            if(
-                coin.ownerId ===
-                CURRENT_USER.id
-            ){
+        /*
+         * Never show a coin owned by the
+         * currently signed-in user.
+         */
 
-                return false;
+        const isOwnCoin =
+            coin.ownerId ===
+            CURRENT_USER.id;
 
-            }
+
+        if(
+            isOwnCoin
+        ){
+
+            return false;
+
+        }
 
 
-            const matchesSearch =
+        /*
+         * A secondary marketplace coin must
+         * have an active listing.
+         */
+
+        const isSecondaryListing =
+            typeof isCoinListed ===
+            "function"
+                ? isCoinListed(coin)
+                : !!coin.listing;
+
+
+        /*
+         * Admin/primary coins without an owner
+         * remain available as primary inventory.
+         */
+
+        const isPrimaryAdminSale =
+            !coin.ownerId &&
+            !isSecondaryListing;
+
+
+        /*
+         * Hide coins that are neither:
+         *
+         * 1. actively listed by a user
+         * 2. available as a primary admin asset
+         */
+
+        if(
+            !isSecondaryListing &&
+            !isPrimaryAdminSale
+        ){
+
+            return false;
+
+        }
+
+
+        const matchesSearch =
 
                 coin.name
                     .toLowerCase()
@@ -5286,19 +9901,6 @@ function openPurchase(coinId){
 
 </div>
 
-
-<div class="notice">
-
-    🔐 Demo purchase only.
-
-    In the production version,
-    blockchain payment verification
-    must happen before ownership
-    changes.
-
-</div>
-
-
 <button
     class="primary-btn"
     style="
@@ -5326,103 +9928,1134 @@ function openPurchase(coinId){
 
 
 /* =====================================================
-   SIMULATED PURCHASE
+   TRANSACTION SYSTEM
 ===================================================== */
 
-async function purchaseCoin(){
-    
-    const coin =
-        getCoin(selectedCoinId);
+const TRANSACTION_COLLECTION =
+    "transactions";
 
 
-    if(!coin){
-        return;
-    }
+/* =====================================================
+   TRANSACTION ID
+===================================================== */
 
+function generateTransactionId(){
 
-    const price =
-        getMarketPrice(coin);
+    const random =
+        Math.random()
+            .toString(36)
+            .substring(2, 10)
+            .toUpperCase();
 
-
-    const total =
-        buyerTotal(price);
-
-
-    if(walletBalance < total){
-
-        toast(
-            "Insufficient USDT balance.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const previousOwner =
-        coin.ownerName ||
-        (
-            coin.listing
-            ?
-            coin.listing.sellerName
-            :
-            "MemeCoinSite Admin"
-        );
-
-
-    walletBalance -= total;
-
-
-    coin.ownerId =
-        CURRENT_USER.id;
-
-
-    coin.ownerName =
-        CURRENT_USER.name;
-
-
-    coin.listing =
-        null;
-
-
-    coin.history.push({
-
-        owner:
-            CURRENT_USER.name,
-
-        action:
-            "Purchased coin",
-
-        design:
-            "Inherited previous owner's design",
-
-        previousOwner:
-            previousOwner,
-
-        date:
-            new Date()
-            .toISOString()
-            .slice(0,10)
-
-    });
-
-
-    closeModal(
-        "purchaseModal"
-    );
-
-
-    renderAll();
-
-
-    toast(
-        `${coin.name} is now yours.`,
-        "success"
+    return (
+        "TX-" +
+        Date.now() +
+        "-" +
+        random
     );
 
 }
 
+
+/* =====================================================
+   PLATFORM FEE
+===================================================== */
+
+const PLATFORM_FEE_RATE =
+    0.01;
+
+
+function calculatePlatformFee(
+    amount
+){
+
+    const value =
+        Number(amount);
+
+
+    if(
+        !Number.isFinite(value) ||
+        value <= 0
+    ){
+
+        return 0;
+
+    }
+
+
+    return (
+        value *
+        PLATFORM_FEE_RATE
+    );
+
+}
+
+
+function calculateBuyerTotal(
+    amount
+){
+
+    const value =
+        Number(amount);
+
+
+    if(
+        !Number.isFinite(value) ||
+        value <= 0
+    ){
+
+        return 0;
+
+    }
+
+
+    return (
+        value +
+        calculatePlatformFee(
+            value
+        )
+    );
+
+}
+
+
+/* =====================================================
+   CREATE TRANSACTION OBJECT
+===================================================== */
+
+function buildTransactionData(
+    coin,
+    price
+){
+
+    const buyerId =
+        getCurrentUserId();
+
+
+    const buyerName =
+        getCurrentUserName();
+
+
+    const buyerEmail =
+        getCurrentUserEmail();
+
+
+    const sellerId =
+        coin.listing?.sellerId ||
+        coin.ownerId ||
+        "";
+
+
+    const sellerName =
+        coin.listing?.sellerName ||
+        coin.ownerName ||
+        "MemeCoinSite Admin";
+
+
+    const amount =
+        Number(price);
+
+
+    const platformFee =
+        calculatePlatformFee(
+            amount
+        );
+
+
+    const buyerTotal =
+        calculateBuyerTotal(
+            amount
+        );
+
+
+    return {
+
+        transactionId:
+            generateTransactionId(),
+
+        type:
+            coin.listing
+                ? "secondary_market"
+                : "primary_sale",
+
+        coinId:
+            coin.id,
+
+        coinName:
+            coin.name,
+
+        coinSymbol:
+            coin.symbol,
+
+        tier:
+            coin.tier,
+
+        buyerId:
+            buyerId,
+
+        buyerName:
+            buyerName,
+
+        buyerEmail:
+            buyerEmail,
+
+        sellerId:
+            sellerId,
+
+        sellerName:
+            sellerName,
+
+        amount:
+            amount,
+
+        platformFee:
+            platformFee,
+
+        buyerTotal:
+            buyerTotal,
+
+        currency:
+            "USDT",
+
+        paymentCurrency:
+            null,
+
+        paymentStatus:
+            "not_started",
+
+        status:
+            TRANSACTION_STATUS.PENDING,
+
+        listingId:
+            coin.listing?.id ||
+            null,
+
+        createdAt:
+            serverTimestamp(),
+
+        updatedAt:
+            serverTimestamp(),
+
+        paymentSubmittedAt:
+            null,
+
+        paymentVerifiedAt:
+            null,
+
+        approvedAt:
+            null,
+
+        completedAt:
+            null,
+
+        rejectedAt:
+            null,
+
+        cancelledAt:
+            null,
+
+        paymentReference:
+            "",
+
+        paymentProof:
+            null,
+
+        adminNote:
+            "",
+
+        buyerNote:
+            "",
+
+        sellerNote:
+            ""
+
+    };
+
+}
+
+
+/* =====================================================
+   CREATE TRANSACTION
+===================================================== */
+
+async function createTransactionForCoin(
+    coinId
+){
+
+    if(
+        !requireUserAction(
+            "purchase",
+            "Your account cannot purchase coins."
+        )
+    ){
+
+        return null;
+
+    }
+
+
+    const coin =
+        getCoin(
+            coinId
+        );
+
+
+    if(!coin){
+
+        toast(
+            "Coin not found.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    const buyerId =
+        getCurrentUserId();
+
+
+    /*
+     * Prevent buying your own coin.
+     */
+
+    if(
+        coin.ownerId ===
+        buyerId
+    ){
+
+        toast(
+            "You cannot purchase your own coin.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    /*
+     * Determine the current sale price.
+     */
+
+    let price = 0;
+
+
+    if(
+        coin.listing &&
+        isListingActive(coin)
+    ){
+
+        price =
+            Number(
+                coin.listing.price
+            );
+
+    } else {
+
+        price =
+            Number(
+                coin.adminPrice
+            );
+
+    }
+
+
+    if(
+        !Number.isFinite(price) ||
+        price <= 0
+    ){
+
+        toast(
+            "This coin does not have a valid price.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    /*
+     * For secondary marketplace purchases,
+     * require an active listing.
+     */
+
+    if(
+        coin.ownerId &&
+        !isListingActive(coin)
+    ){
+
+        toast(
+            "This coin is not currently listed for sale.",
+            "error"
+        );
+
+        return null;
+
+    }
+
+
+    /*
+     * Build transaction.
+     */
+
+    const transaction =
+        buildTransactionData(
+            coin,
+            price
+        );
+
+
+    try {
+
+        /*
+         * Create transaction in Firestore.
+         */
+
+        const transactionRef =
+            await db
+                .collection(
+                    TRANSACTION_COLLECTION
+                )
+                .add(
+                    transaction
+                );
+
+
+        /*
+         * Update local state only with
+         * transaction information.
+         *
+         * Ownership is NOT changed here.
+         */
+
+        toast(
+            "Purchase request created. Continue to payment.",
+            "success"
+        );
+
+
+        return {
+
+            id:
+                transactionRef.id,
+
+            ...transaction
+
+        };
+
+    } catch(error){
+
+        console.error(
+            "Create transaction error:",
+            error
+        );
+
+
+        toast(
+            "Unable to create purchase request.",
+            "error"
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   GET TRANSACTION
+===================================================== */
+
+async function getTransaction(
+    transactionId
+){
+
+    if(!transactionId){
+
+        return null;
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    TRANSACTION_COLLECTION
+                )
+                .doc(
+                    transactionId
+                )
+                .get();
+
+
+        if(
+            !snapshot.exists
+        ){
+
+            return null;
+
+        }
+
+
+        return {
+
+            id:
+                snapshot.id,
+
+            ...snapshot.data()
+
+        };
+
+    } catch(error){
+
+        console.error(
+            "Get transaction error:",
+            error
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   USER TRANSACTIONS
+===================================================== */
+
+async function getMyTransactions(){
+
+    const uid =
+        getCurrentUserId();
+
+
+    if(!uid){
+
+        return [];
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    TRANSACTION_COLLECTION
+                )
+                .where(
+                    "buyerId",
+                    "==",
+                    uid
+                )
+                .get();
+
+
+        const transactions =
+            snapshot.docs.map(
+                doc => ({
+
+                    id:
+                        doc.id,
+
+                    ...doc.data()
+
+                })
+            );
+
+
+        transactions.sort(
+            (
+                a,
+                b
+            ) => {
+
+                return (
+                    getFirestoreTimestampMillis(
+                        b.createdAt
+                    ) -
+                    getFirestoreTimestampMillis(
+                        a.createdAt
+                    )
+                );
+
+            }
+        );
+
+
+        return transactions;
+
+    } catch(error){
+
+        console.error(
+            "Load my transactions error:",
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+/* =====================================================
+   TRANSACTION STATUS UPDATE
+===================================================== */
+
+async function updateTransactionStatus(
+    transactionId,
+    status,
+    extra = {}
+){
+
+    if(!transactionId){
+
+        return false;
+
+    }
+
+
+    if(
+        !isValidTransactionStatus(
+            status
+        )
+    ){
+
+        console.error(
+            "Invalid transaction status:",
+            status
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                TRANSACTION_COLLECTION
+            )
+            .doc(
+                transactionId
+            )
+            .update({
+
+                status:
+                    status,
+
+                updatedAt:
+                    serverTimestamp(),
+
+                ...extra
+
+            });
+
+
+        return true;
+
+    } catch(error){
+
+        console.error(
+            "Transaction status update error:",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   SELECT PAYMENT CURRENCY
+===================================================== */
+
+async function selectTransactionPaymentCurrency(
+    transactionId,
+    crypto
+){
+
+    if(
+        !requireUserAction(
+            "purchase",
+            "Your account cannot make this purchase."
+        )
+    ){
+
+        return false;
+
+    }
+
+
+    const paymentCurrency =
+        normalizeCrypto(
+            crypto
+        );
+
+
+    if(!paymentCurrency){
+
+        toast(
+            "Only BTC, ETH, SOL and USDT are supported.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    const transaction =
+        await getTransaction(
+            transactionId
+        );
+
+
+    if(!transaction){
+
+        toast(
+            "Transaction not found.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    if(
+        transaction.buyerId !==
+        getCurrentUserId()
+    ){
+
+        toast(
+            "You cannot modify this transaction.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    /*
+     * Payment currency can only be selected
+     * before payment submission.
+     */
+
+    const lockedStatuses = [
+
+        TRANSACTION_STATUS.PAYMENT_SUBMITTED,
+
+        TRANSACTION_STATUS.PAYMENT_VERIFIED,
+
+        TRANSACTION_STATUS.APPROVED,
+
+        TRANSACTION_STATUS.COMPLETED
+
+    ];
+
+
+    if(
+        lockedStatuses.includes(
+            transaction.status
+        )
+    ){
+
+        toast(
+            "Payment currency can no longer be changed.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                TRANSACTION_COLLECTION
+            )
+            .doc(
+                transactionId
+            )
+            .update({
+
+                paymentCurrency:
+                    paymentCurrency,
+
+                paymentStatus:
+                    "payment_pending",
+
+                status:
+                    TRANSACTION_STATUS.PAYMENT_PENDING,
+
+                updatedAt:
+                    serverTimestamp()
+
+            });
+
+
+        toast(
+            `${paymentCurrency} selected for payment.`,
+            "success"
+        );
+
+
+        return true;
+
+    } catch(error){
+
+        console.error(
+            "Select payment currency error:",
+            error
+        );
+
+
+        toast(
+            "Unable to select payment currency.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   PAYMENT SUBMISSION
+===================================================== */
+
+async function submitTransactionPayment({
+
+    transactionId,
+
+    paymentReference = "",
+
+    paymentProof = null,
+
+    buyerNote = ""
+
+} = {}){
+
+
+    if(
+        !requireUserAction(
+            "purchase",
+            "Your account cannot submit payment."
+        )
+    ){
+
+        return false;
+
+    }
+
+
+    const transaction =
+        await getTransaction(
+            transactionId
+        );
+
+
+    if(!transaction){
+
+        toast(
+            "Transaction not found.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    if(
+        transaction.buyerId !==
+        getCurrentUserId()
+    ){
+
+        toast(
+            "You cannot submit payment for this transaction.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    const paymentCurrency =
+        normalizeCrypto(
+            transaction.paymentCurrency
+        );
+
+
+    if(!paymentCurrency){
+
+        toast(
+            "Select BTC, ETH, SOL or USDT first.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    if(
+        !paymentReference.trim()
+    ){
+
+        toast(
+            "Enter the payment transaction hash/reference.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    /*
+     * Do not mark payment as verified here.
+     *
+     * The admin must verify it.
+     */
+
+    try {
+
+        await db
+            .collection(
+                TRANSACTION_COLLECTION
+            )
+            .doc(
+                transactionId
+            )
+            .update({
+
+                paymentReference:
+                    paymentReference
+                        .trim(),
+
+                paymentProof:
+                    paymentProof ||
+                    null,
+
+                buyerNote:
+                    String(
+                        buyerNote ||
+                        ""
+                    ).trim(),
+
+                paymentStatus:
+                    "submitted",
+
+                status:
+                    TRANSACTION_STATUS.PAYMENT_SUBMITTED,
+
+                paymentSubmittedAt:
+                    serverTimestamp(),
+
+                updatedAt:
+                    serverTimestamp()
+
+            });
+
+
+        toast(
+            "Payment submitted for admin verification.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch(error){
+
+        console.error(
+            "Submit payment error:",
+            error
+        );
+
+
+        toast(
+            "Unable to submit payment.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   CANCEL TRANSACTION
+===================================================== */
+
+async function cancelTransaction(
+    transactionId
+){
+
+    if(!firebaseUser){
+
+        toast(
+            "Please login first.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    const transaction =
+        await getTransaction(
+            transactionId
+        );
+
+
+    if(!transaction){
+
+        toast(
+            "Transaction not found.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    const uid =
+        getCurrentUserId();
+
+
+    const canCancel =
+        transaction.buyerId === uid ||
+        transaction.sellerId === uid ||
+        isAdmin();
+
+
+    if(!canCancel){
+
+        toast(
+            "You cannot cancel this transaction.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    const blockedStatuses = [
+
+        TRANSACTION_STATUS.PAYMENT_VERIFIED,
+
+        TRANSACTION_STATUS.APPROVED,
+
+        TRANSACTION_STATUS.COMPLETED
+
+    ];
+
+
+    if(
+        blockedStatuses.includes(
+            transaction.status
+        )
+    ){
+
+        toast(
+            "This transaction can no longer be cancelled.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        await db
+            .collection(
+                TRANSACTION_COLLECTION
+            )
+            .doc(
+                transactionId
+            )
+            .update({
+
+                status:
+                    TRANSACTION_STATUS.CANCELLED,
+
+                cancelledAt:
+                    serverTimestamp(),
+
+                cancelledBy:
+                    uid,
+
+                updatedAt:
+                    serverTimestamp()
+
+            });
+
+
+        toast(
+            "Transaction cancelled.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch(error){
+
+        console.error(
+            "Cancel transaction error:",
+            error
+        );
+
+
+        toast(
+            "Unable to cancel transaction.",
+            "error"
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   END TRANSACTION FOUNDATION
+===================================================== */
 
 /* =====================================================
    CUSTOMIZATION
@@ -5858,99 +11491,188 @@ function openSell(coinId){
 
 
 /* =====================================================
-   CREATE LISTING
+   CREATE PERSISTENT LISTING
 ===================================================== */
 
-function createListing(coinId){
+async function createListing(
+    coinId
+){
 
     const coin =
-        getCoin(coinId);
+        getCoin(
+            coinId
+        );
 
 
-    if(!coin){
+    if (!coin) {
+
+        toast(
+            "Coin not found.",
+            "error"
+        );
+
         return;
+
+    }
+
+
+    if (
+        !requireUserAction(
+            "create_listing",
+            "Your account cannot create listings."
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        coin.ownerId !==
+        getCurrentUserId()
+    ) {
+
+        toast(
+            "You can only sell coins you own.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const priceInput =
+        document
+            .getElementById(
+                "sellingPrice"
+            );
+
+
+    if (!priceInput) {
+
+        toast(
+            "Selling price field not found.",
+            "error"
+        );
+
+        return;
+
     }
 
 
     const price =
         Number(
-            document
-            .getElementById(
-                "sellingPrice"
-            )
-            .value
+            priceInput.value
         );
 
 
-    const tier =
-        TIER_RULES[coin.tier];
-
-
-    if(!Number.isFinite(price)){
-
-        toast(
-            "Enter a valid price.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    if(price < tier.min){
-
-        toast(
-            `Minimum price is ${money(tier.min)} USDT.`,
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    if(price > tier.max){
-
-        toast(
-            `Maximum price is ${money(tier.max)} USDT.`,
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    coin.listing = {
-
-        sellerId:
-            CURRENT_USER.id,
-
-        sellerName:
-            CURRENT_USER.name,
-
-        price:
+    const validation =
+        validateListingPrice(
+            coin,
             price
-
-    };
-
-
-    closeModal(
-        "customizeModal"
-    );
+        );
 
 
-    renderAll();
+    if (
+        !validation.valid
+    ) {
+
+        toast(
+            validation.message,
+            "error"
+        );
+
+        return;
+
+    }
 
 
-    toast(
-        `${coin.name} listed for ${money(price)} USDT.`,
-        "success"
-    );
+    /*
+     * Prevent duplicate active listings.
+     */
+
+    const existing =
+        await findMarketplaceListing(
+            coin.id
+        );
+
+
+    if (
+        existing &&
+        existing.data.sellerId !==
+            getCurrentUserId()
+    ) {
+
+        toast(
+            "This coin is already listed by another seller.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const listing =
+            await persistCoinListing(
+                coin.id,
+                validation.price
+            );
+
+
+        /*
+         * Update local state immediately.
+         */
+
+        applyListingToCoin(
+            coin.id,
+            listing
+        );
+
+
+        /*
+         * Close the existing modal.
+         */
+
+        closeModal(
+            "customizeModal"
+        );
+
+
+        /*
+         * Refresh UI.
+         */
+
+        renderAll();
+
+
+        toast(
+            `${coin.name} listed for ${money(validation.price)} USDT.`,
+            "success"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Create listing error:",
+            error
+        );
+
+
+        toast(
+            error.message ||
+            "Unable to create listing.",
+            "error"
+        );
+
+    }
 
 }
-
 
 /* =====================================================
    MY LISTINGS
@@ -6123,29 +11845,61 @@ listings.map(
 
 
 /* =====================================================
-   CANCEL LISTING
+   CANCEL PERSISTENT LISTING
 ===================================================== */
 
-function cancelListing(coinId){
+async function cancelListing(
+    coinId
+){
 
     const coin =
-        getCoin(coinId);
+        getCoin(
+            coinId
+        );
 
 
-    if(
-        !coin ||
-        !coin.listing
-    ){
+    if (!coin) {
+
+        toast(
+            "Coin not found.",
+            "error"
+        );
 
         return;
 
     }
 
 
-    if(
+    if (
+        !requireUserAction(
+            "cancel_listing",
+            "Your account cannot cancel listings."
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !coin.listing
+    ) {
+
+        toast(
+            "This coin is not currently listed.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
         coin.listing.sellerId !==
-        CURRENT_USER.id
-    ){
+        getCurrentUserId()
+    ) {
 
         toast(
             "You cannot cancel another user's listing.",
@@ -6157,17 +11911,151 @@ function cancelListing(coinId){
     }
 
 
-    coin.listing =
-        null;
+    try {
+
+        let listingResult =
+            null;
 
 
-    renderAll();
+        /*
+         * Find the actual Firestore listing.
+         */
+
+        if (
+            coin.listing.id
+        ) {
+
+            const ref =
+                db
+                    .collection(
+                        "marketplace"
+                    )
+                    .doc(
+                        coin.listing.id
+                    );
 
 
-    toast(
-        "Listing cancelled.",
-        "success"
-    );
+            const snap =
+                await ref.get();
+
+
+            if (
+                snap.exists
+            ) {
+
+                listingResult = {
+
+                    ref:
+                        ref,
+
+                    data:
+                        snap.data()
+
+                };
+
+            }
+
+        }
+
+
+        /*
+         * If the listing ID wasn't available,
+         * search by coin ID.
+         */
+
+        if (
+            !listingResult
+        ) {
+
+            listingResult =
+                await findMarketplaceListing(
+                    coin.id
+                );
+
+        }
+
+
+        if (
+            listingResult
+        ) {
+
+            /*
+             * Verify ownership of the listing
+             * before modifying it.
+             */
+
+            if (
+                listingResult.data.sellerId !==
+                getCurrentUserId()
+            ) {
+
+                toast(
+                    "You cannot cancel another user's listing.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * We mark the listing cancelled
+             * rather than deleting the record.
+             *
+             * This preserves marketplace history.
+             */
+
+            await listingResult.ref.update({
+
+                status:
+                    "cancelled",
+
+                cancelledAt:
+                    serverTimestamp(),
+
+                cancelledBy:
+                    getCurrentUserId(),
+
+                updatedAt:
+                    serverTimestamp()
+
+            });
+
+        }
+
+
+        /*
+         * Remove it from the active local state.
+         */
+
+        coin.listing =
+            null;
+
+
+        renderAll();
+
+
+        toast(
+            "Listing cancelled.",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Cancel listing error:",
+            error
+        );
+
+
+        toast(
+            "Unable to cancel listing.",
+            "error"
+        );
+
+    }
 
 }
 
@@ -7766,7 +13654,7 @@ function closeModal(id){
 
     if(modal){
 
-        modal.classList.remove(
+        modal.classList.remove(modal 5 am i right ?
             "show"
         );
 
