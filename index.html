@@ -4138,16 +4138,6 @@ function handleBannedAccount(
    SINGLE FIREBASE AUTH STATE LISTENER
 ===================================================== */
 
-/*
- * IMPORTANT:
- *
- * There is intentionally ONLY ONE
- * auth.onAuthStateChanged listener.
- *
- * The previous file contained duplicate
- * authentication listeners.
- */
-
 auth.onAuthStateChanged(
     async (user) => {
 
@@ -4156,7 +4146,7 @@ auth.onAuthStateChanged(
 
 
         /*
-         * Logged out.
+         * LOGGED OUT
          */
 
         if (!user) {
@@ -4176,14 +4166,8 @@ auth.onAuthStateChanged(
 
             }
 
-
             updateGoogleLoginUI();
 
-
-            /*
-             * Keep the existing rendering
-             * system working.
-             */
 
             if (
                 typeof renderAll ===
@@ -4194,14 +4178,13 @@ auth.onAuthStateChanged(
 
             }
 
-
             return;
 
         }
 
 
         /*
-         * Logged in.
+         * LOGGED IN
          */
 
         firebaseUser =
@@ -4210,7 +4193,6 @@ auth.onAuthStateChanged(
         currentUser =
             user;
 
-
         AUTH_STATE.signedIn =
             true;
 
@@ -4218,8 +4200,7 @@ auth.onAuthStateChanged(
         try {
 
             /*
-             * Load or create the
-             * user's Firestore profile.
+             * Load or create profile.
              */
 
             const profile =
@@ -4245,8 +4226,8 @@ auth.onAuthStateChanged(
             }
 
 
-                       /*
-             * Apply profile data.
+            /*
+             * Apply profile.
              */
 
             applyUserProfile(
@@ -4255,7 +4236,7 @@ auth.onAuthStateChanged(
 
 
             /*
-             * Initialize security and admin state.
+             * Initialize security.
              */
 
             initializeSecurityState(
@@ -4263,23 +4244,31 @@ auth.onAuthStateChanged(
             );
 
             await finalizeSecurityInitialization();
+
+
             /*
              * ADMIN / USER SITE ROUTING
              */
 
-            if (SECURITY_STATE.isAdmin) {
+            if (
+                SECURITY_STATE.isAdmin
+            ) {
 
-                showPage("admin");
+                showPage(
+                    "admin"
+                );
 
             } else {
 
-                showPage("home");
+                showPage(
+                    "home"
+                );
 
             }
 
 
             /*
-             * Refresh assets after authentication.
+             * Refresh assets.
              */
 
             if (
@@ -4306,18 +4295,11 @@ auth.onAuthStateChanged(
                 error
             );
 
-
             AUTH_STATE.profileLoaded =
                 false;
 
-
             updateGoogleLoginUI();
 
-
-            /*
-             * Do not destroy the existing UI
-             * when profile loading fails.
-             */
 
             if (
                 typeof renderAll ===
