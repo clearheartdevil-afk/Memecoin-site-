@@ -4360,38 +4360,30 @@ if (
 
 } catch (error) {
 
-            console.error(
-                "MemeCoinSite authentication/profile error:",
-                error
-            );
+    console.error(
+        "MemeCoinSite authentication/profile error:",
+        error
+    );
 
+    AUTH_STATE.profileLoaded =
+        false;
 
-            AUTH_STATE.profileLoaded =
-                false;
+    updateGoogleLoginUI();
 
+    if (
+        typeof renderAll ===
+        "function"
+    ) {
 
-            updateGoogleLoginUI();
-
-
-            /*
-             * Do not destroy the existing UI
-             * when profile loading fails.
-             */
-
-            if (
-                typeof renderAll ===
-                "function"
-            ) {
-
-                renderAll();
-
-            }
-
-        }
+        renderAll();
 
     }
-);
 
+}
+
+}
+
+);
 
 /* =====================================================
    FIRESTORE ASSET + MARKETPLACE DATA LAYER
