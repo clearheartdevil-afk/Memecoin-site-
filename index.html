@@ -1990,6 +1990,7 @@ footer{
 </section>
 
 
+
 <!-- =====================================================
      ADMIN
 ===================================================== -->
@@ -4323,67 +4324,6 @@ auth.onAuthStateChanged(
     }
 );
     
-/* ---------------------------------------------
-   ADMIN / USER SITE ROUTING
---------------------------------------------- */
-
-if (SECURITY_STATE.isAdmin) {
-
-    showPage("admin");
-
-} else {
-
-    showPage("home");
-
-}
-
-
-/*
- * Refresh assets after authentication.
- */
-
-if (
-    typeof loadAssetsFromFirestore ===
-    "function"
-) {
-
-    await loadAssetsFromFirestore();
-
-} else if (
-    typeof renderAll ===
-    "function"
-) {
-
-    renderAll();
-
-}
-
-} catch (error) {
-
-    console.error(
-        "MemeCoinSite authentication/profile error:",
-        error
-    );
-
-    AUTH_STATE.profileLoaded =
-        false;
-
-    updateGoogleLoginUI();
-
-    if (
-        typeof renderAll ===
-        "function"
-    ) {
-
-        renderAll();
-
-    }
-
-}
-
-}
-
-);
 
 /* =====================================================
    FIRESTORE ASSET + MARKETPLACE DATA LAYER
