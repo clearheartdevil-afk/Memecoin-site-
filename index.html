@@ -1399,10 +1399,11 @@ footer{
         </button>
 
         <button
-            class="nav-btn"
-            onclick="showPage('admin',this)">
-            Admin
-        </button>
+    class="nav-btn admin-only"
+    data-admin-only
+    onclick="openAdminPage(this)">
+    Admin
+</button>
 
     </nav>
 
@@ -2176,6 +2177,9 @@ footer{
 </div>
 
 ```javascript
+
+  </script>  
+    
 /* =====================================================
    ADMIN TRANSACTION CENTER
 ===================================================== */
