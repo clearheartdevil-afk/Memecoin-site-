@@ -14664,10 +14664,33 @@ users
 
 
 /* =====================================================
-   ADMIN CREATE
+   ADMIN CREATE COIN — FIRESTORE
 ===================================================== */
 
-function adminCreateCoin(){
+async function adminCreateCoin(){
+
+    /* -------------------------------------------------
+       ADMIN SECURITY CHECK
+    ------------------------------------------------- */
+
+    if(
+        !firebaseUser ||
+        !checkAdminIdentity(firebaseUser)
+    ){
+
+        toast(
+            "Admin access required.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /* -------------------------------------------------
+       READ FORM
+    ------------------------------------------------- */
 
     const name =
         document
@@ -14734,6 +14757,10 @@ function adminCreateCoin(){
         .value;
 
 
+    /* -------------------------------------------------
+       VALIDATION
+    ------------------------------------------------- */
+
     if(
         !name ||
         !symbol ||
@@ -14752,6 +14779,18 @@ function adminCreateCoin(){
 
     const tierRule =
         TIER_RULES[tier];
+
+
+    if(!tierRule){
+
+        toast(
+            "Invalid coin tier selected.",
+            "error"
+        );
+
+        return;
+
+    }
 
 
     if(
@@ -14777,99 +14816,245 @@ function adminCreateCoin(){
     }
 
 
-    const newCoin = {
+    /* -------------------------------------------------
+       GENERATE UNIQUE COIN ID
+    ------------------------------------------------- */
 
-        id:
-            "coin_" +
-            Date.now(),
+    const coinID =
+        "MC-" +
+        Math.random()
+            .toString(36)
+            .substring(2,10)
+            .toUpperCase();
 
-        name,
 
-        symbol,
+    /* -------------------------------------------------
+       FIRESTORE ASSET DATA
+    ------------------------------------------------- */
 
-        emoji,
+    const assetData = {
 
-        color,
+        coinID:
 
-        tier,
+            coinID,
 
-        description,
 
-        adminCreated:true,
+        name:
 
-        ownerId:null,
+            name,
 
-        ownerName:null,
 
-        listing:null,
+        symbol:
 
-        adminPrice:price,
+            symbol,
 
-        history:[
 
-        {
+        description:
 
-            owner:
-                "MemeCoinSite Admin",
+            description,
 
-            action:
-                "Created coin",
 
-            design:
-                `Original ${name} design`,
+        tier:
 
-            date:
-                new Date()
-                .toISOString()
-                .slice(0,10)
+            tier,
 
-        }
 
-        ]
+        primaryPrice:
+
+            price,
+
+
+        adminPrice:
+
+            price,
+
+
+        ownerId:
+
+            "",
+
+
+        ownerName:
+
+            "",
+
+
+        ownerEmail:
+
+            "",
+
+
+        emoji:
+
+            emoji,
+
+
+        color:
+
+            color || "#8b5cf6",
+
+
+        adminCreated:
+
+            true,
+
+
+        createdBy:
+
+            firebaseUser.uid,
+
+
+        createdAt:
+
+            firebase.firestore
+                .FieldValue
+                .serverTimestamp(),
+
+
+        updatedAt:
+
+            firebase.firestore
+                .FieldValue
+                .serverTimestamp()
 
     };
 
 
-    coins.push(
-        newCoin
-    );
+    /* -------------------------------------------------
+       SAVE ASSET
+    ------------------------------------------------- */
+
+    try{
+
+        await db
+            .collection(
+                "assets"
+            )
+            .doc(
+                coinID
+            )
+            .set(
+                assetData
+            );
 
 
-    document.getElementById(
-        "adminCoinName"
-    ).value = "";
+        /* ---------------------------------------------
+           SAVE INITIAL OWNERSHIP HISTORY
+        --------------------------------------------- */
+
+        await db
+            .collection(
+                "ownershipHistory"
+            )
+            .add({
+
+                coinId:
+
+                    coinID,
 
 
-    document.getElementById(
-        "adminCoinSymbol"
-    ).value = "";
+                owner:
+
+                    "MemeCoinSite Admin",
 
 
-    document.getElementById(
-        "adminCoinPrice"
-    ).value = "";
+                action:
+
+                    "Created coin",
 
 
-    document.getElementById(
-        "adminCoinDescription"
-    ).value = "";
+                design:
+
+                    `Original ${name} design`,
 
 
-    document.getElementById(
-        "adminCoinEmoji"
-    ).value = "🪙";
+                date:
+
+                    new Date()
+                    .toISOString()
+                    .slice(
+                        0,
+                        10
+                    ),
 
 
-    renderAll();
+                createdAt:
+
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
 
 
-    toast(
-        `${name} created successfully.`,
-        "success"
-    );
+        /* ---------------------------------------------
+           RELOAD FIRESTORE DATA
+        --------------------------------------------- */
+
+        await loadAssetsFromFirestore();
+
+
+        /* ---------------------------------------------
+           CLEAR FORM
+        --------------------------------------------- */
+
+        document.getElementById(
+            "adminCoinName"
+        ).value = "";
+
+
+        document.getElementById(
+            "adminCoinSymbol"
+        ).value = "";
+
+
+        document.getElementById(
+            "adminCoinPrice"
+        ).value = "";
+
+
+        document.getElementById(
+            "adminCoinDescription"
+        ).value = "";
+
+
+        document.getElementById(
+            "adminCoinEmoji"
+        ).value = "🪙";
+
+
+        /* ---------------------------------------------
+           SUCCESS
+        --------------------------------------------- */
+
+        toast(
+            `${name} created successfully.`,
+            "success"
+        );
+
+
+        console.log(
+            "Admin coin created:",
+            coinID
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Admin coin creation failed:",
+            error
+        );
+
+
+        toast(
+            "Failed to create coin. Check the console.",
+            "error"
+        );
+
+    }
 
 }
-
 
 /* =====================================================
    ADMIN TIER REVIEW
