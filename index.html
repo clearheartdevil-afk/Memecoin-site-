@@ -2169,9 +2169,1077 @@ footer{
     class="primary-btn"
     onclick="adminCreateCoin()">
 
-    + Create Coin
+      + Create Coin
 
 </button>
+
+</div>
+
+```javascript
+/* =====================================================
+   ADMIN TRANSACTION CENTER
+===================================================== */
+
+/*
+ * Load all transactions for the Admin Transaction Center.
+ *
+ * IMPORTANT:
+ * This is ADMIN-ONLY UI.
+ * Payment remains DEMO MODE for now.
+ */
+async function loadAdminTransactions(){
+
+    const container =
+        document.getElementById(
+            "adminTransactions"
+        );
+
+    if(!container){
+        return;
+    }
+
+
+    /*
+     * Security check.
+     */
+    if(
+        !firebaseUser ||
+        !SECURITY_STATE.isAdmin
+    ){
+
+        container.innerHTML = `
+
+<div class="empty">
+
+    Admin access required.
+
+</div>
+
+`;
+
+        return;
+    }
+
+
+    container.innerHTML = `
+
+<div class="empty">
+
+    Loading transactions...
+
+</div>
+
+`;
+
+
+    try{
+
+        const snapshot =
+            await db
+                .collection(
+                    TRANSACTION_COLLECTION
+                )
+                .orderBy(
+                    "createdAt",
+                    "desc"
+                )
+                .limit(100)
+                .get();
+
+
+        if(snapshot.empty){
+
+            container.innerHTML = `
+
+<div class="empty">
+
+    No transactions found.
+
+</div>
+
+`;
+
+            return;
+        }
+
+
+        const transactions = [];
+
+
+        snapshot.forEach(
+            doc => {
+
+                transactions.push({
+
+                    id:doc.id,
+
+                    ...doc.data()
+
+                });
+
+            }
+        );
+
+
+        container.innerHTML = `
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+    Transaction
+</th>
+
+<th>
+    Coin
+</th>
+
+<th>
+    Buyer
+</th>
+
+<th>
+    Seller
+</th>
+
+<th>
+    Amount
+</th>
+
+<th>
+    Crypto
+</th>
+
+<th>
+    Status
+</th>
+
+<th>
+    Action
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${
+    transactions
+        .map(
+            transaction => {
+
+                const status =
+                    String(
+                        transaction.status ||
+                        "pending"
+                    );
+
+
+                const crypto =
+                    transaction.paymentCurrency ||
+                    "Not selected";
+
+
+                const amount =
+                    Number(
+                        transaction.amount ||
+                        0
+                    );
+
+
+                const fee =
+                    Number(
+                        transaction.platformFee ||
+                        0
+                    );
+
+
+                const total =
+                    Number(
+                        transaction.buyerTotal ||
+                        (
+                            amount +
+                            fee
+                        )
+                    );
+
+
+                const paymentReference =
+                    transaction.paymentReference ||
+                    "";
+
+
+                let statusClass =
+                    "badge-new";
+
+
+                if(
+                    status ===
+                    TRANSACTION_STATUS.PAYMENT_SUBMITTED
+                ){
+
+                    statusClass =
+                        "badge-gold";
+
+                }
+                else if(
+                    status ===
+                    TRANSACTION_STATUS.PAYMENT_VERIFIED
+                ){
+
+                    statusClass =
+                        "badge-silver";
+
+                }
+                else if(
+                    status ===
+                    TRANSACTION_STATUS.APPROVED
+                ){
+
+                    statusClass =
+                        "badge-gold";
+
+                }
+                else if(
+                    status ===
+                    TRANSACTION_STATUS.COMPLETED
+                ){
+
+                    statusClass =
+                        "badge-luxury";
+
+                }
+                else if(
+                    status ===
+                    TRANSACTION_STATUS.REJECTED
+                ){
+
+                    statusClass =
+                        "badge-new";
+
+                }
+
+
+                const created =
+                    transaction.createdAt
+                        ? formatTransactionDate(
+                            transaction.createdAt
+                        )
+                        : "—";
+
+
+                return `
+
+<tr>
+
+<td>
+
+<strong>
+
+    ${escapeHTML(
+        transaction.transactionId ||
+        transaction.id ||
+        "—"
+    )}
+
+</strong>
+
+<br>
+
+<small
+    style="
+        color:var(--muted);
+    "
+>
+
+    ${escapeHTML(
+        created
+    )}
+
+</small>
+
+</td>
+
+
+<td>
+
+<strong>
+
+    ${escapeHTML(
+        transaction.coinName ||
+        "MemeCoin"
+    )}
+
+</strong>
+
+<br>
+
+<small
+    style="
+        color:var(--muted);
+    "
+>
+
+    ${escapeHTML(
+        transaction.coinSymbol ||
+        ""
+    )}
+
+</small>
+
+</td>
+
+
+<td>
+
+    ${escapeHTML(
+        transaction.buyerName ||
+        transaction.buyerEmail ||
+        transaction.buyerId ||
+        "—"
+    )}
+
+</td>
+
+
+<td>
+
+    ${escapeHTML(
+        transaction.sellerName ||
+        transaction.sellerId ||
+        "MemeCoinSite"
+    )}
+
+</td>
+
+
+<td>
+
+<strong>
+
+    ${money(
+        amount
+    )}
+
+    USDT
+
+</strong>
+
+<br>
+
+<small
+    style="
+        color:var(--muted);
+    "
+>
+
+    Fee:
+    ${money(
+        fee
+    )}
+
+    <br>
+
+    Total:
+    ${money(
+        total
+    )}
+
+</small>
+
+</td>
+
+
+<td>
+
+    <strong>
+        ${escapeHTML(
+            crypto
+        )}
+    </strong>
+
+${
+    paymentReference
+    ?
+`
+
+<br>
+
+<small
+    style="
+        color:var(--muted);
+        word-break:break-all;
+    "
+>
+
+    Ref:
+    ${escapeHTML(
+        paymentReference
+    )}
+
+</small>
+
+`
+    :
+    ""
+}
+
+</td>
+
+
+<td>
+
+<span
+    class="
+        badge
+        ${statusClass}
+    "
+>
+
+    ${escapeHTML(
+        status
+    )}
+
+</span>
+
+</td>
+
+
+<td>
+
+<button
+    class="primary-btn"
+    onclick="
+        openAdminTransaction(
+            '${escapeHTML(
+                transaction.id
+            )}'
+        )
+    "
+>
+
+    Review
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+            }
+        )
+        .join("")
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+    }
+    catch(error){
+
+        console.error(
+            "Admin transaction loading error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+<div class="empty">
+
+    Unable to load transactions.
+
+    <br><br>
+
+    <small>
+
+        ${escapeHTML(
+            error.message ||
+            "Unknown Firestore error."
+        )}
+
+    </small>
+
+</div>
+
+`;
+
+    }
+
+}
+
+
+/* =====================================================
+   TRANSACTION DATE FORMATTER
+===================================================== */
+
+function formatTransactionDate(
+    value
+){
+
+    try{
+
+        if(
+            value &&
+            typeof value.toDate ===
+            "function"
+        ){
+
+            return value
+                .toDate()
+                .toLocaleString();
+
+        }
+
+
+        if(
+            value instanceof Date
+        ){
+
+            return value.toLocaleString();
+
+        }
+
+
+        const date =
+            new Date(
+                value
+            );
+
+
+        if(
+            Number.isNaN(
+                date.getTime()
+            )
+        ){
+
+            return "—";
+
+        }
+
+
+        return date.toLocaleString();
+
+    }
+    catch(error){
+
+        return "—";
+
+    }
+
+}
+
+
+/* =====================================================
+   OPEN ADMIN TRANSACTION
+===================================================== */
+
+async function openAdminTransaction(
+    transactionId
+){
+
+    if(
+        !firebaseUser ||
+        !SECURITY_STATE.isAdmin
+    ){
+
+        toast(
+            "Admin access denied.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!transactionId){
+
+        toast(
+            "Transaction ID is missing.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const snap =
+            await db
+                .collection(
+                    TRANSACTION_COLLECTION
+                )
+                .doc(
+                    transactionId
+                )
+                .get();
+
+
+        if(!snap.exists){
+
+            toast(
+                "Transaction not found.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const transaction =
+            {
+                id:snap.id,
+                ...snap.data()
+            };
+
+
+        window.activeAdminTransaction =
+            transaction;
+
+
+        const status =
+            transaction.status ||
+            "pending";
+
+
+        const crypto =
+            transaction.paymentCurrency ||
+            "Not selected";
+
+
+        const amount =
+            Number(
+                transaction.amount ||
+                0
+            );
+
+
+        const fee =
+            Number(
+                transaction.platformFee ||
+                0
+            );
+
+
+        const total =
+            Number(
+                transaction.buyerTotal ||
+                amount + fee
+            );
+
+
+        const reference =
+            transaction.paymentReference ||
+            "Not submitted";
+
+
+        const existing =
+            document.getElementById(
+                "adminTransactionModal"
+            );
+
+
+        if(existing){
+
+            existing.remove();
+
+        }
+
+
+        const modal =
+            document.createElement(
+                "div"
+            );
+
+
+        modal.id =
+            "adminTransactionModal";
+
+
+        modal.className =
+            "modal-overlay show";
+
+
+        modal.innerHTML = `
+
+<div class="modal">
+
+<div class="modal-header">
+
+<div>
+
+<h2>
+    💳 Transaction Review
+</h2>
+
+<p
+    style="
+        color:var(--muted);
+        margin-top:5px;
+    "
+>
+
+    Admin verification center
+
+</p>
+
+</div>
+
+
+<button
+    class="close-btn"
+    onclick="
+        document
+            .getElementById(
+                'adminTransactionModal'
+            )
+            .remove()
+    "
+>
+
+    ✕
+
+</button>
+
+</div>
+
+
+<div class="summary-card">
+
+
+<div class="summary-row">
+
+<span>
+    Transaction ID
+</span>
+
+<strong>
+
+    ${escapeHTML(
+        transaction.transactionId ||
+        transaction.id
+    )}
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Coin
+</span>
+
+<strong>
+
+    ${escapeHTML(
+        transaction.coinName ||
+        "MemeCoin"
+    )}
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Buyer
+</span>
+
+<strong>
+
+    ${escapeHTML(
+        transaction.buyerName ||
+        transaction.buyerEmail ||
+        transaction.buyerId ||
+        "—"
+    )}
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Seller
+</span>
+
+<strong>
+
+    ${escapeHTML(
+        transaction.sellerName ||
+        transaction.sellerId ||
+        "MemeCoinSite"
+    )}
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Coin Amount
+</span>
+
+<strong>
+
+    ${money(
+        amount
+    )}
+
+    USDT
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Platform Fee
+</span>
+
+<strong>
+
+    ${money(
+        fee
+    )}
+
+    USDT
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Buyer Total
+</span>
+
+<strong>
+
+    ${money(
+        total
+    )}
+
+    USDT
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Payment Currency
+</span>
+
+<strong>
+
+    ${escapeHTML(
+        crypto
+    )}
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Payment Reference
+</span>
+
+<strong
+    style="
+        word-break:break-all;
+    "
+>
+
+    ${escapeHTML(
+        reference
+    )}
+
+</strong>
+
+</div>
+
+
+<div class="summary-row">
+
+<span>
+    Current Status
+</span>
+
+<strong>
+
+    ${escapeHTML(
+        status
+    )}
+
+</strong>
+
+</div>
+
+
+</div>
+
+
+<div
+    style="
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-top:20px;
+    "
+>
+
+<button
+    class="primary-btn"
+    onclick="
+        adminVerifyTransaction(
+            '${escapeHTML(
+                transaction.id
+            )}'
+        )
+    "
+>
+
+    ✅ Verify Payment
+
+</button>
+
+
+<button
+    class="primary-btn"
+    onclick="
+        adminRejectTransaction(
+            '${escapeHTML(
+                transaction.id
+            )}'
+        )
+    "
+>
+
+    ❌ Reject
+
+</button>
+
+
+<button
+    class="primary-btn"
+    onclick="
+        adminApproveTransaction(
+            '${escapeHTML(
+                transaction.id
+            )}'
+        )
+    "
+>
+
+    👍 Approve
+
+</button>
+
+</div>
+
+
+<p
+    style="
+        color:var(--muted);
+        margin-top:18px;
+        line-height:1.6;
+    "
+>
+
+    Payment is currently in demo mode.
+    No real crypto wallet transfer is performed.
+
+</p>
+
+</div>
+
+`;
+
+
+        document.body.appendChild(
+            modal
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Open admin transaction error:",
+            error
+        );
+
+
+        toast(
+            error.message ||
+            "Unable to open transaction.",
+            "error"
+        );
+
+    }
+
+}
+    
+<!-- =====================================================
+     ADMIN TRANSACTION CENTER
+===================================================== -->
+
+<div class="form-card">
+
+    <h2>
+        💳 Transaction Center
+    </h2>
+
+    <p
+        style="
+            color:var(--muted);
+            margin:8px 0 20px;
+        "
+    >
+        Review submitted payments and manage
+        marketplace transactions.
+    </p>
+
+    <div
+        id="adminTransactions"
+    >
+        <div class="empty">
+            Loading transactions...
+        </div>
+    </div>
 
 </div>
 
@@ -9255,9 +10323,11 @@ function showPage(pageId, button){
 
     if(pageId === "admin"){
 
-        renderAdminReview();
+    renderAdminReview();
 
-    }
+    loadAdminTransactions();
+
+}
 
 
     /* ---------------------------------------------
