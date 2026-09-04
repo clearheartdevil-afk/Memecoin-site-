@@ -2174,11 +2174,273 @@ footer{
 
 </button>
 
+    /* =====================================================
+   ADMIN CREATED COINS
+===================================================== */
+
+async function loadAdminCreatedCoins(){
+
+    const container =
+        document.getElementById(
+            "adminCreatedCoinsList"
+        );
+
+
+    if(!container){
+
+        return;
+
+    }
+
+
+    if(
+        !firebaseUser ||
+        !checkAdminIdentity(firebaseUser)
+    ){
+
+        container.innerHTML = `
+            <div>
+                Admin access required.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+        <div>
+            Loading created coins...
+        </div>
+    `;
+
+
+    try{
+
+        const snapshot =
+            await db
+                .collection("assets")
+                .orderBy(
+                    "createdAt",
+                    "desc"
+                )
+                .get();
+
+
+        if(snapshot.empty){
+
+            container.innerHTML = `
+                <div>
+                    No coins have been created yet.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        const coinsList = [];
+
+
+        snapshot.forEach(
+            doc => {
+
+                const data =
+                    doc.data();
+
+
+                coinsList.push({
+
+                    id:
+                        doc.id,
+
+                    ...data
+
+                });
+
+            }
+        );
+
+
+        container.innerHTML = `
+
+            <div
+                style="
+                    display:grid;
+                    gap:15px;
+                "
+            >
+
+                ${
+                    coinsList
+                    .map(
+                        coin => {
+
+                            const price =
+                                Number(
+                                    coin.primaryPrice ??
+                                    coin.adminPrice ??
+                                    0
+                                );
+
+
+                            return `
+
+                                <div
+                                    style="
+                                        padding:20px;
+                                        border:1px solid rgba(255,255,255,.12);
+                                        border-radius:16px;
+                                        background:rgba(255,255,255,.04);
+                                    "
+                                >
+
+                                    <div
+                                        style="
+                                            display:flex;
+                                            align-items:center;
+                                            gap:15px;
+                                        "
+                                    >
+
+                                        <div
+                                            style="
+                                                font-size:36px;
+                                            "
+                                        >
+                                            ${escapeHTML(
+                                                coin.emoji ||
+                                                "🪙"
+                                            )}
+                                        </div>
+
+
+                                        <div>
+
+                                            <h3
+                                                style="
+                                                    margin:0;
+                                                "
+                                            >
+                                                ${escapeHTML(
+                                                    coin.name ||
+                                                    "Unnamed Coin"
+                                                )}
+                                            </h3>
+
+
+                                            <div>
+                                                ${escapeHTML(
+                                                    coin.symbol ||
+                                                    ""
+                                                )}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div
+                                        style="
+                                            margin-top:15px;
+                                            line-height:1.8;
+                                        "
+                                    >
+
+                                        <div>
+                                            <strong>Coin ID:</strong>
+                                            ${escapeHTML(
+                                                coin.coinID ||
+                                                coin.id ||
+                                                "—"
+                                            )}
+                                        </div>
+
+
+                                        <div>
+                                            <strong>Price:</strong>
+                                            ${money(price)} USDT
+                                        </div>
+
+
+                                        <div>
+                                            <strong>Tier:</strong>
+                                            ${escapeHTML(
+                                                coin.tier ||
+                                                "new"
+                                            )}
+                                        </div>
+
+
+                                        <div>
+                                            <strong>Owner:</strong>
+                                            ${
+                                                coin.ownerName
+                                                    ? escapeHTML(
+                                                        coin.ownerName
+                                                    )
+                                                    : "Unowned"
+                                            }
+                                        </div>
+
+
+                                        <div>
+                                            <strong>Status:</strong>
+                                            ${
+                                                coin.adminCreated === true
+                                                    ? "Admin Created"
+                                                    : "—"
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("")
+                }
+
+            </div>
+
+        `;
+
+
+        console.log(
+            "Admin created coins loaded:",
+            coinsList.length
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Admin created coins loading error:",
+            error
+        );
+
+
+        container.innerHTML = `
+            <div>
+                Unable to load created coins.
+            </div>
+        `;
+
+    }
+
+}
+    
 </div>
 
 ```javascript
 
-  </script>  
+  </script> 
     
     /* =====================================================
    ADMIN TRANSACTION CENTER
