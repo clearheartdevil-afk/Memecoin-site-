@@ -2179,6 +2179,7 @@ footer{
 ```javascript
 
   </script>  
+    
     /* =====================================================
    ADMIN TRANSACTION CENTER
 ===================================================== */
@@ -9145,6 +9146,13 @@ function openAdminPage(
 
 function updateSecurityUI() {
 
+    const allowed =
+        !!firebaseUser &&
+        checkAdminIdentity(
+            firebaseUser
+        );
+
+
     const adminButtons =
         document.querySelectorAll(
             "[data-admin-only]"
@@ -9153,10 +9161,6 @@ function updateSecurityUI() {
 
     adminButtons.forEach(
         element => {
-
-            const allowed =
-                isAdmin();
-
 
             element.style.display =
                 allowed
@@ -9175,10 +9179,6 @@ function updateSecurityUI() {
 
     adminElements.forEach(
         element => {
-
-            const allowed =
-                isAdmin();
-
 
             element.style.display =
                 allowed
