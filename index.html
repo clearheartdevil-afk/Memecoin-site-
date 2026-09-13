@@ -1,113 +1,332 @@
-🪙
-MemeCoinSite
-Home Marketplace My Coins Leaderboard Community My Listings History Admin
-Balance: $0.00
-G
-Buy. Own.
-Redesign.
-Collect unique MemeCoins, customize their designs, own their history and trade them inside the MemeCoinSite marketplace.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f19">
+<meta name="description" content="MemeCoinSite - Buy, own, redesign and trade collectible MemeCoins.">
+<title>MemeCoinSite</title>
 
-🔵 Continue with Google Explore Marketplace
-How it works
-Admin creates collectible coins. Users can acquire, customize and trade them.
 
-💎 Each coin carries its own design and ownership history.
-💰 Buyer platform fee: 1%
-Total Coins
-0
-Active Listings
-0
-Your Coins
-0
-Featured Coins
-Discover collectible MemeCoins.
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-Marketplace
-Buy available collectible MemeCoins.
+<header class="header">
+<div class="container header-inner">
 
-Search 
-Search name or symbol
-Tier 
-All Tiers
-My Coins
-Coins currently owned by you.
+<a href="#" class="logo" onclick="showPage('home');return false;">
+<div class="logo-mark">🪙</div>
+<span>MemeCoinSite</span>
+</a>
 
-Leaderboard
-Top collectible holders.
+<nav class="nav" id="mainNav">
+<button class="nav-btn active" data-page="home" onclick="showPage('home',this)">Home</button>
+<button class="nav-btn" data-page="marketplace" onclick="showPage('marketplace',this)">Marketplace</button>
+<button class="nav-btn" data-page="mycoins" onclick="showPage('mycoins',this)">My Coins</button>
+<button class="nav-btn" data-page="leaderboard" onclick="showPage('leaderboard',this)">Leaderboard</button>
+<button class="nav-btn" data-page="community" onclick="showPage('community',this)">Community</button>
+<button class="nav-btn" data-page="listings" onclick="showPage('listings',this)">My Listings</button>
+<button class="nav-btn" data-page="history" onclick="showPage('history',this)">History</button>
+<button class="nav-btn admin-only" data-admin-only data-page="admin" onclick="showPage('admin',this)">Admin</button>
+</nav>
 
-Community
-Share your MemeCoin journey.
+<div class="header-actions">
+<div class="wallet">Balance: $<span id="walletBalance">0.00</span></div>
+<div class="user-avatar" id="userAvatar">G</div>
+</div>
 
-Share something with the community...
+</div>
+</header>
 
-No file chosen
-Publish Post
-My Listings
-Manage your active marketplace listings.
+<main>
 
-History
-Ownership and design history of your coins.
+<section class="page active" id="home">
+<div class="container hero">
+<div class="hero-grid">
+<div>
+<h1>Buy. <span class="gradient-text">Own.</span><br>Redesign.</h1>
+<p>Collect unique MemeCoins, customize their designs, own their history and trade them inside the MemeCoinSite marketplace.</p>
+<div class="hero-actions">
+<button class="primary-btn" id="googleLoginBtn" onclick="signInWithGoogle()">🔵 Continue with Google</button>
+<button class="secondary-btn" onclick="showPage('marketplace')">Explore Marketplace</button>
+</div>
+</div>
+<div class="form-card">
+<h2>How it works</h2>
+<p style="color:var(--muted);margin-top:10px;">Admin creates collectible coins. Users can acquire, customize and trade them.</p>
+<div class="notice" style="margin-top:18px;">💎 Each coin carries its own design and ownership history.</div>
+<div class="notice" style="margin-top:12px;">💰 Buyer platform fee: <strong>1%</strong></div>
+</div>
+</div>
 
-Admin Control Center
-Manage MemeCoins, listings, transactions and platform activity.
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-label">Total Coins</div><div class="stat-value" id="statCoins">0</div></div>
+<div class="stat-card"><div class="stat-label">Active Listings</div><div class="stat-value" id="statListings">0</div></div>
+<div class="stat-card"><div class="stat-label">Your Coins</div><div class="stat-value" id="statOwned">0</div></div>
+</div>
+</div>
 
-ADMIN ONLY
-Create MemeCoin
-Issue a new primary MemeCoin asset.
+<div class="container section">
+<div class="section-head">
+<div><h2>Featured Coins</h2><p>Discover collectible MemeCoins.</p></div>
+</div>
+<div class="coin-grid" id="featuredCoins"></div>
+</div>
+</section>
 
-Coin Name 
-Example MemeCoin
-Symbol 
-MEME
-Initial Price (USD) 
-10
-Tier 
-New / Unreviewed
-Description 
-Describe this MemeCoin...
+<section class="page" id="marketplace">
+<div class="container">
+<div class="section-head">
+<div><h2>Marketplace</h2><p>Buy available collectible MemeCoins.</p></div>
+</div>
+<div class="form-grid" style="margin-bottom:20px;">
+<div class="form-group">
+<label>Search</label>
+<input id="marketSearch" placeholder="Search name or symbol" oninput="renderMarketplace()">
+</div>
+<div class="form-group">
+<label>Tier</label>
+<select id="tierFilter" onchange="renderMarketplace()">
+<option value="all">All Tiers</option>
+<option value="new">New</option>
+<option value="bronze">Bronze</option>
+<option value="silver">Silver</option>
+<option value="gold">Gold</option>
+<option value="luxury">Luxury</option>
+</select>
+</div>
+</div>
+<div class="coin-grid" id="marketplaceGrid"></div>
+</div>
+</section>
 
-Image URL 
-https://...
-Supply 
-100
-Create MemeCoin
-Platform Controls
-Administrative tools and platform status.
+<section class="page" id="mycoins">
+<div class="container">
+<div class="section-head"><div><h2>My Coins</h2><p>Coins currently owned by you.</p></div></div>
+<div class="coin-grid" id="myCoinsGrid"></div>
+</div>
+</section>
 
-0 Assets
-0 Listings
-0 Transactions
-Refresh Data Transactions Listings
-Pending Marketplace Reviews
-Review user listings and trade requests.
+<section class="page" id="leaderboard">
+<div class="container">
+<div class="section-head"><div><h2>Leaderboard</h2><p>Top collectible holders.</p></div></div>
+<div id="leaderboardContainer"></div>
+</div>
+</section>
 
-Loading admin listings...
-Transaction Center
-Review and manage marketplace transactions.
+<section class="page" id="community">
+<div class="container">
+<div class="section-head"><div><h2>Community</h2><p>Share your MemeCoin journey.</p></div></div>
+<div class="form-card">
+<textarea id="communityPostText" placeholder="Share something with the community..."></textarea>
+<div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+<input id="communityPostMedia" type="file" accept="image/*,video/*">
+<button class="primary-btn" onclick="createCommunityPost()">Publish Post</button>
+</div>
+</div>
+<div id="communityFeed" style="margin-top:20px;"></div>
+</div>
+</section>
 
-Loading transactions...
-×
-Buy MemeCoin
-Review your purchase before confirming.
+<section class="page" id="listings">
+<div class="container">
+<div class="section-head"><div><h2>My Listings</h2><p>Manage your active marketplace listings.</p></div></div>
+<div id="myListings"></div>
+</div>
+</section>
 
-Cancel Confirm Purchase
-×
-Customize MemeCoin
-Your design changes will be saved to your ownership record.
+<section class="page" id="history">
+<div class="container">
+<div class="section-head"><div><h2>History</h2><p>Ownership and design history of your coins.</p></div></div>
+<div id="historyContainer"></div>
+</div>
+</section>
 
-Display Name 
-Your MemeCoin name
-Background 
-#111722
-Primary Text 
-#ffffff
-Tagline 
-My MemeCoin
-Cancel Save Design
-×
-×
-My Profile
-MemeCoinSite
-Collect. Customize. Own. Trade.
+   <section class="page" id="admin">
+<div class="container">
+<div class="section-head">
+<div>
+<h2>Admin Control Center</h2>
+<p>Manage MemeCoins, listings, transactions and platform activity.</p>
+</div>
+<span class="badge badge-admin">ADMIN ONLY</span>
+</div>
 
-© MemeCoinSite
+<div class="admin-grid">
+<div class="card">
+<h3>Create MemeCoin</h3>
+<p class="muted">Issue a new primary MemeCoin asset.</p>
+<div class="form-grid">
+<div class="field">
+<label>Coin Name</label>
+<input id="adminCoinName" type="text" placeholder="Example MemeCoin">
+</div>
+<div class="field">
+<label>Symbol</label>
+<input id="adminCoinSymbol" type="text" placeholder="MEME">
+</div>
+<div class="field">
+<label>Initial Price (USD)</label>
+<input id="adminCoinPrice" type="number" min="0" step="0.01" placeholder="10">
+</div>
+<div class="field">
+<label>Tier</label>
+<select id="adminCoinTier">
+<option value="New">New / Unreviewed</option>
+<option value="Bronze">Bronze</option>
+<option value="Silver">Silver</option>
+<option value="Gold">Gold</option>
+<option value="Luxury">Luxury</option>
+</select>
+</div>
+<div class="field full">
+<label>Description</label>
+<textarea id="adminCoinDescription" rows="4" placeholder="Describe this MemeCoin..."></textarea>
+</div>
+<div class="field">
+<label>Image URL</label>
+<input id="adminCoinImage" type="url" placeholder="https://...">
+</div>
+<div class="field">
+<label>Supply</label>
+<input id="adminCoinSupply" type="number" min="1" value="100">
+</div>
+</div>
+<button class="btn btn-primary" onclick="createAdminCoin()">Create MemeCoin</button>
+</div>
+
+<div class="card">
+<h3>Platform Controls</h3>
+<p class="muted">Administrative tools and platform status.</p>
+<div class="admin-stat-row">
+<div class="mini-stat">
+<strong id="adminAssetCount">0</strong>
+<span>Assets</span>
+</div>
+<div class="mini-stat">
+<strong id="adminListingCount">0</strong>
+<span>Listings</span>
+</div>
+<div class="mini-stat">
+<strong id="adminTransactionCount">0</strong>
+<span>Transactions</span>
+</div>
+</div>
+<div class="admin-actions">
+<button class="btn btn-secondary" onclick="loadAdminData()">Refresh Data</button>
+<button class="btn btn-secondary" onclick="loadAdminTransactions()">Transactions</button>
+<button class="btn btn-secondary" onclick="loadAdminListings()">Listings</button>
+</div>
+</div>
+</div>
+
+<div class="card admin-panel">
+<div class="section-head">
+<div>
+<h3>Pending Marketplace Reviews</h3>
+<p class="muted">Review user listings and trade requests.</p>
+</div>
+</div>
+<div id="adminListings">
+<div class="empty-state">Loading admin listings...</div>
+</div>
+</div>
+
+<div class="card admin-panel">
+<div class="section-head">
+<div>
+<h3>Transaction Center</h3>
+<p class="muted">Review and manage marketplace transactions.</p>
+</div>
+</div>
+<div id="adminTransactions">
+<div class="empty-state">Loading transactions...</div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="modal" id="purchaseModal">
+<div class="modal-box">
+<button class="modal-close" onclick="closeModal('purchaseModal')">×</button>
+<h2>Buy MemeCoin</h2>
+<p class="muted">Review your purchase before confirming.</p>
+<div id="purchaseContent"></div>
+<div class="modal-actions">
+<button class="btn btn-secondary" onclick="closeModal('purchaseModal')">Cancel</button>
+<button class="btn btn-primary" id="confirmPurchaseBtn">Confirm Purchase</button>
+</div>
+</div>
+</div>
+
+<div class="modal" id="customizeModal">
+<div class="modal-box">
+<button class="modal-close" onclick="closeModal('customizeModal')">×</button>
+<h2>Customize MemeCoin</h2>
+<p class="muted">Your design changes will be saved to your ownership record.</p>
+<div class="form-grid">
+<div class="field">
+<label>Display Name</label>
+<input id="customName" type="text" placeholder="Your MemeCoin name">
+</div>
+<div class="field">
+<label>Background</label>
+<input id="customBackground" type="text" placeholder="#111722">
+</div>
+<div class="field">
+<label>Primary Text</label>
+<input id="customTextColor" type="text" placeholder="#ffffff">
+</div>
+<div class="field">
+<label>Tagline</label>
+<input id="customTagline" type="text" placeholder="My MemeCoin">
+</div>
+</div>
+<div class="modal-actions">
+<button class="btn btn-secondary" onclick="closeModal('customizeModal')">Cancel</button>
+<button class="btn btn-primary" onclick="saveCustomization()">Save Design</button>
+</div>
+</div>
+</div>
+
+<div class="modal" id="detailsModal">
+<div class="modal-box">
+<button class="modal-close" onclick="closeModal('detailsModal')">×</button>
+<div id="detailsContent"></div>
+</div>
+</div>
+
+<div class="modal" id="profileModal">
+<div class="modal-box">
+<button class="modal-close" onclick="closeModal('profileModal')">×</button>
+<h2>My Profile</h2>
+<div id="profileContent"></div>
+</div>
+</div>
+
+<div id="toastContainer"></div>
+
+<footer class="site-footer">
+<div class="container footer-inner">
+<div>
+<strong>MemeCoinSite</strong>
+<p class="muted">Collect. Customize. Own. Trade.</p>
+</div>
+<div class="muted">© <span id="currentYear"></span> MemeCoinSite</div>
+</div>
+</footer>
+
+
+
+
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
