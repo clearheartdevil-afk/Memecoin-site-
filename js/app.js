@@ -1,4 +1,3 @@
-
 "use strict";
 
 const firebaseConfig = {
@@ -124061,5 +124060,3 @@ ensureQuarterlyTierStyles();
     initialize();
 
 })();
-
-    
